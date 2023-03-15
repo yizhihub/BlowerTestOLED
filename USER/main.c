@@ -17,8 +17,8 @@
 	delay_init();	     //延时初始化
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);// 设置中断优先级分组2
  	LED_Init();
-   OLED_Init();			//初始化OLED     
-  OLED_ShowString(0,0,"ALIENTEK",24);  
+    OLED_Init();			//初始化OLED     
+    OLED_ShowString(0,0,"ALIENTEK",24);  
 	OLED_ShowString(0,24, "0.96' OLED TEST",16);  
  	OLED_ShowString(0,40,"ATOM 2014/3/7",12);  
  	OLED_ShowString(0,52,"ASCII:",12);  

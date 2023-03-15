@@ -20,22 +20,26 @@
 //OLED模式设置
 //0:4线串行模式
 //1:并行8080模式
-#define OLED_MODE 1
+#define OLED_MODE 0
 		    						  
-//-----------------OLED端口定义----------------  					   
-#define OLED_CS PCout(9)
-//#define OLED_RST  PBout(14)//在MINISTM32上直接接到了STM32的复位脚！	
-#define OLED_RS PCout(8)
-#define OLED_WR PCout(7)		  
-#define OLED_RD PCout(6)
+//-----------------OLED端口定义---------------- PC6 PB0 PB2 PB4 PB6
+//#define OLED_CS   PCout(9)
+//#define OLED_RST  PBout(14)            /* 在MINISTM32上直接接到了STM32的复位脚！*/
+//#define OLED_RS   PCout(8)
+//#define OLED_WR   PCout(7)
+//#define OLED_RD   PCout(6)
 
 //PB0~7,作为数据线
-#define DATAOUT(DataValue) {GPIO_Write(GPIOB,(GPIO_ReadOutputData(GPIOB)&0xff00)|(DataValue&0x00FF));}  
+//#define DATAOUT(DataValue) {GPIO_Write(GPIOB,(GPIO_ReadOutputData(GPIOB)&0xff00)|(DataValue&0x00FF));}  
 
 //使用4线串行接口时使用 
-#define OLED_SCLK PBout(0)
-#define OLED_SDIN PBout(1)
-		     
+#define OLED_SCLK PCout(6)
+#define OLED_SDIN PBout(0)
+#define OLED_RST  PBout(2)            /* 在MINISTM32上直接接到了STM32的复位脚！*/
+#define OLED_RS   PBout(4) 
+#define OLED_CS   PBout(6)
+
+
 #define OLED_CMD  0	//写命令
 #define OLED_DATA 1	//写数据
 //OLED控制用函数

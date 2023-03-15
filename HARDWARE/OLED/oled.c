@@ -229,22 +229,31 @@ void OLED_Init(void)
 	GPIO_SetBits(GPIOC, GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9);//如果每一位决定一个GPIO_Pin,则可以通过或的形式来初始化多个IO
 
 #else
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOB, &GPIO_InitStructure);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD ; 		 //推挽输出	
-	GPIO_Init(GPIOB, &GPIO_InitStructure);				    	 
-	GPIO_Write(GPIOB,0X03);
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_9;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);	//使能AFIO时钟
+ 	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable , ENABLE);	//JTAG-DP 失能 + SW-DP使能 
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
-	GPIO_SetBits(GPIOC, GPIO_Pin_8|GPIO_Pin_9);
-#endif								  
- 		  
+    GPIO_SetBits(GPIOC, GPIO_Pin_6);
+//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD ; 		 //推挽输出	
+//	GPIO_Init(GPIOB, &GPIO_InitStructure);				    	 
+//	GPIO_Write(GPIOB,0X03);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_2 | GPIO_Pin_4 | GPIO_Pin_6;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	GPIO_SetBits(GPIOB, GPIO_Pin_0 | GPIO_Pin_2 | GPIO_Pin_4 | GPIO_Pin_6);
+#endif
+     
+    OLED_RST = 0; 
+    delay_ms(20);
+    OLED_RST = 1;
+    delay_ms(50);
+    
 	OLED_WR_Byte(0xAE,OLED_CMD); //关闭显示
 	OLED_WR_Byte(0xD5,OLED_CMD); //设置时钟分频因子,震荡频率
 	OLED_WR_Byte(80,OLED_CMD);   //[3:0],分频因子;[7:4],震荡频率

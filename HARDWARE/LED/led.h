@@ -14,7 +14,7 @@
 //All rights reserved									  
 ////////////////////////////////////////////////////////////////////////////////// 
 #define LED0 PAout(8)	// PA8
-#define LED1 PDout(2)	// PD2	
+#define LED1 PBout(4)	// PD2	
 
 void LED_Init(void);//≥ı ºªØ
 
