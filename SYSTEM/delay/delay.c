@@ -8,7 +8,7 @@
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
 //ALIENTEK STM32开发板
 //使用SysTick的普通计数模式对延迟进行管理（适合STM32F10x系列）
-//包括delay_us,delay_ms
+//包括usDelay,msDelay
 //正点原子@ALIENTEK
 //技术论坛:www.openedv.com
 //创建日期:2010/1/1
@@ -23,16 +23,16 @@
 //V1.3修改说明
 //增加了对UCOSII延时的支持.
 //如果使用ucosII,delay_init会自动设置SYSTICK的值,使之与ucos的TICKS_PER_SEC对应.
-//delay_ms和delay_us也进行了针对ucos的改造.
-//delay_us可以在ucos下使用,而且准确度很高,更重要的是没有占用额外的定时器.
-//delay_ms在ucos下,可以当成OSTimeDly来用,在未启动ucos时,它采用delay_us实现,从而准确延时
-//可以用来初始化外设,在启动了ucos之后delay_ms根据延时的长短,选择OSTimeDly实现或者delay_us实现.
+//msDelay和usDelay也进行了针对ucos的改造.
+//usDelay可以在ucos下使用,而且准确度很高,更重要的是没有占用额外的定时器.
+//msDelay在ucos下,可以当成OSTimeDly来用,在未启动ucos时,它采用usDelay实现,从而准确延时
+//可以用来初始化外设,在启动了ucos之后msDelay根据延时的长短,选择OSTimeDly实现或者usDelay实现.
 //V1.4修改说明 20110929
-//修改了使用ucos,但是ucos未启动的时候,delay_ms中中断无法响应的bug.
+//修改了使用ucos,但是ucos未启动的时候,msDelay中中断无法响应的bug.
 //V1.5修改说明 20120902
-//在delay_us加入ucos上锁，防止由于ucos打断delay_us的执行，可能导致的延时不准。
+//在usDelay加入ucos上锁，防止由于ucos打断usDelay的执行，可能导致的延时不准。
 //V1.6修改说明 20150109
-//在delay_ms加入OSLockNesting判断。
+//在msDelay加入OSLockNesting判断。
 //V1.7修改说明 20150319
 //修改OS支持方式,以支持任意OS(不限于UCOSII和UCOSIII,理论上任意OS都可以支持)
 //添加:delay_osrunning/delay_ostickspersec/delay_osintnesting三个宏定义
@@ -48,11 +48,11 @@ static u16 fac_ms=0;							//ms延时倍乘数,在ucos下,代表每个节拍的ms数
 	
 	
 #if SYSTEM_SUPPORT_OS							//如果SYSTEM_SUPPORT_OS定义了,说明要支持OS了(不限于UCOS).
-//当delay_us/delay_ms需要支持OS的时候需要三个与OS相关的宏定义和函数来支持
+//当usDelay/msDelay需要支持OS的时候需要三个与OS相关的宏定义和函数来支持
 //首先是3个宏定义:
 //    delay_osrunning:用于表示OS当前是否正在运行,以决定是否可以使用相关函数
 //delay_ostickspersec:用于表示OS设定的时钟节拍,delay_init将根据这个参数来初始哈systick
-// delay_osintnesting:用于表示OS中断嵌套级别,因为中断里面不可以调度,delay_ms使用该参数来决定如何运行
+// delay_osintnesting:用于表示OS中断嵌套级别,因为中断里面不可以调度,msDelay使用该参数来决定如何运行
 //然后是3个函数:
 //  delay_osschedlock:用于锁定OS任务调度,禁止调度
 //delay_osschedunlock:用于解锁OS任务调度,重新开启调度
@@ -150,7 +150,7 @@ void delay_init()
 #if SYSTEM_SUPPORT_OS  							//如果需要支持OS.
 //延时nus
 //nus为要延时的us数.		    								   
-void delay_us(u32 nus)
+void usDelay(u32 nus)
 {		
 	u32 ticks;
 	u32 told,tnow,tcnt=0;
@@ -174,7 +174,7 @@ void delay_us(u32 nus)
 }
 //延时nms
 //nms:要延时的ms数
-void delay_ms(u16 nms)
+void msDelay(u16 nms)
 {	
 	if(delay_osrunning&&delay_osintnesting==0)	//如果OS已经在跑了,并且不是在中断里面(中断里面不能任务调度)	    
 	{		 
@@ -184,12 +184,12 @@ void delay_ms(u16 nms)
 		}
 		nms%=fac_ms;							//OS已经无法提供这么小的延时了,采用普通方式延时    
 	}
-	delay_us((u32)(nms*1000));					//普通方式延时  
+	usDelay((u32)(nms*1000));					//普通方式延时  
 }
 #else //不用OS时
 //延时nus
 //nus为要延时的us数.		    								   
-void delay_us(u32 nus)
+void usDelay(u32 nus)
 {		
 	u32 temp;	    	 
 	SysTick->LOAD=nus*fac_us; 					//时间加载	  		 
@@ -208,7 +208,7 @@ void delay_us(u32 nus)
 //nms<=0xffffff*8*1000/SYSCLK
 //SYSCLK单位为Hz,nms单位为ms
 //对72M条件下,nms<=1864 
-void delay_ms(u16 nms)
+void msDelay(u16 nms)
 {	 		  	  
 	u32 temp;		   
 	SysTick->LOAD=(u32)nms*fac_ms;				//时间加载(SysTick->LOAD为24bit)

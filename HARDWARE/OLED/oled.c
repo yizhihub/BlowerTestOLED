@@ -250,9 +250,9 @@ void OLED_Init(void)
 #endif
      
     OLED_RST = 0; 
-    delay_ms(20);
+    msDelay(20);
     OLED_RST = 1;
-    delay_ms(50);
+    msDelay(50);
     
 	OLED_WR_Byte(0xAE,OLED_CMD); //关闭显示
 	OLED_WR_Byte(0xD5,OLED_CMD); //设置时钟分频因子,震荡频率
