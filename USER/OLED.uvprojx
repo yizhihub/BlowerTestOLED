@@ -134,10 +134,10 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4099</DriverSelection>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>Segger\JL2CM3.dll</Flash2>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -337,7 +337,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,ARM_PLATEFORM,STM32F10X_HD,CHIP_SSD1327,OLED_SPI</Define>
+              <Define>USE_STDPERIPH_DRIVER,ARM_PLATEFORM,STM32F10X_HD,CHIP_SSD1309,OLED_SPI,GD32F30X_HD</Define>
               <Undefine></Undefine>
               <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\USER;..\HARDWARE\OLED;..\SYSTEM\usart;..\SYSTEM\STM32F10x_FWLib\inc;..\SYSTEM\CORE;..\..\STC15W408AS_A\Source</IncludePath>
             </VariousControls>
@@ -398,16 +398,16 @@
               <FileType>1</FileType>
               <FilePath>.\system_stm32f10x.c</FilePath>
             </File>
+            <File>
+              <FileName>HwDrv.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\HwDrv.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HARDWARE</GroupName>
           <Files>
-            <File>
-              <FileName>led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LED\led.c</FilePath>
-            </File>
             <File>
               <FileName>oled.c</FileName>
               <FileType>1</FileType>
@@ -524,6 +524,16 @@
               <FileType>1</FileType>
               <FilePath>..\SYSTEM\STM32F10x_FWLib\src\stm32f10x_usart.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f10x_tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SYSTEM\STM32F10x_FWLib\src\stm32f10x_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SYSTEM\STM32F10x_FWLib\src\stm32f10x_exti.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -540,6 +550,16 @@
           <GroupName>Source</GroupName>
           <Files>
             <File>
+              <FileName>IIC.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\STC15W408AS_A\Source\Component\IIC.h</FilePath>
+            </File>
+            <File>
+              <FileName>IIC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\STC15W408AS_A\Source\Component\IIC.c</FilePath>
+            </File>
+            <File>
               <FileName>bKEY.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\STC15W408AS_A\Source\bKEY.c</FilePath>
@@ -550,7 +570,7 @@
                   <RVCTZI>0</RVCTZI>
                   <RVCTOtherData>0</RVCTOtherData>
                   <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
+                  <IncludeInBuild>1</IncludeInBuild>
                   <AlwaysBuild>2</AlwaysBuild>
                   <GenerateAssemblyFile>2</GenerateAssemblyFile>
                   <AssembleAssemblyFile>2</AssembleAssemblyFile>
@@ -596,19 +616,29 @@
               </FileOption>
             </File>
             <File>
+              <FileName>bKEY.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\STC15W408AS_A\Source\bKEY.h</FilePath>
+            </File>
+            <File>
               <FileName>bOLED.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\STC15W408AS_A\Source\bOLED.c</FilePath>
             </File>
             <File>
-              <FileName>IIC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\STC15W408AS_A\Source\Component\IIC.c</FilePath>
+              <FileName>bOLED.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\STC15W408AS_A\Source\bOLED.h</FilePath>
             </File>
             <File>
-              <FileName>IIC.h</FileName>
+              <FileName>bHMI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\STC15W408AS_A\Source\bHMI.c</FilePath>
+            </File>
+            <File>
+              <FileName>bHMI.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\STC15W408AS_A\Source\Component\IIC.h</FilePath>
+              <FilePath>..\..\STC15W408AS_A\Source\bHMI.h</FilePath>
             </File>
           </Files>
         </Group>

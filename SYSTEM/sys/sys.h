@@ -1,23 +1,27 @@
 #ifndef __SYS_H
 #define __SYS_H	
 #include "stm32f10x.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32开发板		   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//修改日期:2012/8/18
-//版本：V1.7
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2009-2019
-//All rights reserved
-////////////////////////////////////////////////////////////////////////////////// 	 
+#include "stdint.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#
+/*********************************************************************************************************
+  通用数据类型重定义
+*********************************************************************************************************/
+typedef unsigned char           BOOL;                                   /* 布尔变量                     */
+typedef unsigned char           INT8U;                                  /* 无符号8位整型变量            */
+typedef signed   char           INT8S;                                  /* 有符号8位整型变量            */
+typedef unsigned short          INT16U;                                 /* 无符号16位整型变量           */
+typedef signed   short          INT16S;                                 /* 有符号16位整型变量           */
+typedef unsigned long           INT32U;                                 /* 无符号32位整型变量           */
+typedef signed   long           INT32S;                                 /* 有符号32位整型变量           */
+typedef unsigned long long      INT64U;                                 /* 无符号64位整型变量           */
+typedef signed long long        INT64S;                                 /* 有符号64位整型变量           */
+typedef float                   FP32;                                   /* 单精度浮点数（32位长度）     */
+typedef double                  FP64;                                   /* 双精度浮点数（64位长度）     */
+typedef unsigned char           uchar;
 
-//0,不支持ucos
-//1,支持ucos
-#define SYSTEM_SUPPORT_OS		0		//定义系统文件夹是否支持UCOS
-																	    
-	 
 //位带操作,实现51类似的GPIO控制功能
 //具体实现思想,参考<<CM3权威指南>>第五章(87页~92页).
 //IO口操作宏定义
@@ -65,9 +69,9 @@
 #define PGin(n)    BIT_ADDR(GPIOG_IDR_Addr,n)  //输入
 
 //以下为汇编函数
-void WFI_SET(void);		//执行WFI指令
+void WFI_SET(void);     //执行WFI指令
 void INTX_DISABLE(void);//关闭所有中断
-void INTX_ENABLE(void);	//开启所有中断
-void MSR_MSP(u32 addr);	//设置堆栈地址
+void INTX_ENABLE(void); //开启所有中断
+void MSR_MSP(u32 addr); //设置堆栈地址
 
 #endif

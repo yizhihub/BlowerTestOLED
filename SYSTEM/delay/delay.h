@@ -41,8 +41,8 @@
 ////////////////////////////////////////////////////////////////////////////////// 
 	 
 void delay_init(void);
-void msDelay(u16 nms);
-void usDelay(u32 nus);
+void ms_Delay(u16 nms);
+void us_Delay(u32 nus);
 
 #endif
 
