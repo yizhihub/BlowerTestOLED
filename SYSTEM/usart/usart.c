@@ -53,8 +53,8 @@ _sys_exit(int x)
 //重定义fputc函数 
 int fputc(int ch, FILE *f)
 {      
-    while((USART1->SR&0X40)==0);//循环发送,直到发送完毕   
-    USART1->DR = (u8) ch;      
+    while((USART2->SR&0X40)==0);//循环发送,直到发送完毕   
+    USART2->DR = (u8) ch;      
     return ch;
 }
 #endif 
@@ -171,7 +171,7 @@ void USART1_IRQHandler(void)                    //串口1中断服务程序
             }
             USART_RX_BUF[GucUartRxIndex++] = Res; 
             
-            if (GucUartRxIndex == 10) {
+            if (GucUartRxIndex == 8) {
                 GbUartRxDone = 1;                    /* 生产完毕 */ 
             }
         }
@@ -202,7 +202,7 @@ void USART2_IRQHandler(void)                    //串口1中断服务程序
             }
             USART_RX_BUF[GucUartRxIndex++] = Res; 
             
-            if (GucUartRxIndex == 10) {
+            if (GucUartRxIndex == 8) {
                 GbUartRxDone = 1;                    /* 生产完毕 */ 
             }
         }
@@ -222,18 +222,18 @@ void USART2_IRQHandler(void)                    //串口1中断服务程序
 ** Modified by:             
 ** Modified date:           
 *********************************************************************************************************/
-void  uartDrvPutChar (INT8U ucData)
+void  uartDrvPutChar (USART_TypeDef* USARTx, INT8U ucData)
 {
-    while (!USART_GetFlagStatus(USART1, USART_FLAG_TXE)) {
+    while (!USART_GetFlagStatus(USARTx, USART_FLAG_TXE)) {
     }
-    USART_SendData(USART1, (uint16_t)ucData);
+    USART_SendData(USARTx, (uint16_t)ucData);
 
 }
 
-INT8U uartDrvPutBuf(const INT8U *pucTxBuff, INT32U ulTxSize) 
+INT8U uartDrvPutBuf(USART_TypeDef* USARTx, const INT8U *pucTxBuff, INT32U ulTxSize) 
 {
     while(ulTxSize--) {
-        uartDrvPutChar(*pucTxBuff++);
+        uartDrvPutChar(USARTx, *pucTxBuff++);
     }
     return 0;      
 }

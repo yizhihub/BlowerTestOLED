@@ -393,7 +393,7 @@ void  msDelay(uint32_t  ulDly)
     volatile uint32_t i= 0, j = 0;
     for(j = 0; j < ulDly; j++) 
     {
-        for (i = 0; i < (9226); ++i)
+        for (i = 0; i < (5000); ++i)
         {
             __asm("NOP"); /* delay */
         }

@@ -13,6 +13,8 @@ INT8U  ucArrayIndex = 0;
 INT32U uleRpmFilterSum = 0;
 INT16S sPwmDutyValue  = 0;
 
+uchar UartCMDSpeedTxBuf[10] = {0x2B, 0xC1, 0x3F};
+
 uchar MenuItem[7][16];
 uchar MenuValue[7][16];
 
@@ -28,7 +30,7 @@ uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
     KEYn_e eKeyPress;
                                     /* edit the selection */
     uchar  ii;
-     
+                  
     hwInit();
     uart_init(115200); 
     ledInit();
@@ -60,8 +62,7 @@ uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
     PwmCtrl.tPwmCtrl.sPwmLowDur  = 100;
     PwmCtrl.tPwmCtrl.sPwmHighVal = 999;
     PwmCtrl.tPwmCtrl.sPwmHighDur = 100;
-    PwmCtrl.tPwmCtrl.usPwmModulo  = 2500;
-    PwmCtrl.tPwmCtrl.ePwmProtocol = 0;
+    PwmCtrl.tPwmCtrl.ePwmProtocol = 2;
     PWM_KeyCallback(4);
     PWM_KeyCallback(0);
     PWM_KeyCallback(2);
@@ -80,10 +81,10 @@ uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
         
         if (GbUartRxDone) {
             
-              if (GucUartRxIndex == 10) {
-                  ucTemperature = USART_RX_BUF[0];
-                  ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];
-                  uleRpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[8];
+              if (GucUartRxIndex == 8) {
+//                  ucTemperature = USART_RX_BUF[0];
+//                  ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];
+                  uleRpm        = USART_RX_BUF[3] << 8 | USART_RX_BUF[4];
                   GbUartRxDone =  0;                                     /* 消费完成 */ 
                   LED0 = !LED0;
                   uleRpmFilterSum += uleRpm;
@@ -95,7 +96,7 @@ uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
                      
 //                      OLED_PutNumber(0 , OLED_LINE1, ulVoltage10Mv / 100.0f, 2, 1, "V",  8, 1);
 //                      OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "℃", 8, 1);
-                      OLED_PutNum   (64,  OLED_LINE3, uleRpmFilter * 100,     5,          8, 1);
+                      OLED_PutNum   (64,  OLED_LINE3,  uleRpmFilter,     5,          8, 1);
                   }
               } else {
                   GbUartRxDone = 0;                                     /* 直接消费完成 */
@@ -105,7 +106,7 @@ uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
         
         if (GulPrintTimeCnt > 10) { 
             GulPrintTimeCnt = 0;
-        
+            uartDrvPutBuf(USART2, UartCMDSpeedTxBuf, 3);                    /* ask for speed frame */ 
             if(bScreenIDFlg)
             {
                 bScreenIDFlg=0;

@@ -34,8 +34,8 @@ extern u8  GbUartRxDone;         		//接收状态标记
 extern u8  GucUartRxIndex;
 //如果想串口中断接收，请不要注释以下宏定义
 void uart_init(u32 bound);
-void  uartDrvPutChar (INT8U ucData);
-INT8U uartDrvPutBuf(const INT8U *pucTxBuff, INT32U ulTxSize);
+void  uartDrvPutChar (USART_TypeDef* USARTx, INT8U ucData);
+INT8U uartDrvPutBuf(USART_TypeDef* USARTx, const INT8U *pucTxBuff, INT32U ulTxSize);
 
 #endif
 
