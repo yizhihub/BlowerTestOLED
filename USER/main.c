@@ -58,7 +58,7 @@ uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
        
     PwmCtrl.tPwmCtrl.sPwmLowVal  = 500;
     PwmCtrl.tPwmCtrl.sPwmLowDur  = 100;
-    PwmCtrl.tPwmCtrl.sPwmHighVal = 1000;
+    PwmCtrl.tPwmCtrl.sPwmHighVal = 999;
     PwmCtrl.tPwmCtrl.sPwmHighDur = 100;
     PwmCtrl.tPwmCtrl.usPwmModulo  = 2500;
     PwmCtrl.tPwmCtrl.ePwmProtocol = 0;
@@ -110,16 +110,16 @@ uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
             {
                 bScreenIDFlg=0;
                 
-                strcpy((char*)MenuItem[0], "谷值");
-                strcpy((char*)MenuItem[1], "时间");
-                strcpy((char*)MenuItem[2], "峰值");
-                strcpy((char*)MenuItem[3], "时间");
-                strcpy((char*)MenuItem[4], "协议");
+                strcpy((char*)MenuItem[0], "H:");
+                strcpy((char*)MenuItem[1], "T:");
+                strcpy((char*)MenuItem[2], "L:");
+                strcpy((char*)MenuItem[3], "T:");
+                strcpy((char*)MenuItem[4], "P:");
                 
-                sprintf((char*)MenuValue[0], "%04d", PwmCtrl.tPwmCtrl.sPwmLowVal);
-                sprintf((char*)MenuValue[1] ,"%04d", PwmCtrl.tPwmCtrl.sPwmLowDur);
-                sprintf((char*)MenuValue[2] ,"%04d", PwmCtrl.tPwmCtrl.sPwmHighVal);
-                sprintf((char*)MenuValue[3] ,"%04d", PwmCtrl.tPwmCtrl.sPwmHighDur);
+                sprintf((char*)MenuValue[0], "%4.1f%%", PwmCtrl.tPwmCtrl.sPwmLowVal / 10.0f);
+                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmLowDur * 10);
+                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl.tPwmCtrl.sPwmHighVal / 10.0f);
+                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmHighDur * 10);
                 sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl.tPwmCtrl.ePwmProtocol);
                 
                 for(ii=0; ii < ucEntrysEveryScreen; ii++)                                          
@@ -136,19 +136,19 @@ uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
 
                 for(ii=0; ii < ucEntrysEveryScreen; ii++)                                          
                 {
-                      HMI_Draw(ii, 32, MenuValue[ucFirstItem+ii], 1); // 正常显示
+                      HMI_Draw(ii, 16, MenuValue[ucFirstItem+ii], 1); // 正常显示
                 }
             }
             
             if (bScreenValFlg)
             {
                 bScreenValFlg = 0;
-                sprintf((char*)MenuValue[0], "%04d", PwmCtrl.tPwmCtrl.sPwmLowVal);
-                sprintf((char*)MenuValue[1] ,"%04d", PwmCtrl.tPwmCtrl.sPwmLowDur);
-                sprintf((char*)MenuValue[2] ,"%04d", PwmCtrl.tPwmCtrl.sPwmHighVal);
-                sprintf((char*)MenuValue[3] ,"%04d", PwmCtrl.tPwmCtrl.sPwmHighDur);
+                sprintf((char*)MenuValue[0], "%4.1f%%", PwmCtrl.tPwmCtrl.sPwmLowVal / 10.0f);
+                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmLowDur*10);
+                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl.tPwmCtrl.sPwmHighVal / 10.0f);
+                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmHighDur*10);
                 sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl.tPwmCtrl.ePwmProtocol);
-                HMI_Draw(ucNowItem, 32, MenuValue[ucFirstItem+ucNowItem], 0);
+                HMI_Draw(ucNowItem, 16, MenuValue[ucFirstItem+ucNowItem], 0);
 
             }
             eKeyPress = ADKey_Check();
@@ -191,7 +191,7 @@ uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
                 } else {
                     PwmCtrl.sPwmCtrl[ucNowItem] += (GsEc11CntCCW + 1);
                     GsEc11CntCCW                 = 0;
-                    if (PwmCtrl.sPwmCtrl[ucNowItem] > 1000) PwmCtrl.sPwmCtrl[ucNowItem] = 1000;
+                    if (PwmCtrl.sPwmCtrl[ucNowItem] > 999) PwmCtrl.sPwmCtrl[ucNowItem] = 999;
                     bScreenValFlg = 1;
                     PWM_KeyCallback(ucNowItem);
                 }
@@ -224,7 +224,7 @@ uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
             else 
                 sPwmDutyValue = 0;
             
-            if (sPwmDutyValue >= 1000)  sPwmDutyValue = 1000;
+            if (sPwmDutyValue >= 999)  sPwmDutyValue = 999;
             if (sPwmDutyValue <= 0)      sPwmDutyValue = 0;
             
             
