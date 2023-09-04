@@ -171,7 +171,7 @@ void USART1_IRQHandler(void)                    //串口1中断服务程序
             }
             USART_RX_BUF[GucUartRxIndex++] = Res; 
             
-            if (GucUartRxIndex == 8) {
+            if (GucUartRxIndex == 10) {
                 GbUartRxDone = 1;                    /* 生产完毕 */ 
             }
         }
@@ -202,7 +202,7 @@ void USART2_IRQHandler(void)                    //串口1中断服务程序
             }
             USART_RX_BUF[GucUartRxIndex++] = Res; 
             
-            if (GucUartRxIndex == 8) {
+            if (GucUartRxIndex == 10) {
                 GbUartRxDone = 1;                    /* 生产完毕 */ 
             }
         }
