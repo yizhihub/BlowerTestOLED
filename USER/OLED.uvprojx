@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Output\Objects\</OutputDirectory>
-          <OutputName>BlowerTester210808A</OutputName>
+          <OutputName>BlowerTestOLED.out</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -354,7 +354,7 @@
             <useXO>0</useXO>
             <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--cpreproc</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
@@ -407,6 +407,11 @@
               <FileName>bHMI.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\bHMI.c</FilePath>
+            </File>
+            <File>
+              <FileName>aUpperCom.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\aUpperCom.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -470,14 +475,14 @@
               </FileOption>
             </File>
             <File>
-              <FileName>bBraoAdc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\HARDWARE\Pressurer\bBraoAdc.h</FilePath>
-            </File>
-            <File>
               <FileName>bBraoAdc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\Pressurer\bBraoAdc.c</FilePath>
+            </File>
+            <File>
+              <FileName>bBraoAdc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\HARDWARE\Pressurer\bBraoAdc.h</FilePath>
             </File>
             <File>
               <FileName>bINA226.c</FileName>
@@ -618,6 +623,51 @@
               <FileName>IIC.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Source\Component\IIC.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ZMC_Component</GroupName>
+          <Files>
+            <File>
+              <FileName>ZMC_Filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\ZMC_Filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>ZMC_Filter.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ZMC_Filter.h</FilePath>
+            </File>
+            <File>
+              <FileName>ZMC_QMath_CM.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\ZMC_QMath_CM.s</FilePath>
+            </File>
+            <File>
+              <FileName>ZMC_QMath_Cfg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ZMC_QMath_Cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>ZMC_Asm_Mac.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ZMC_Asm_Mac.h</FilePath>
+            </File>
+            <File>
+              <FileName>ZMC_QMath.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ZMC_QMath.h</FilePath>
+            </File>
+            <File>
+              <FileName>ZMC_Rc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ZMC_Rc.h</FilePath>
+            </File>
+            <File>
+              <FileName>ZMC_Pid.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\ZMC_Pid.h</FilePath>
             </File>
           </Files>
         </Group>

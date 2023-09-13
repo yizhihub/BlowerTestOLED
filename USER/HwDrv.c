@@ -24,7 +24,8 @@
 #include "HwDrv.h"
 
 
-INT32U GulEscReoprtT1msCnt = 0;
+INT32U  GulEscReoprtT1msCnt = 0;
+INT32U  GulLapReoprtT1msCnt = 0;
 INT32U GulPrintTimeCnt = 0;
 INT32U GulEc11IntervalCnt = 0;
 
@@ -140,6 +141,7 @@ void hwdDisable(void)
       
           TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
           GulEscReoprtT1msCnt++;
+          GulLapReoprtT1msCnt++;
           GulPrintTimeCnt++;
           GulEc11IntervalCnt++;
 //          LED1_TOG();

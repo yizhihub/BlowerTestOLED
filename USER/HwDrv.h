@@ -29,6 +29,7 @@ extern "C" {
 #endif
 
 extern INT32U GulEscReoprtT1msCnt;
+extern INT32U GulLapReoprtT1msCnt;
 extern INT32U GulPrintTimeCnt;
 extern INT32U GulEc11IntervalCnt;
 

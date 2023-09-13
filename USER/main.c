@@ -36,6 +36,12 @@
     Menu_Display();
     while(1) 
     {
+        uint16_t lVelSetRpm;
+//          if (USART1->SR & USART_SR_RXNE)     {   //  USART_GetFlagStatus    #define USART_FLAG_RXNE                      ((uint16_t)0x0020) 
+//              ucData = USART1->DR;
+//              while((USART1->SR & USART_SR_TXE) == 0);
+//              USART1->DR = ucData;
+//          }
 //        static float t = 3.14f;
 //        OLED_ShowChar(36,52,t,12,1);//显示ASCII字符    
 //        OLED_ShowNum(94,52,t,3,12);    //显示ASCII字符的码值    

@@ -23,8 +23,9 @@
 #include "bBraoAdc.h"
 #include "bINA226.h"
 #include "usart.h"
-
 #include "stm32f10x_tim.h"
+
+#include "aUpperCom.h"
 //#include "string.h"
 //#include "oled.h"
 //#include "key.h"
@@ -214,11 +215,11 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
         {
           if(NowItem!=ii)
           {
-            OLED_PutStr(0,(ii*2+2),MenuItem[FirstItem+ii], 8, 1);
+            OLED_PutStr(0,(ii*2+2),MenuItem[FirstItem+ii], 8, 1);     // 正常显示 
           }
           else
           {
-            OLED_PutStr(0,(ii*2+2),MenuItem[FirstItem+ii], 8, 1);
+            OLED_PutStr(0,(ii*2+2),MenuItem[FirstItem+ii], 8, 0);      // 高亮显示 
           }
         }
         
@@ -236,16 +237,22 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
       // msDelay(10);
       // if(ADKey_Scan(1)==KEY_UP)
       //while(ADKey_Scan()==KEY_UP);
-      if(NowItem > 0)         NowItem-=1; // 当前屏 的条目
-      else if(FirstItem >0)  FirstItem-=1; // 当前屏 的第一个条目 
-      else  // 已到达所有菜单的第一个条目
+      if(num>2)
       {
-        NowItem=3-title;
-        FirstItem=num-4+title;
+          if(NowItem > 0)         NowItem-=1; // 当前屏 的条目
+          else if(FirstItem >0)  FirstItem-=1; // 当前屏 的第一个条目 
+          else  // 已到达所有菜单的第一个条目
+          {
+            NowItem=3-title;
+            FirstItem=num-4+title;
+          }
+      }
+      else   // 菜单总条目<=2
+      {
+        if(NowItem>0)   NowItem-=1;
+//        else            NowItem =0;
       }
       screen_flag=1;
-      
-      
     }
     if(EC11_CCW == key)
     {
@@ -266,7 +273,8 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
       }
       else   // 菜单总条目<=2
       {
-        if(NowItem<1)   NowItem+=1;  //  
+        if(NowItem< (num - 1))   NowItem+=1;
+//        else            NowItem =0;
       }
       screen_flag=1;
       
@@ -582,26 +590,24 @@ void BlowerBiLTest(uint8_t ucX)
     while(ADKey_Scan()!=KEY_CANCEL)
     {
        if (GbUartRxDone) {
-            
-              if (GucUartRxIndex == 10) {
-                  ucTemperature = USART_RX_BUF[0];
-                  ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];
-                  uleRpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[8];
-                  GbUartRxDone =  0;                                     /* 消费完成 */ 
-                  LED0 = !LED0;
-                  uleRpmFilterSum += uleRpm;
-                  ucArrayIndex++;
-                  if (ucArrayIndex == 10) {
-                      ucArrayIndex = 0;
-                      uleRpmFilter = uleRpmFilterSum / 10;
-                      uleRpmFilterSum = 0;                      
-                     /* OLED_PutNumber(0 , OLED_LINE1, ulVoltage10Mv / 100.0f, 2, 1, "V",  8, 1);
-                        OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "℃", 8, 1); */
-                      OLED_PutNum(64,  OLED_LINE3,  uleRpmFilter * 100,     5,          8, 1);
-                  }
-              } else {
-                  GbUartRxDone = 0;                                     /* 直接消费完成 */
+          if (GucUartRxIndex == 10) {
+              ucTemperature = USART_RX_BUF[0];
+              ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];
+              uleRpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[8];
+              GbUartRxDone =  0;                                     /* 消费完成 */ 
+              uleRpmFilterSum += uleRpm;
+              ucArrayIndex++;
+              if (ucArrayIndex == 10) {
+                  ucArrayIndex = 0;
+                  uleRpmFilter = uleRpmFilterSum / 10;
+                  uleRpmFilterSum = 0;                      
+                 /* OLED_PutNumber(0 , OLED_LINE1, ulVoltage10Mv / 100.0f, 2, 1, "V",  8, 1);
+                    OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "℃", 8, 1); */
+                  OLED_PutNum(64,  OLED_LINE3,  uleRpmFilter * 100,     5,          8, 1);
               }
+          } else {
+              GbUartRxDone = 0;                                     /* 直接消费完成 */
+          }
         }
         if (GulPrintTimeCnt > 10) { 
             GulPrintTimeCnt = 0;
@@ -976,27 +982,28 @@ void Menu_Display(void)
 
     while(1)  // 根菜单
     { 
-        strcpy((char*)MenuItem[0] ,"1:BlowerBiLTest ");
-        strcpy((char*)MenuItem[1] ,"2:BlowerC60Test ");
+        strcpy((char*)MenuItem[0] ,"1:CXD 7054      ");
+        strcpy((char*)MenuItem[1] ,"2:BOREASA C68S1 ");
         strcpy((char*)MenuItem[2] ,"3:INV266Test    ");
         strcpy((char*)MenuItem[3] ,"4:BraoCalibrate ");
-        strcpy((char*)MenuItem[4] ,"5:Todolist_Test ");
+        strcpy((char*)MenuItem[4] ,"5:UpperComCtrl  ");
         strcpy((char*)MenuItem[5] ,"6:Todolist_Test ");
         strcpy((char*)MenuItem[6] ,"7:Todolist_Test ");
-
-            
-            
-        sel=DrawMenu(MenuItem,6,0); 
+        
+        OLED_Fill(0x00);
+        OLED_Print(8, OLED_LINE0, "请选择风机型号？", 1);
+        
+        sel=DrawMenu(MenuItem,2,1); 
         msDelay(5);
         usDelay(5);
         switch (sel)  {
             
         case 0:
-            BlowerBiLTest(sel);
+            UpperComCXD7054(sel);//BlowerBiLTest(sel);
             break;
 
         case 1:
-            BlowerC60Test(sel);
+            UpperComBFC68S1(sel); //BlowerC60Test(sel);
             break;
 
         case 2:
@@ -1008,7 +1015,7 @@ void Menu_Display(void)
             break;
 
         case 4:
-            IR_Test();
+            UpperComCXD7054(sel);
             break;
         case 5:
             ADKey_Cali();
