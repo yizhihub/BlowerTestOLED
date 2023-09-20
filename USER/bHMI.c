@@ -45,6 +45,43 @@ static uchar NowItem;
 static uchar FirstItem;
 PWM_CTRL_UNION PwmCtrl;
 
+extern const char GscBuildDate[];
+extern const char GscSoftRelease[];
+extern const char GscBuildTIme[];
+extern float _GfRsINA226;
+
+/**
+********************************************************************************************************
+** @nameis VersionInfoDisp
+** @effect Display Version info.
+** @import ulPeriodHz    : pwm frequency，unit Hz 
+**         ulDeadtimeNs  : dead time，unit ns
+**         pfuncIntFault : PWM Fault interrupter func. pointer, input (void *)0  if disable.
+**         pfuncIntPwm   : PWM Periodic Interrupter callback func. pointer, if noone insert (void *)0
+** @export none
+** @return none
+** @create yizhi 2023.06.24
+** @modify 
+*********************************************************************************************************/
+void VersionInfoDisp(void)
+{
+    OLED_Fill(0x00);
+    
+    while (ADKey_Scan() != KEY_CANCEL) {
+        
+        OLED_PutChar(10, OLED_LINE0, 'V', 8, 1);
+        OLED_PutChar(18, OLED_LINE0, GscSoftRelease[0], 8, 1);
+        OLED_PutChar(26, OLED_LINE0, '.', 8, 1);
+        OLED_PutChar(34, OLED_LINE0, GscSoftRelease[1], 8, 1);
+        OLED_PutChar(42, OLED_LINE0, '.', 8, 1);
+        OLED_PutChar(50, OLED_LINE0, GscSoftRelease[2], 8, 1);
+        OLED_PutStr(10, OLED_LINE2, (uint8_t *)GscBuildDate,   6, 1);
+        OLED_PutStr(10, OLED_LINE2 + LINE_HEIGHT / 2, (uint8_t *)GscBuildTIme,   6, 1);
+        OLED_PutNumber(10, OLED_LINE3, _GfRsINA226, 2, 3, "mΩ", 6, 1);
+        msDelay(20);
+    }
+}
+
 /**
 ********************************************************************************************************
 ** @nameis HMI_Draw
@@ -284,6 +321,13 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
       //while(ADKey_Scan()==KEY_IN); 
       usDelay(10);
       return  FirstItem+NowItem;
+    }
+    if(KEY_UP == key)
+    {
+      //while(ADKey_Scan()==KEY_BACK) 
+        usDelay(10);
+        VersionInfoDisp();   //  display the version info.
+        return 0xff;
     }
     if(KEY_CANCEL == key)
     {
@@ -982,28 +1026,31 @@ void Menu_Display(void)
 
     while(1)  // 根菜单
     { 
-        strcpy((char*)MenuItem[0] ,"1:CXD 7054      ");
-        strcpy((char*)MenuItem[1] ,"2:BOREASA C68S1 ");
+        strcpy((char*)MenuItem[0] ,"1:BlowerBiLTest ");     //BlowerBiLTest 
+        strcpy((char*)MenuItem[1] ,"2:BlowerC60Test ");    //BlowerC60Test
         strcpy((char*)MenuItem[2] ,"3:INV266Test    ");
         strcpy((char*)MenuItem[3] ,"4:BraoCalibrate ");
-        strcpy((char*)MenuItem[4] ,"5:UpperComCtrl  ");
-        strcpy((char*)MenuItem[5] ,"6:Todolist_Test ");
-        strcpy((char*)MenuItem[6] ,"7:Todolist_Test ");
+        strcpy((char*)MenuItem[4] ,"5:CXD 7054      ");
+        strcpy((char*)MenuItem[5] ,"6:BOREASA C68S1 ");
+        strcpy((char*)MenuItem[6] ,"7:Nidec TF029B  ");
+        strcpy((char*)MenuItem[7] ,"8:Todolist_Test ");
         
         OLED_Fill(0x00);
-        OLED_Print(8, OLED_LINE0, "请选择风机型号？", 1);
+//        OLED_Print(8, OLED_LINE0, "请选择风机型号？", 1);
         
-        sel=DrawMenu(MenuItem,2,1); 
+        sel=DrawMenu(MenuItem,7,0); 
         msDelay(5);
         usDelay(5);
         switch (sel)  {
             
         case 0:
-            UpperComCXD7054(sel);//BlowerBiLTest(sel);
+            BlowerBiLTest(sel);
+            //UpperComCXD7054(sel);
             break;
 
         case 1:
-            UpperComBFC68S1(sel); //BlowerC60Test(sel);
+            BlowerC60Test(sel);
+           //UpperComBFC68S1(sel);
             break;
 
         case 2:
@@ -1018,10 +1065,11 @@ void Menu_Display(void)
             UpperComCXD7054(sel);
             break;
         case 5:
-            ADKey_Cali();
+            UpperComBFC68S1(sel);
             break;
 
         case 6:
+            UpperComNidecTF029B(sel);
             break;
 
          default :

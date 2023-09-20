@@ -24,6 +24,9 @@
 #include "bKey.h"
 #include "bOLED.h"
 
+
+float _GfRsINA226 = 0;
+
 /**
 ********************************************************************************************************
 ** @nameis INA226_init
@@ -36,6 +39,7 @@
 *********************************************************************************************************/
 void INA226_Init(void)
 {
+    uint16_t  ulCalibrateValue = 0;
 #ifdef GD32F30X_HD
     /*
      * KEY GPIO配置
@@ -50,7 +54,11 @@ void INA226_Init(void)
 #endif
     i2cInit();
     INA226_Config(0x4727);                                        /*  64 averages 1.1ms convert time */
-    Write_Calibrt_reg(CALIBRT_VALUE);
+    
+    _GfRsINA226      = RSHUNT;
+    ulCalibrateValue = (5120.0f / (CURRENT_LSB * _GfRsINA226));
+    
+    Write_Calibrt_reg(ulCalibrateValue);
 }
 
 /**

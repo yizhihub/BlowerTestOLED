@@ -17,14 +17,13 @@
  * 下面校准数值按照电子负载输出2A，进行校准，比如设置电子负载输入2A，INA226显示2.01A，则此处应填写 1.005f 
  *  // #1 1.011    #2 1.008   #3  1.009  #4 1.0035 
  */
-#define RSHUNT              (10 * 1.009)  //mΩ  
+#define RSHUNT              (10 * 1.008f)  //mΩ  
 #define MAX_CURRENT         (15) //A
 
 #define VSHUNT_LSB          (2.5)   //μV
 #define VBUS_LSB            (1.25)  //mV
 #define CURRENT_LSB         (1)  //(MAX_CURRENT*1000) >> 15 mA
 #define POWER_LSB           (CURRENT_LSB*25)
-#define CALIBRT_VALUE       (5120/(CURRENT_LSB*RSHUNT))
 
 void INA226_Init(void);
 void INA226_Config(uint16_t config_data);
