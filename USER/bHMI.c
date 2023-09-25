@@ -238,11 +238,11 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
         {
           if(NowItem!=ii)
           {
-            OLED_PutStr(0,(ii*2+title*2),MenuItem[FirstItem+ii], 8, 1); // 正常显示
+            OLED_Print(0,(ii*2+title*2),MenuItem[FirstItem+ii], 1); // 正常显示
           }
           else
           {
-            OLED_PutStr(0,(ii*2+title*2),MenuItem[FirstItem+ii], 8, 0); // 高亮显示
+            OLED_Print(0,(ii*2+title*2),MenuItem[FirstItem+ii], 0); // 高亮显示
           }
         }
       }
@@ -252,11 +252,11 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
         {
           if(NowItem!=ii)
           {
-            OLED_PutStr(0,(ii*2+2),MenuItem[FirstItem+ii], 8, 1);     // 正常显示 
+            OLED_Print(0,(ii*2+2),MenuItem[FirstItem+ii], 1);     // 正常显示 
           }
           else
           {
-            OLED_PutStr(0,(ii*2+2),MenuItem[FirstItem+ii], 8, 0);      // 高亮显示 
+            OLED_Print(0,(ii*2+2),MenuItem[FirstItem+ii], 0);      // 高亮显示 
           }
         }
         
@@ -1026,8 +1026,8 @@ void Menu_Display(void)
 
     while(1)  // 根菜单
     { 
-        strcpy((char*)MenuItem[0] ,"1:BlowerBiLTest ");     //BlowerBiLTest 
-        strcpy((char*)MenuItem[1] ,"2:BlowerC60Test ");    //BlowerC60Test
+        strcpy((char*)MenuItem[0] ,"1:定电压        ");     //BlowerBiLTest 
+        strcpy((char*)MenuItem[1] ,"2:定转速        ");    //BlowerC60Test
         strcpy((char*)MenuItem[2] ,"3:INV266Test    ");
         strcpy((char*)MenuItem[3] ,"4:BraoCalibrate ");
         strcpy((char*)MenuItem[4] ,"5:CXD 7054      ");
@@ -1037,8 +1037,9 @@ void Menu_Display(void)
         
         OLED_Fill(0x00);
 //        OLED_Print(8, OLED_LINE0, "请选择风机型号？", 1);
+        OLED_Print(8, OLED_LINE0, "风机测试平台", 1);
         
-        sel=DrawMenu(MenuItem,7,0); 
+        sel=DrawMenu(MenuItem,2,0); 
         msDelay(5);
         usDelay(5);
         switch (sel)  {
@@ -1049,7 +1050,7 @@ void Menu_Display(void)
             break;
 
         case 1:
-            BlowerC60Test(sel);
+            UpperComBFC68S1(sel); //BlowerC60Test(sel);
            //UpperComBFC68S1(sel);
             break;
 

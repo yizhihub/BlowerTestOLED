@@ -316,8 +316,9 @@ void UpperComBFC68S1(uint8_t ucX)
     
     OLED_Fill(0x00);
     OLED_Print(0, OLED_LINE0, (uint8_t *)"BOREASA C68S1:", 1);
-    OLED_PutStr(120, OLED_LINE3, (uint8_t *)"RPM", 8, 1);
-//    OLED_PutStr(0, OLED_LINE3, (uint8_t *)"UperCmd:", 8, 1);    
+    OLED_PutStr(120, OLED_LINE3, (uint8_t *)"R", 8, 1);
+    OLED_PutStr(0,  OLED_LINE3 + LINE_HEIGHT / 2,  "-----", 6, 1);
+//    OLED_PutStr(0, OLED_LINE3, (uint8_t *)"UperCmd:", 8, 1);
 
 
     /*
@@ -366,7 +367,7 @@ void UpperComBFC68S1(uint8_t ucX)
                 ZMC_PID(&_GtPidVelOne, lEscEleRpmFilter)
                 sPwmDutyValue = _GtPidVelOne.qOut;
                 OLED_PutNum(0,  OLED_LINE3, sPwmDutyValue, 5, 6, 1);
-                OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  (INT32S)(_GtLowPassVelOneX.qOut + 0.5f) * (100 / GucPolePairs) ,     5,          6, 1);
+                OLED_PutNum(80,  OLED_LINE3,  (INT32S)(_GtLowPassVelOneX.qOut + 0.5f) * (100 / GucPolePairs) ,     5,          8, 1);
                 
              } else {
                 GbUartRxDone = 0;                                     /* 直接消费完成 */
@@ -404,7 +405,7 @@ void UpperComBFC68S1(uint8_t ucX)
                 default:
                     break;
                 }
-                OLED_PutNum(80,  OLED_LINE3,  _GlSetMecVelRpm,     5,          8, 1);
+                OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  _GlSetMecVelRpm,     5,          6, 1);
             } else {
                     
                 GbUartRxDone1 = 0;                                     /* 直接消费完成 */
@@ -436,7 +437,7 @@ void UpperComBFC68S1(uint8_t ucX)
                         OLED_PutNumber(72, OLED_LINE2, sCur / 1000.0f, 2, 3, "A", 8, 1);
                     }
                 } else {
-                    OLED_PutNum(40, OLED_LINE3,   GusRxFromPcCnt, 5, 6, 1);                  /* 显示电脑数据帧计数 */
+                    OLED_PutNum(40, OLED_LINE3,   GusRxFromPcCnt,              5, 6, 1);                  /* 显示电脑数据帧计数 */
                     OLED_PutNum(40, OLED_LINE3 + LINE_HEIGHT / 2, GusTx2PcCnt, 5, 6, 1);     /* 显示发送计数       */
                 }
                 eKeyPress = ADKey_Check();
@@ -446,7 +447,7 @@ void UpperComBFC68S1(uint8_t ucX)
                      _GlSetMecVelRpm -= (GsEc11CntCW + 1) << 5;
                      if (_GlSetMecVelRpm < 0l)  _GlSetMecVelRpm = 0l;
                      GsEc11CntCW                  = 0;
-                     OLED_PutNum(80,  OLED_LINE3,  _GlSetMecVelRpm,     5,          8, 1);
+                     OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  _GlSetMecVelRpm,     5,          6, 1);
                      bScreenValFlg = 1;
                      break;
                 
@@ -454,7 +455,7 @@ void UpperComBFC68S1(uint8_t ucX)
                     _GlSetMecVelRpm += (GsEc11CntCCW + 1) << 5;
                      if (_GlSetMecVelRpm > 32000l)  _GlSetMecVelRpm = 32000l; 
                     GsEc11CntCCW                 = 0;
-                    OLED_PutNum(80,  OLED_LINE3,  _GlSetMecVelRpm,     5,          8, 1);
+                    OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  _GlSetMecVelRpm,     5,          6, 1);
                     bScreenValFlg = 1;
                     break;
                 
