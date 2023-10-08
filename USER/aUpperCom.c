@@ -453,7 +453,7 @@ void UpperComBFC68S1(uint8_t ucX)
                 
                 case EC11_CCW:
                     _GlSetMecVelRpm += (GsEc11CntCCW + 1) << 5;
-                     if (_GlSetMecVelRpm > 32000l)  _GlSetMecVelRpm = 32000l; 
+                     if (_GlSetMecVelRpm > 45000l)  _GlSetMecVelRpm = 45000l; 
                     GsEc11CntCCW                 = 0;
                     OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  _GlSetMecVelRpm,     5,          6, 1);
                     bScreenValFlg = 1;

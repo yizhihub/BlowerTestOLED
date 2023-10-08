@@ -1026,8 +1026,8 @@ void Menu_Display(void)
 
     while(1)  // 根菜单
     { 
-        strcpy((char*)MenuItem[0] ,"1:定电压        ");     //BlowerBiLTest 
-        strcpy((char*)MenuItem[1] ,"2:定转速        ");    //BlowerC60Test
+        strcpy((char*)MenuItem[0] ,"1:BlowerBiLTest ");     //BlowerBiLTest 
+        strcpy((char*)MenuItem[1] ,"2:BlowerC60Test ");    //BlowerC60Test
         strcpy((char*)MenuItem[2] ,"3:INV266Test    ");
         strcpy((char*)MenuItem[3] ,"4:BraoCalibrate ");
         strcpy((char*)MenuItem[4] ,"5:CXD 7054      ");
@@ -1037,9 +1037,8 @@ void Menu_Display(void)
         
         OLED_Fill(0x00);
 //        OLED_Print(8, OLED_LINE0, "请选择风机型号？", 1);
-        OLED_Print(8, OLED_LINE0, "风机测试平台", 1);
         
-        sel=DrawMenu(MenuItem,2,0); 
+        sel=DrawMenu(MenuItem,7,0); 
         msDelay(5);
         usDelay(5);
         switch (sel)  {
@@ -1050,7 +1049,7 @@ void Menu_Display(void)
             break;
 
         case 1:
-            UpperComBFC68S1(sel); //BlowerC60Test(sel);
+            BlowerC60Test(sel);
            //UpperComBFC68S1(sel);
             break;
 
