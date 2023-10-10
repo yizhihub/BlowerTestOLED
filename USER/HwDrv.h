@@ -62,6 +62,14 @@ extern INT32U GulEc11IntervalCnt;
 #define LED_SPECIAL_3   5                                               /* LED模式，闪三次，常灭1秒     */
 #define LED_MODE_OFF    6                                               /* LED模式, 常灭               */
 
+#define PWM_DUTY_SETA(usX)   {    \
+    TIM_SetCompare1(TIM3, usX);   \
+    TIM_SetCompare1(TIM1, usX);   \
+    }
+
+//#define BOARD_V1
+#define BORAD_V2
+
 void  ledInit(void);
 void  hwInit(void);
 void  timInit(void);

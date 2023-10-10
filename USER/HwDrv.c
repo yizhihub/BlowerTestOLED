@@ -329,8 +329,9 @@ void timInit(void)
 
     /* 
      *  初始化一个定时器，用于产生一个400Hz， 1ms~2ms的脉冲信号 
+     *  测试平台V1.0 使用PA6、测试平台V2.0使用PA8
      */
-    
+    /* PA6 TIM3*/
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
     
@@ -346,7 +347,7 @@ void timInit(void)
     tTimeBaseConfig.TIM_Prescaler     = 72 - 1;                 /* Time Unit  1000ns                         */
     tTimeBaseConfig.TIM_ClockDivision = TIM_CKD_DIV1;
     tTimeBaseConfig.TIM_CounterMode   = TIM_CounterMode_Up; 
-    tTimeBaseConfig.TIM_Period        = 2500; 
+    tTimeBaseConfig.TIM_Period        = 2500 - 1; 
     tTimeBaseConfig.TIM_RepetitionCounter = 0;                  
     TIM_TimeBaseInit(TIM3, &tTimeBaseConfig);
     TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE);
@@ -357,19 +358,53 @@ void timInit(void)
     TIM_OC1Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM3 OC2
 
     TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);  //使能TIM3在CCR2上的预装载寄存器
-   
+    TIM_SetCompare1(TIM3,1000);
+
+    /*PA8  TIM1*/
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+    
+    GPIO_InitStructure.GPIO_Pin    = GPIO_Pin_8;
+    GPIO_InitStructure.GPIO_Speed  = GPIO_Speed_50MHz;                
+    GPIO_InitStructure.GPIO_Mode   = GPIO_Mode_AF_PP; 
+    GPIO_Init(GPIOA,&GPIO_InitStructure);
+    
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+    TIM_DeInit(TIM1);
+    TIM_InternalClockConfig(TIM1);
+
+    tTimeBaseConfig.TIM_Prescaler     = 72 - 1;                 /* Time Unit  1000ns                         */
+    tTimeBaseConfig.TIM_ClockDivision = TIM_CKD_DIV1;
+    tTimeBaseConfig.TIM_CounterMode   = TIM_CounterMode_Up; 
+    tTimeBaseConfig.TIM_Period        = 2500 - 1; 
+    tTimeBaseConfig.TIM_RepetitionCounter = 0;                  
+    TIM_TimeBaseInit(TIM1, &tTimeBaseConfig);
+    TIM_ITConfig(TIM1,TIM_IT_Update,ENABLE);
+    
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //选择定时器模式:TIM脉冲宽度调制模式2
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //比较输出使能
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; //输出极性:TIM输出比较极性高
+    TIM_OC1Init(TIM1, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM3 OC2
+
+    TIM_CtrlPWMOutputs(TIM1,ENABLE);          //MOE 主输出使能
+    TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);  //使能TIM3在CCR2上的预装载寄存器
+//    TIM_ARRPreloadConfig(TIM1, ENABLE); //使能TIMx在ARR上的预装载寄存器
+    
+    TIM_SetCompare1(TIM1,1000);
+    
+    /* 开启所有定时器 */
     TIM_Cmd(TIM2, ENABLE);
     TIM_Cmd(TIM3, ENABLE);
+    TIM_Cmd(TIM1, ENABLE);
     
-    
-    TIM_SetCompare1(TIM3,1000);
-    
-    NVIC_DisableIRQ(TIM2_IRQn);
-    NVIC_SetPriority(TIM2_IRQn, 1);                                 /* 设置中断优先级               */
-    NVIC_EnableIRQ(TIM2_IRQn);
     NVIC_DisableIRQ(TIM3_IRQn);
     NVIC_SetPriority(TIM3_IRQn, 2);                                 /* 设置中断优先级               */
     NVIC_EnableIRQ(TIM3_IRQn);
+ 
+    NVIC_DisableIRQ(TIM2_IRQn);
+    NVIC_SetPriority(TIM2_IRQn, 1);                                 /* 设置中断优先级               */
+    NVIC_EnableIRQ(TIM2_IRQn);
+
 }
 
 /**
