@@ -807,12 +807,12 @@ void BlowerBiLTest(uint8_t ucX)
                 PwmCtrl.tPwmCtrl.sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmWidthDflt;
             }
 //            OLED_PutNum(0,  OLED_LINE3, 1234,  4, 8, 1);
-            TIM_SetCompare1(TIM3, PwmCtrl.tPwmCtrl.sPwmDutyValue);
+            PWM_DUTY_SETA(PwmCtrl.tPwmCtrl.sPwmDutyValue);
         }
     }
     GsEc11CntCW = 0;
     GsEc11CntCCW = 0;
-    TIM_SetCompare1(TIM3, PwmCtrl.tPwmCtrl.sPwmWidthDflt);
+    PWM_DUTY_SETA(PwmCtrl.tPwmCtrl.sPwmWidthDflt);
 }
 
 
@@ -1002,7 +1002,7 @@ void BlowerC60Test(uint8_t ucX)
                 PwmCtrl.tPwmCtrl.sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmWidthDflt;
             }
             
-            TIM_SetCompare1(TIM3, PwmCtrl.tPwmCtrl.sPwmDutyValue);
+            PWM_DUTY_SETA(PwmCtrl.tPwmCtrl.sPwmDutyValue);
         }
     }
     GsEc11CntCW = 0;

@@ -92,17 +92,21 @@ void BraoAdcInit(void)
      
     /* 
      * GD32F103CY   ESC            board ： PA2(ADC01_IN2) is the NTC sample channel 
-     * GD32F303RET6 BlowerTestOLED board :  PB0(ADC01_IN8) is the Pressure sampler channel 
+     * GD32F303RET6 BlowerTestOLED board :  PB0(ADC01_IN8) is the Pressure sampler channel   
+     * GD32F303RET6 BlowerTestOLED board :  PC5(ADC01_IN15) is the pressuer sampler channel
      */
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2 | RCC_APB2Periph_GPIOB, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2 | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC, ENABLE);
     RCC_ADCCLKConfig(RCC_PCLK2_Div8);
     
     GPIO_InitStruct.GPIO_Pin  = GPIO_Pin_0; 
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN;
     GPIO_Init(GPIOB, &GPIO_InitStruct);
+    GPIO_InitStruct.GPIO_Pin  = GPIO_Pin_5; 
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN;
+    GPIO_Init(GPIOC, &GPIO_InitStruct);
     
     /* 
-     *  ADC1, ADC2 恢复默认值.  added by ;lgd  Aug23 再次发现之前我多一句这样的初始化 
+     *  ADC1, ADC2 恢复默认值. 这个恢复默认操作必须否则每次上电校准值不一致。
      */
     ADC_DeInit(ADC2); 
 
@@ -121,7 +125,7 @@ void BraoAdcInit(void)
     ADC_StartCalibration(ADC2); 
     while(ADC_GetCalibrationStatus(ADC2)); 
     
-    ADC_RegularChannelConfig(ADC2, ADC_Channel_8, 1, ADC_SampleTime_239Cycles5);
+    ADC_RegularChannelConfig(ADC2, ADC_Channel_15, 1, ADC_SampleTime_239Cycles5);
 }
 
 /**

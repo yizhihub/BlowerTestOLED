@@ -114,8 +114,9 @@ void UpperComCXD7054(uint8_t ucX)
     
     OLED_Fill(0x00);
     OLED_Print(0, OLED_LINE0, (uint8_t *)"CXD 7054:", 1);
-    OLED_PutStr(120, OLED_LINE3, (uint8_t *)"RPM", 8, 1);
-//    OLED_PutStr(0, OLED_LINE3, (uint8_t *)"UperCmd:", 8, 1);    
+    OLED_PutStr(120, OLED_LINE3, (uint8_t *)"R", 8, 1);
+    OLED_PutStr(0,  OLED_LINE3 + LINE_HEIGHT / 2,  "-----", 6, 1);
+//    OLED_PutStr(0, OLED_LINE3, (uint8_t *)"UperCmd:", 8, 1);  
 
 
     /*
@@ -164,7 +165,7 @@ void UpperComCXD7054(uint8_t ucX)
                 ZMC_PID(&_GtPidVelOne, lEscEleRpmFilter)
                 sPwmDutyValue = _GtPidVelOne.qOut;
                 OLED_PutNum(0,  OLED_LINE3, sPwmDutyValue, 5, 6, 1);
-                OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  (INT32S)(_GtLowPassVelOneX.qOut + 0.5f) * (100 / GucPolePairs) ,     5,          6, 1);
+                OLED_PutNum(80,  OLED_LINE3,  (INT32S)(_GtLowPassVelOneX.qOut + 0.5f) * (100 / GucPolePairs) ,     5,          8, 1);
                 
              } else {
                 GbUartRxDone = 0;                                     /* 直接消费完成 */
@@ -202,7 +203,7 @@ void UpperComCXD7054(uint8_t ucX)
                 default:
                     break;
                 }
-                OLED_PutNum(80,  OLED_LINE3,  _GlSetMecVelRpm,     5,          8, 1);
+                OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  _GlSetMecVelRpm,     5,          6, 1);
             } else {
                     
                 GbUartRxDone1 = 0;                                     /* 直接消费完成 */
@@ -244,15 +245,15 @@ void UpperComCXD7054(uint8_t ucX)
                      _GlSetMecVelRpm -= (GsEc11CntCW + 1) << 5;
                      if (_GlSetMecVelRpm < 0l)  _GlSetMecVelRpm = 0l;
                      GsEc11CntCW                  = 0;
-                     OLED_PutNum(80,  OLED_LINE3,  _GlSetMecVelRpm,     5,          8, 1);
+                     OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  _GlSetMecVelRpm,     5,          6, 1);
                      bScreenValFlg = 1;
                      break;
                 
                 case EC11_CCW:
                     _GlSetMecVelRpm += (GsEc11CntCCW + 1) << 5;
-                     if (_GlSetMecVelRpm > 32000l)  _GlSetMecVelRpm = 32000l; 
+                     if (_GlSetMecVelRpm > 45000l)  _GlSetMecVelRpm = 45000l; 
                     GsEc11CntCCW                 = 0;
-                    OLED_PutNum(80,  OLED_LINE3,  _GlSetMecVelRpm,     5,          8, 1);
+                    OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  _GlSetMecVelRpm,     5,          6, 1);
                     bScreenValFlg = 1;
                     break;
                 
@@ -272,13 +273,13 @@ void UpperComCXD7054(uint8_t ucX)
     //            OLED_PutNum(0,  OLED_LINE3, 1234,  4, 8, 1);
                 if (sPwmDutyValue >= 999)  sPwmDutyValue = 999;
                 if (sPwmDutyValue <= 0)      sPwmDutyValue = 0;
-                TIM_SetCompare1(TIM3, 1000 + sPwmDutyValue);
+                PWM_DUTY_SETA(1000 + sPwmDutyValue);
             }
         }
     }
     GsEc11CntCW = 0;
     GsEc11CntCCW = 0;
-    TIM_SetCompare1(TIM3, 1000);
+    PWM_DUTY_SETA(1000);
 }
 /**
 ********************************************************************************************************
@@ -475,13 +476,13 @@ void UpperComBFC68S1(uint8_t ucX)
     //            OLED_PutNum(0,  OLED_LINE3, 1234,  4, 8, 1);
                 if (sPwmDutyValue >= 999)  sPwmDutyValue = 999;
                 if (sPwmDutyValue <= 0)      sPwmDutyValue = 0;
-                TIM_SetCompare1(TIM3, 1000 + sPwmDutyValue);
+                PWM_DUTY_SETA(1000 + sPwmDutyValue);
             }
         }
     }
     GsEc11CntCW = 0;
     GsEc11CntCCW = 0;
-    TIM_SetCompare1(TIM3, 1000);
+    PWM_DUTY_SETA(1000);
 }
 
 /**
@@ -678,12 +679,12 @@ void UpperComNidecTF029B(uint8_t ucX)
     //            OLED_PutNum(0,  OLED_LINE3, 1234,  4, 8, 1);
                 if (sPwmDutyValue >= 999)  sPwmDutyValue = 999;
                 if (sPwmDutyValue <= 0)      sPwmDutyValue = 0;
-                TIM_SetCompare1(TIM3, 1000 + sPwmDutyValue);
+                PWM_DUTY_SETA(1000 + sPwmDutyValue);
             }
         }
     }
     GsEc11CntCW = 0;
     GsEc11CntCCW = 0;
-    TIM_SetCompare1(TIM3, 1000);
+    PWM_DUTY_SETA(1000);
 }
 /* end of file */
