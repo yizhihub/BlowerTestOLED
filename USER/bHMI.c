@@ -23,6 +23,8 @@
 #include "bBraoAdc.h"
 #include "bINA226.h"
 #include "usart.h"
+#include "bFLASH.h"
+#include "bSDP800.H"
 #include "stm32f10x_tim.h"
 
 #include "aUpperCom.h"
@@ -40,15 +42,14 @@
 //#include "DS1302.h" 
 //#include "isr.h"
 
-static uchar MenuItem[7][17];
+static uchar MenuItem[9][17];
 static uchar NowItem;
 static uchar FirstItem;
-PWM_CTRL_UNION PwmCtrl;
+PWM_CTRL_UNION PwmCtrl1, PwmCtrl2;
 
 extern const char GscBuildDate[];
 extern const char GscSoftRelease[];
 extern const char GscBuildTIme[];
-extern float _GfRsINA226;
 
 /**
 ********************************************************************************************************
@@ -77,7 +78,7 @@ void VersionInfoDisp(void)
         OLED_PutChar(50, OLED_LINE0, GscSoftRelease[2], 8, 1);
         OLED_PutStr(10, OLED_LINE2, (uint8_t *)GscBuildDate,   6, 1);
         OLED_PutStr(10, OLED_LINE2 + LINE_HEIGHT / 2, (uint8_t *)GscBuildTIme,   6, 1);
-        OLED_PutNumber(10, OLED_LINE3, _GfRsINA226, 2, 3, "mΩ", 6, 1);
+        OLED_PutNumber(10, OLED_LINE3, RSHUNT*_GfRsINA226.fdata, 2, 3, "mΩ", 6, 1);
         msDelay(20);
     }
 }
@@ -173,35 +174,35 @@ void PWM_ProtoUpdate(PWM_CTRL_DATA * ptPwm, INT16U ePwmProto)
 ** @create yizhi 2023.8.1
 ** @modify 
 *********************************************************************************************************/
-void PWM_KeyCallback(uint8_t ucItem)
+void PWM_KeyCallback(PWM_CTRL_UNION *PwmCtrl, uint8_t ucItem)
 {
    if (ucItem == 4) {
-        if (PwmCtrl.sPwmCtrl[4] > 2)  PwmCtrl.sPwmCtrl[4] = 2;  /* max ePwmProtocol is 2 */
-        PWM_ProtoUpdate(&PwmCtrl.tPwmCtrl, PwmCtrl.tPwmCtrl.ePwmProtocol);
-        TIM_SetAutoreload(TIM3, PwmCtrl.tPwmCtrl.usPwmModulo);
-        PwmCtrl.tPwmCtrl.sPwmWidthSetting = PwmCtrl.tPwmCtrl.sPwmWidthDflt;
+        if (PwmCtrl->sPwmCtrl[4] > 2)  PwmCtrl->sPwmCtrl[4] = 2;  /* max ePwmProtocol is 2 */
+        PWM_ProtoUpdate(&PwmCtrl->tPwmCtrl, PwmCtrl->tPwmCtrl.ePwmProtocol);
+        TIM_SetAutoreload(TIM3, PwmCtrl->tPwmCtrl.usPwmModulo);
+        PwmCtrl->tPwmCtrl.sPwmWidthSetting = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
     } else if (ucItem == 0) {
-        if (PwmCtrl.tPwmCtrl.ePwmProtocol == 1) {                                            /* 协议为 01 时 直接脉宽赋值 */
-            PwmCtrl.tPwmCtrl.sPwmWidthLow  = PwmCtrl.tPwmCtrl.sPwmLowVal;
+        if (PwmCtrl->tPwmCtrl.ePwmProtocol == 1) {                                            /* 协议为 01 时 直接脉宽赋值 */
+            PwmCtrl->tPwmCtrl.sPwmWidthLow  = PwmCtrl->tPwmCtrl.sPwmLowVal;
         } else {                                                                             /* 协议为 00 或者 02 时采用百分比方式 */ 
-            PwmCtrl.tPwmCtrl.sPwmWidthLow  = PwmCtrl.tPwmCtrl.sPwmWidthStart +              /* PwmCtrl.tPwmCtrl.sPwmLowVal;从调整占空比百分比修改为直接调整脉冲宽度 */
-                                             PwmCtrl.tPwmCtrl.sPwmWidthRange * PwmCtrl.tPwmCtrl.sPwmLowVal /  1000u;
-            if (PwmCtrl.tPwmCtrl.sPwmWidthLow < PwmCtrl.tPwmCtrl.sPwmWidthDflt)
-                PwmCtrl.tPwmCtrl.sPwmWidthLow = PwmCtrl.tPwmCtrl.sPwmWidthDflt;
+            PwmCtrl->tPwmCtrl.sPwmWidthLow  = PwmCtrl->tPwmCtrl.sPwmWidthStart +              /* PwmCtrl->tPwmCtrl.sPwmLowVal;从调整占空比百分比修改为直接调整脉冲宽度 */
+                                             PwmCtrl->tPwmCtrl.sPwmWidthRange * PwmCtrl->tPwmCtrl.sPwmLowVal /  1000u;
+            if (PwmCtrl->tPwmCtrl.sPwmWidthLow < PwmCtrl->tPwmCtrl.sPwmWidthDflt)
+                PwmCtrl->tPwmCtrl.sPwmWidthLow = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
        }
-       PwmCtrl.tPwmCtrl.sPwmWidthSetting =  PwmCtrl.tPwmCtrl.sPwmWidthLow;
+       PwmCtrl->tPwmCtrl.sPwmWidthSetting =  PwmCtrl->tPwmCtrl.sPwmWidthLow;
     } else if (ucItem == 2) {
-        if (PwmCtrl.tPwmCtrl.ePwmProtocol == 1) {                                           /* 协议为 01 时 直接脉宽赋值*/ 
-            PwmCtrl.tPwmCtrl.sPwmWidthHigh = PwmCtrl.tPwmCtrl.sPwmHighVal;
+        if (PwmCtrl->tPwmCtrl.ePwmProtocol == 1) {                                           /* 协议为 01 时 直接脉宽赋值*/ 
+            PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmHighVal;
         } else {                                                                            /* 协议为 00 或者 02 时 */ 
-            PwmCtrl.tPwmCtrl.sPwmWidthHigh = PwmCtrl.tPwmCtrl.sPwmWidthStart +              /* PwmCtrl.tPwmCtrl.sPwmHighVal;从调整占空比百分比修改为直接调整脉冲宽度 */
-                                             PwmCtrl.tPwmCtrl.sPwmWidthRange * PwmCtrl.tPwmCtrl.sPwmHighVal /  1000u; 
-            if (PwmCtrl.tPwmCtrl.sPwmWidthHigh < PwmCtrl.tPwmCtrl.sPwmWidthDflt)
-                PwmCtrl.tPwmCtrl.sPwmWidthHigh = PwmCtrl.tPwmCtrl.sPwmWidthDflt;
+            PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmWidthStart +              /* PwmCtrl->tPwmCtrl.sPwmHighVal;从调整占空比百分比修改为直接调整脉冲宽度 */
+                                             PwmCtrl->tPwmCtrl.sPwmWidthRange * PwmCtrl->tPwmCtrl.sPwmHighVal /  1000u; 
+            if (PwmCtrl->tPwmCtrl.sPwmWidthHigh < PwmCtrl->tPwmCtrl.sPwmWidthDflt)
+                PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
         }
-        PwmCtrl.tPwmCtrl.sPwmWidthSetting =  PwmCtrl.tPwmCtrl.sPwmWidthHigh;
+        PwmCtrl->tPwmCtrl.sPwmWidthSetting =  PwmCtrl->tPwmCtrl.sPwmWidthHigh;
     } else {
-        PwmCtrl.tPwmCtrl.sPwmWidthSetting = PwmCtrl.tPwmCtrl.sPwmWidthDflt;
+        PwmCtrl->tPwmCtrl.sPwmWidthSetting = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
     }
 }
 /***********************************************************************************************************
@@ -621,15 +622,18 @@ void BlowerBiLTest(uint8_t ucX)
     
     OLED_Fill(0x00);
     OLED_PutStr(104, OLED_LINE3, (uint8_t *)"RPM", 8, 1); 
-    
-    PwmCtrl.tPwmCtrl.sPwmLowVal  = 500;
-    PwmCtrl.tPwmCtrl.sPwmLowDur  = 100;
-    PwmCtrl.tPwmCtrl.sPwmHighVal = 999;
-    PwmCtrl.tPwmCtrl.sPwmHighDur = 100;
-    PwmCtrl.tPwmCtrl.ePwmProtocol = 0;
-    PWM_KeyCallback(4);                         /* stimulate Press KeyProtocol KeyUP KEYDOWN update related value */
-    PWM_KeyCallback(0);
-    PWM_KeyCallback(2);
+    FLASH_Read(PWMCTRL1_ADDR, (uint16_t*)PwmCtrl1.sPwmCtrl, 6);
+    if ((uint8_t)PwmCtrl1.sPwmCtrl[0] == 0xFF && (uint8_t)(PwmCtrl1.sPwmCtrl[0]>>8) == 0xFF)
+    {
+        PwmCtrl1.tPwmCtrl.sPwmLowVal  = 500;
+        PwmCtrl1.tPwmCtrl.sPwmLowDur  = 100;
+        PwmCtrl1.tPwmCtrl.sPwmHighVal = 999;
+        PwmCtrl1.tPwmCtrl.sPwmHighDur = 100;
+        PwmCtrl1.tPwmCtrl.ePwmProtocol = 0;
+    }
+    PWM_KeyCallback(&PwmCtrl1, 4);                         /* stimulate Press KeyProtocol KeyUP KEYDOWN update related value */
+    PWM_KeyCallback(&PwmCtrl1, 0);
+    PWM_KeyCallback(&PwmCtrl1, 2);
     
     while(ADKey_Scan()!=KEY_CANCEL)
     {
@@ -678,11 +682,11 @@ void BlowerBiLTest(uint8_t ucX)
                 strcpy((char*)MenuItem[3], "T:");
                 strcpy((char*)MenuItem[4], "P:");
                 
-                sprintf((char*)MenuValue[0], "%4.1f%%", PwmCtrl.tPwmCtrl.sPwmLowVal / 10.0f);
-                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmLowDur * 10);
-                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl.tPwmCtrl.sPwmHighVal / 10.0f);
-                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmHighDur * 10);
-                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl.tPwmCtrl.ePwmProtocol);
+                sprintf((char*)MenuValue[0], "%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmLowVal / 10.0f);
+                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmLowDur * 10);
+                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmHighVal / 10.0f);
+                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmHighDur * 10);
+                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl1.tPwmCtrl.ePwmProtocol);
                 
                 for(ii=0; ii < ucEntrysEveryScreen; ii++)                                          
                 {
@@ -705,11 +709,11 @@ void BlowerBiLTest(uint8_t ucX)
             if (bScreenValFlg)
             {
                 bScreenValFlg = 0;
-                sprintf((char*)MenuValue[0], "%4.1f%%", PwmCtrl.tPwmCtrl.sPwmLowVal / 10.0f);
-                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmLowDur*10);
-                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl.tPwmCtrl.sPwmHighVal / 10.0f);
-                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmHighDur*10);
-                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl.tPwmCtrl.ePwmProtocol);
+                sprintf((char*)MenuValue[0], "%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmLowVal / 10.0f);
+                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmLowDur*10);
+                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmHighVal / 10.0f);
+                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmHighDur*10);
+                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl1.tPwmCtrl.ePwmProtocol);
                 HMI_Draw(ucNowItem, 16, MenuValue[ucFirstItem+ucNowItem], 0); // 反黑显示
 
             }
@@ -730,11 +734,11 @@ void BlowerBiLTest(uint8_t ucX)
                     bScreenIDFlg = 1;
                     bPwmRunning  = 0;                                   /* once rotate stop pwm run */ 
                 } else {
-                    PwmCtrl.sPwmCtrl[ucNowItem] -= (GsEc11CntCW + 1);
+                    PwmCtrl1.sPwmCtrl[ucNowItem] -= (GsEc11CntCW + 1);
                     GsEc11CntCW                  = 0;
-                   if (PwmCtrl.sPwmCtrl[ucNowItem] < 0) PwmCtrl.sPwmCtrl[ucNowItem] = 0;
+                   if (PwmCtrl1.sPwmCtrl[ucNowItem] < 0) PwmCtrl1.sPwmCtrl[ucNowItem] = 0;
                     bScreenValFlg = 1;
-                    PWM_KeyCallback(ucNowItem);
+                    PWM_KeyCallback(&PwmCtrl1, ucNowItem);
                 }
                 break;
             
@@ -751,11 +755,11 @@ void BlowerBiLTest(uint8_t ucX)
                     bScreenIDFlg = 1;
                     bPwmRunning  = 0;                                   /* once rotate stop pwm run */ 
                 } else {
-                    PwmCtrl.sPwmCtrl[ucNowItem] += (GsEc11CntCCW + 1);
+                    PwmCtrl1.sPwmCtrl[ucNowItem] += (GsEc11CntCCW + 1);
                     GsEc11CntCCW                 = 0;
-                    if (PwmCtrl.sPwmCtrl[ucNowItem] > 999) PwmCtrl.sPwmCtrl[ucNowItem] = 999;
+                    if (PwmCtrl1.sPwmCtrl[ucNowItem] > 999) PwmCtrl1.sPwmCtrl[ucNowItem] = 999;
                     bScreenValFlg = 1;
-                    PWM_KeyCallback(ucNowItem);
+                    PWM_KeyCallback(&PwmCtrl1, ucNowItem);
                 }
                 break;
             
@@ -770,7 +774,7 @@ void BlowerBiLTest(uint8_t ucX)
                     bEdit_flag = !bEdit_flag;
                     (bEdit_flag == 1) ? (bScreenValFlg = 1) : (bScreenIDFlg = 1);
                     if (bEdit_flag) 
-                        PWM_KeyCallback(ucNowItem);
+                        PWM_KeyCallback(&PwmCtrl1, ucNowItem);
                 } else {                                                /* enter adjust mode when Pwm is Runing, just like press KEY_CANCEL */
                     bPwmRunning = !bPwmRunning;
                     bScreenIDFlg = 1;
@@ -782,7 +786,7 @@ void BlowerBiLTest(uint8_t ucX)
                 break;
             }
             if (bEdit_flag)
-                sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmHighVal;
+                sPwmDutyValue = PwmCtrl1.tPwmCtrl.sPwmHighVal;
             else 
                 sPwmDutyValue = 0;
             
@@ -791,28 +795,29 @@ void BlowerBiLTest(uint8_t ucX)
             
             
             if (bPwmRunning)  {
-                PwmCtrl.tPwmCtrl.usTime10msCnt++;
-                if (PwmCtrl.tPwmCtrl.usTime10msCnt < PwmCtrl.tPwmCtrl.sPwmLowDur) {
-                    PwmCtrl.tPwmCtrl.sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmWidthLow;
-                } else if (PwmCtrl.tPwmCtrl.usTime10msCnt < (PwmCtrl.tPwmCtrl.sPwmLowDur + PwmCtrl.tPwmCtrl.sPwmHighDur)) {
-                    PwmCtrl.tPwmCtrl.sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmWidthHigh;
+                PwmCtrl1.tPwmCtrl.usTime10msCnt++;
+                if (PwmCtrl1.tPwmCtrl.usTime10msCnt < PwmCtrl1.tPwmCtrl.sPwmLowDur) {
+                    PwmCtrl1.tPwmCtrl.sPwmDutyValue = PwmCtrl1.tPwmCtrl.sPwmWidthLow;
+                } else if (PwmCtrl1.tPwmCtrl.usTime10msCnt < (PwmCtrl1.tPwmCtrl.sPwmLowDur + PwmCtrl1.tPwmCtrl.sPwmHighDur)) {
+                    PwmCtrl1.tPwmCtrl.sPwmDutyValue = PwmCtrl1.tPwmCtrl.sPwmWidthHigh;
                 } else {
-                    PwmCtrl.tPwmCtrl.usTime10msCnt = 0;
+                    PwmCtrl1.tPwmCtrl.usTime10msCnt = 0;
                 }
             } else if (bEdit_flag){                                                    /* set pwm output to default value when not run  */
-                PwmCtrl.tPwmCtrl.usTime10msCnt = 0;
-                PwmCtrl.tPwmCtrl.sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmWidthSetting;
+                PwmCtrl1.tPwmCtrl.usTime10msCnt = 0;
+                PwmCtrl1.tPwmCtrl.sPwmDutyValue = PwmCtrl1.tPwmCtrl.sPwmWidthSetting;
             } else {
-                PwmCtrl.tPwmCtrl.usTime10msCnt = 0;
-                PwmCtrl.tPwmCtrl.sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmWidthDflt;
+                PwmCtrl1.tPwmCtrl.usTime10msCnt = 0;
+                PwmCtrl1.tPwmCtrl.sPwmDutyValue = PwmCtrl1.tPwmCtrl.sPwmWidthDflt;
             }
 //            OLED_PutNum(0,  OLED_LINE3, 1234,  4, 8, 1);
-            PWM_DUTY_SETA(PwmCtrl.tPwmCtrl.sPwmDutyValue);
+            PWM_DUTY_SETA(PwmCtrl1.tPwmCtrl.sPwmDutyValue);
         }
     }
+    FLASH_Write(PWMCTRL1_ADDR, (uint16_t*)PwmCtrl1.sPwmCtrl, 6);
     GsEc11CntCW = 0;
     GsEc11CntCCW = 0;
-    TIM_SetCompare1(TIM3, PwmCtrl.tPwmCtrl.sPwmWidthDflt);
+    PWM_DUTY_SETA(PwmCtrl1.tPwmCtrl.sPwmWidthDflt);
 }
 
 
@@ -835,15 +840,18 @@ void BlowerC60Test(uint8_t ucX)
     OLED_Fill(0x00);
     OLED_Print(22,  OLED_LINE0, (uint8_t *)"C60测试", 1);
     OLED_PutStr(104, OLED_LINE3, (uint8_t *)"RPM", 8, 1);
-    
-    PwmCtrl.tPwmCtrl.sPwmLowVal  = 1001;
-    PwmCtrl.tPwmCtrl.sPwmLowDur  = 100;
-    PwmCtrl.tPwmCtrl.sPwmHighVal = 2001;
-    PwmCtrl.tPwmCtrl.sPwmHighDur = 100;
-    PwmCtrl.tPwmCtrl.ePwmProtocol = 1;
-    PWM_KeyCallback(4); /// stimulate Press KeyProtocol KeyUP KEYDOWN update related value 
-    PWM_KeyCallback(0);
-    PWM_KeyCallback(2);
+    FLASH_Read(PWMCTRL2_ADDR, (uint16_t*)PwmCtrl2.sPwmCtrl, 6);
+    if ((uint8_t)PwmCtrl2.sPwmCtrl[0] == 0xFF && (uint8_t)(PwmCtrl2.sPwmCtrl[0]>>8) == 0xFF)
+    {
+        PwmCtrl2.tPwmCtrl.sPwmLowVal  = 1001;
+        PwmCtrl2.tPwmCtrl.sPwmLowDur  = 100;
+        PwmCtrl2.tPwmCtrl.sPwmHighVal = 2001;
+        PwmCtrl2.tPwmCtrl.sPwmHighDur = 100;
+        PwmCtrl2.tPwmCtrl.ePwmProtocol = 1;
+    }
+    PWM_KeyCallback(&PwmCtrl2, 4); /// stimulate Press KeyProtocol KeyUP KEYDOWN update related value 
+    PWM_KeyCallback(&PwmCtrl2, 0);
+    PWM_KeyCallback(&PwmCtrl2, 2);
     
     
     while(ADKey_Scan()!=KEY_CANCEL)
@@ -873,11 +881,11 @@ void BlowerC60Test(uint8_t ucX)
                 strcpy((char*)MenuItem[3], "T:");
                 strcpy((char*)MenuItem[4], "P:");
                 
-                sprintf((char*)MenuValue[0], "%04dus", PwmCtrl.tPwmCtrl.sPwmWidthLow);
-                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmLowDur * 10);
-                sprintf((char*)MenuValue[2] ,"%04dus", PwmCtrl.tPwmCtrl.sPwmWidthHigh);
-                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmHighDur * 10);
-                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl.tPwmCtrl.ePwmProtocol);
+                sprintf((char*)MenuValue[0], "%04dus", PwmCtrl2.tPwmCtrl.sPwmWidthLow);
+                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl2.tPwmCtrl.sPwmLowDur * 10);
+                sprintf((char*)MenuValue[2] ,"%04dus", PwmCtrl2.tPwmCtrl.sPwmWidthHigh);
+                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl2.tPwmCtrl.sPwmHighDur * 10);
+                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl2.tPwmCtrl.ePwmProtocol);
                 
                 for(ii=0; ii < ucEntrysEveryScreen; ii++)                                          
                 {
@@ -900,11 +908,11 @@ void BlowerC60Test(uint8_t ucX)
             if (bScreenValFlg)
             {
                 bScreenValFlg = 0;
-                sprintf((char*)MenuValue[0], "%04dus", PwmCtrl.tPwmCtrl.sPwmWidthLow);
-                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmLowDur * 10);
-                sprintf((char*)MenuValue[2] ,"%04dus", PwmCtrl.tPwmCtrl.sPwmWidthHigh);
-                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl.tPwmCtrl.sPwmHighDur * 10);
-                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl.tPwmCtrl.ePwmProtocol);
+                sprintf((char*)MenuValue[0], "%04dus", PwmCtrl2.tPwmCtrl.sPwmWidthLow);
+                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl2.tPwmCtrl.sPwmLowDur * 10);
+                sprintf((char*)MenuValue[2] ,"%04dus", PwmCtrl2.tPwmCtrl.sPwmWidthHigh);
+                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl2.tPwmCtrl.sPwmHighDur * 10);
+                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl2.tPwmCtrl.ePwmProtocol);
                 HMI_Draw(ucNowItem, 16, MenuValue[ucFirstItem+ucNowItem], 0); // 反黑显示
 
             }
@@ -925,11 +933,11 @@ void BlowerC60Test(uint8_t ucX)
                     bScreenIDFlg = 1;
                     bPwmRunning  = 0;                                   /* once rotate stop pwm run */ 
                 } else {
-                    PwmCtrl.sPwmCtrl[ucNowItem] -= (GsEc11CntCW + 1);
+                    PwmCtrl2.sPwmCtrl[ucNowItem] -= (GsEc11CntCW + 1);
                     GsEc11CntCW                  = 0;
-                   if (PwmCtrl.sPwmCtrl[ucNowItem] < 0) PwmCtrl.sPwmCtrl[ucNowItem] = 0;
+                   if (PwmCtrl2.sPwmCtrl[ucNowItem] < 0) PwmCtrl2.sPwmCtrl[ucNowItem] = 0;
                     bScreenValFlg = 1;
-                    PWM_KeyCallback(ucNowItem);
+                    PWM_KeyCallback(&PwmCtrl2, ucNowItem);
                 }
                 break;
             
@@ -946,11 +954,11 @@ void BlowerC60Test(uint8_t ucX)
                     bScreenIDFlg = 1;
                     bPwmRunning  = 0;                                   /* once rotate stop pwm run */ 
                 } else {
-                    PwmCtrl.sPwmCtrl[ucNowItem] += (GsEc11CntCCW + 1);
+                    PwmCtrl2.sPwmCtrl[ucNowItem] += (GsEc11CntCCW + 1);
                     GsEc11CntCCW                 = 0;
-                    if (PwmCtrl.sPwmCtrl[ucNowItem] > 3000) PwmCtrl.sPwmCtrl[ucNowItem] = 3000;
+                    if (PwmCtrl2.sPwmCtrl[ucNowItem] > 3000) PwmCtrl2.sPwmCtrl[ucNowItem] = 3000;
                     bScreenValFlg = 1;
-                    PWM_KeyCallback(ucNowItem);
+                    PWM_KeyCallback(&PwmCtrl2, ucNowItem);
                 }
                 break;
             
@@ -965,7 +973,7 @@ void BlowerC60Test(uint8_t ucX)
                     bEdit_flag = !bEdit_flag;
                     (bEdit_flag == 1) ? (bScreenValFlg = 1) : (bScreenIDFlg = 1);
                     if (bEdit_flag) 
-                        PWM_KeyCallback(ucNowItem);
+                        PWM_KeyCallback(&PwmCtrl2, ucNowItem);
                 } else {                                                /* enter adjust mode when Pwm is Runing, just like press KEY_CANCEL */
                     bPwmRunning = !bPwmRunning;
                     bScreenIDFlg = 1;
@@ -977,7 +985,7 @@ void BlowerC60Test(uint8_t ucX)
                 break;
             }
             if (bEdit_flag)
-                sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmHighVal;
+                sPwmDutyValue = PwmCtrl2.tPwmCtrl.sPwmHighVal;
             else 
                 sPwmDutyValue = 0;
             
@@ -986,25 +994,26 @@ void BlowerC60Test(uint8_t ucX)
             
             
             if (bPwmRunning)  {
-                PwmCtrl.tPwmCtrl.usTime10msCnt++;
-                if (PwmCtrl.tPwmCtrl.usTime10msCnt < PwmCtrl.tPwmCtrl.sPwmLowDur) {
-                    PwmCtrl.tPwmCtrl.sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmWidthLow;
-                } else if (PwmCtrl.tPwmCtrl.usTime10msCnt < (PwmCtrl.tPwmCtrl.sPwmLowDur + PwmCtrl.tPwmCtrl.sPwmHighDur)) {
-                    PwmCtrl.tPwmCtrl.sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmWidthHigh;
+                PwmCtrl2.tPwmCtrl.usTime10msCnt++;
+                if (PwmCtrl2.tPwmCtrl.usTime10msCnt < PwmCtrl2.tPwmCtrl.sPwmLowDur) {
+                    PwmCtrl2.tPwmCtrl.sPwmDutyValue = PwmCtrl2.tPwmCtrl.sPwmWidthLow;
+                } else if (PwmCtrl2.tPwmCtrl.usTime10msCnt < (PwmCtrl2.tPwmCtrl.sPwmLowDur + PwmCtrl2.tPwmCtrl.sPwmHighDur)) {
+                    PwmCtrl2.tPwmCtrl.sPwmDutyValue = PwmCtrl2.tPwmCtrl.sPwmWidthHigh;
                 } else {
-                    PwmCtrl.tPwmCtrl.usTime10msCnt = 0;
+                    PwmCtrl2.tPwmCtrl.usTime10msCnt = 0;
                 }
             } else if (bEdit_flag){                                                    /* set pwm output to default value when not run  */
-                PwmCtrl.tPwmCtrl.usTime10msCnt = 0;
-                PwmCtrl.tPwmCtrl.sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmWidthSetting;
+                PwmCtrl2.tPwmCtrl.usTime10msCnt = 0;
+                PwmCtrl2.tPwmCtrl.sPwmDutyValue = PwmCtrl2.tPwmCtrl.sPwmWidthSetting;
             } else {
-                PwmCtrl.tPwmCtrl.usTime10msCnt = 0;
-                PwmCtrl.tPwmCtrl.sPwmDutyValue = PwmCtrl.tPwmCtrl.sPwmWidthDflt;
+                PwmCtrl2.tPwmCtrl.usTime10msCnt = 0;
+                PwmCtrl2.tPwmCtrl.sPwmDutyValue = PwmCtrl2.tPwmCtrl.sPwmWidthDflt;
             }
             
-            PWM_DUTY_SETA(PwmCtrl.tPwmCtrl.sPwmDutyValue);
+            PWM_DUTY_SETA(PwmCtrl2.tPwmCtrl.sPwmDutyValue);
         }
     }
+    FLASH_Write(PWMCTRL2_ADDR, (uint16_t*)PwmCtrl2.sPwmCtrl, 6);
     GsEc11CntCW = 0;
     GsEc11CntCCW = 0;
 }
@@ -1026,19 +1035,20 @@ void Menu_Display(void)
 
     while(1)  // 根菜单
     { 
-        strcpy((char*)MenuItem[0] ,"1:BlowerBiLTest ");     //BlowerBiLTest 
+        strcpy((char*)MenuItem[0] ,"1:BlowerC65Test ");     //BlowerBiLTest 
         strcpy((char*)MenuItem[1] ,"2:BlowerC60Test ");    //BlowerC60Test
-        strcpy((char*)MenuItem[2] ,"3:INV266Test    ");
-        strcpy((char*)MenuItem[3] ,"4:BraoCalibrate ");
-        strcpy((char*)MenuItem[4] ,"5:CXD 7054      ");
-        strcpy((char*)MenuItem[5] ,"6:BOREASA C68S1 ");
-        strcpy((char*)MenuItem[6] ,"7:Nidec TF029B  ");
-        strcpy((char*)MenuItem[7] ,"8:Todolist_Test ");
+        strcpy((char*)MenuItem[2] ,"3:INA226Test    ");
+        strcpy((char*)MenuItem[3] ,"4:SDP800Test    ");
+        strcpy((char*)MenuItem[4] ,"5:BraoCalibrate ");
+        strcpy((char*)MenuItem[5] ,"6:CXD 7054      ");
+        strcpy((char*)MenuItem[6] ,"7:BOREASA C68S1 ");
+        strcpy((char*)MenuItem[7] ,"8:Nidec TF029B  ");
+        strcpy((char*)MenuItem[8] ,"9:Todolist_Test ");
         
         OLED_Fill(0x00);
 //        OLED_Print(8, OLED_LINE0, "请选择风机型号？", 1);
         
-        sel=DrawMenu(MenuItem,7,0); 
+        sel=DrawMenu(MenuItem,8,0); 
         msDelay(5);
         usDelay(5);
         switch (sel)  {
@@ -1058,17 +1068,22 @@ void Menu_Display(void)
             break;
 
         case 3:
+            SDP800_TEST(sel);
+            break;
+        
+        case 4:
             BraoCalibration(sel);
             break;
 
-        case 4:
+        case 5:
             UpperComCXD7054(sel);
             break;
-        case 5:
+        
+        case 6:
             UpperComBFC68S1(sel);
             break;
 
-        case 6:
+        case 7:
             UpperComNidecTF029B(sel);
             break;
 

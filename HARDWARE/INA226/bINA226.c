@@ -19,14 +19,16 @@
 **
 *********************************************************************************************************/
 
-#include "./Component/iiC.h"
+//#include "./Component/iiC.h"
+#include "./Component/i2c1.c"
 #include "bINA226.h"
+#include "bFLASH.h"
 #include "bKey.h"
 #include "bOLED.h"
 
 
-float _GfRsINA226 = 0;
-
+FloatToHex _GfRsINA226;
+float _GfRsINA226Fresh = 0.0;
 /**
 ********************************************************************************************************
 ** @nameis INA226_init
@@ -55,8 +57,17 @@ void INA226_Init(void)
     i2cInit();
     INA226_Config(0x4727);                                        /*  64 averages 1.1ms convert time */
     
-    _GfRsINA226      = RSHUNT;
-    ulCalibrateValue = (5120.0f / (CURRENT_LSB * _GfRsINA226));
+    FLASH_Read(INA226_ADDR, (uint16_t*)&_GfRsINA226.hdata[0], 2);
+    if (_GfRsINA226.hdata[0] == 0xFF && _GfRsINA226.hdata[1] == 0xFF)
+    {
+        _GfRsINA226.fdata = CALIBRATION_INDEX;
+    }
+    if (_GfRsINA226Fresh)
+    {
+        if (_GfRsINA226Fresh != _GfRsINA226.fdata)
+            _GfRsINA226.fdata = _GfRsINA226Fresh;
+    }
+    ulCalibrateValue = (5120.0f / (CURRENT_LSB * RSHUNT * _GfRsINA226.fdata));
     
     Write_Calibrt_reg(ulCalibrateValue);
 }
@@ -257,21 +268,89 @@ void INA226_Read(INT16U *pusVol10mv, INT16S *psCur1mA)
 ** @create 
 ** @modify 
 *********************************************************************************************************/
+static uchar bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
 void INA226Test(uint8_t ucX)
 {
+    KEYn_e eKeyPress;
     INT16U usVol;
     INT16S sCur;
-    
+    uint8_t ul10msCnt = 0;
     OLED_Fill(0x00);
+    
     INA226_Init();
-    
-    while(ADKey_Scan()!=KEY_CANCEL) {
-    
-        INA226_Read(&usVol, &sCur);
-        OLED_PutNumber(0,  OLED_LINE0, usVol / 100.0f, 2, 2, "V", 8, 1);
-        OLED_PutNumber(72, OLED_LINE0, sCur / 1000.0f, 2, 3, "A", 8, 1);
-        msDelay(200);
+    OLED_PutStr(0, OLED_LINE1, "CalibInd", 8, 1);
+    OLED_PutNumber(72, OLED_LINE1, _GfRsINA226.fdata, 2, 4, 0, 8, 1);
+    while(ADKey_Scan()!=KEY_CANCEL) 
+    {
+        if (GulPrintTimeCnt > 10) 
+        { 
+            GulPrintTimeCnt = 0;
+            
+            if (ul10msCnt++ > 10) 
+            {
+                ul10msCnt = 0;
+                INA226_Read(&usVol, &sCur);
+                OLED_PutNumber(0,  OLED_LINE0, usVol / 100.0f, 2, 2, "V", 8, 1);
+                OLED_PutNumber(72, OLED_LINE0, sCur / 1000.0f, 2, 3, "A", 8, 1);
+            }
+            if (bScreenValFlg)
+            {
+                bScreenValFlg = 0;
+                OLED_PutNumber(72, OLED_LINE1, _GfRsINA226.fdata, 2, 4, 0, 8, 0);
+            }
+            eKeyPress = ADKey_Check();
+            switch (eKeyPress) 
+            {
+                case EC11_CW:
+                    if (!bEdit_flag)
+                    {
+                        GsEc11CntCW = 0;
+                    }
+                    else
+                    {
+                        _GfRsINA226.fdata *= 10000;
+                        _GfRsINA226.fdata -= (GsEc11CntCW + 1);
+                        if(_GfRsINA226.fdata < 0)
+                            _GfRsINA226.fdata = 0;
+                        _GfRsINA226.fdata /= 10000;
+                        _GfRsINA226Fresh = _GfRsINA226.fdata;
+                        GsEc11CntCW = 0;
+                        bScreenValFlg = 1;
+                    }
+                    break;
+                case EC11_CCW:
+                    if (!bEdit_flag)
+                    {
+                        GsEc11CntCCW = 0;
+                    }
+                    else
+                    {
+                        _GfRsINA226.fdata *= 10000;
+                        _GfRsINA226.fdata += (GsEc11CntCCW + 1);
+                        _GfRsINA226.fdata /= 10000;
+                        _GfRsINA226Fresh = _GfRsINA226.fdata;
+                        GsEc11CntCCW = 0;
+                        bScreenValFlg = 1;
+                    }
+                    break;
+                case EC11_SET:
+                    if (bEdit_flag)
+                    {
+                        OLED_PutNumber(72, OLED_LINE1, _GfRsINA226.fdata, 2, 4, 0, 8, 1);
+                        bEdit_flag   = 0;
+                        INA226_Init();
+                    }
+                    else
+                    {
+                        bScreenValFlg = 1;
+                        bEdit_flag   = 1;
+                    }break;
+                default:
+                    break;
+            }
+        }
     }
+    FLASH_Write(INA226_ADDR, (uint16_t*)&_GfRsINA226.hdata[0], 2);
     GsEc11CntCW = 0;
     GsEc11CntCCW = 0;
 }

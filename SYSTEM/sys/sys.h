@@ -5,7 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#
+
+//此为数据保存区地址（FLSAH最后一个bank）
+#define PWMCTRL1_ADDR   0x0803F000
+#define PWMCTRL2_ADDR   0x0803F00C
+#define INA226_ADDR     0x0803F00E
+#define BRAOCALIB_ARRR  0x0803F012
+
 /*********************************************************************************************************
   通用数据类型重定义
 *********************************************************************************************************/
@@ -67,6 +73,12 @@ typedef unsigned char           uchar;
 
 #define PGout(n)   BIT_ADDR(GPIOG_ODR_Addr,n)  //输出 
 #define PGin(n)    BIT_ADDR(GPIOG_IDR_Addr,n)  //输入
+
+typedef union floattohex
+{
+    float fdata;
+    uint8_t hdata[4];
+} FloatToHex;
 
 //以下为汇编函数
 void WFI_SET(void);     //执行WFI指令
