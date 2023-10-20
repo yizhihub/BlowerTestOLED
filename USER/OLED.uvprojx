@@ -545,6 +545,11 @@
               <FileType>5</FileType>
               <FilePath>..\HARDWARE\INA226\bINA226.h</FilePath>
             </File>
+            <File>
+              <FileName>bSDP800.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\Pressurer\bSDP800.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -630,6 +635,11 @@
               <FileType>1</FileType>
               <FilePath>..\SYSTEM\STM32F10x_FWLib\src\stm32f10x_dma.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f10x_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SYSTEM\STM32F10x_FWLib\src\stm32f10x_flash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -674,6 +684,11 @@
               <FileName>IIC.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Source\Component\IIC.h</FilePath>
+            </File>
+            <File>
+              <FileName>bFLASH.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Source\bFLASH.c</FilePath>
             </File>
           </Files>
         </Group>

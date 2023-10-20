@@ -39,6 +39,7 @@
 
 #endif
 
+
 enum pwm_type_data {
     PWM_300HZ = 0,
     PMW_1KHZ,
@@ -80,7 +81,7 @@ extern PWM_CTRL_UNION PwmCtrl;
 void Menu_Display(void);
 void HMI_Draw(uint8_t ucX, uint8_t ucStart, uint8_t str[], uint16_t ucYn);
 void PWM_ProtoUpdate(PWM_CTRL_DATA * ptPwm, INT16U ePwmProto);
-void PWM_KeyCallback(uint8_t ucItem);
+void PWM_KeyCallback(PWM_CTRL_UNION *PwmCtrl, uint8_t ucItem);
 
 
 

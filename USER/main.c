@@ -7,7 +7,7 @@
 #include "bBraoAdc.h"
 
 const char GscBuildDate[]   __attribute__((section(".ARM.__at_0x8000200"))) = __DATE__;
-const char GscSoftRelease[] __attribute__((section(".ARM.__at_0x800020C"))) = "004";
+const char GscSoftRelease[] __attribute__((section(".ARM.__at_0x800020C"))) = "006";
 const char GscBuildTIme[]   __attribute__((section(".ARM.__at_0x8000210"))) = __TIME__;
 
 
@@ -40,7 +40,7 @@ const char GscBuildTIme[]   __attribute__((section(".ARM.__at_0x8000210"))) = __
     Menu_Display();
     while(1) 
     {
-        uint16_t lVelSetRpm;
+//        uint16_t lVelSetRpm;
 //          if (USART1->SR & USART_SR_RXNE)     {   //  USART_GetFlagStatus    #define USART_FLAG_RXNE                      ((uint16_t)0x0020) 
 //              ucData = USART1->DR;
 //              while((USART1->SR & USART_SR_TXE) == 0);

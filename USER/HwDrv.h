@@ -67,6 +67,11 @@ extern INT32U GulEc11IntervalCnt;
     TIM_SetCompare1(TIM1, usX);   \
     }
 
+#define PWM_PERIOD_SETA(usX)   {    \
+    TIM_SetAutoreload(TIM3, usX);   \
+    TIM_SetAutoreload(TIM1, usX);   \
+    }
+
 //#define BOARD_V1
 #define BORAD_V2
 
