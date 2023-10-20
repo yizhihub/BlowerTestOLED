@@ -28,7 +28,15 @@
 
 
 FloatToHex _GfRsINA226;
-float _GfRsINA226Fresh = 0.0;
+
+static void INA226_Calibrt(float fCalibrt)
+{
+    uint16_t  ulCalibrateValue = 0;
+    ulCalibrateValue = (5120.0f / (CURRENT_LSB * RSHUNT * fCalibrt));
+    
+    Write_Calibrt_reg(ulCalibrateValue);
+}
+
 /**
 ********************************************************************************************************
 ** @nameis INA226_init
@@ -41,7 +49,7 @@ float _GfRsINA226Fresh = 0.0;
 *********************************************************************************************************/
 void INA226_Init(void)
 {
-    uint16_t  ulCalibrateValue = 0;
+
 #ifdef GD32F30X_HD
     /*
      * KEY GPIO配置
@@ -58,18 +66,12 @@ void INA226_Init(void)
     INA226_Config(0x4727);                                        /*  64 averages 1.1ms convert time */
     
     FLASH_Read(INA226_ADDR, (uint16_t*)&_GfRsINA226.hdata[0], 2);
-    if (_GfRsINA226.hdata[0] == 0xFF && _GfRsINA226.hdata[1] == 0xFF)
+    if ((_GfRsINA226.hdata[0] == 0xFF && _GfRsINA226.hdata[1] == 0xFF) ||( _GfRsINA226.fdata == 0.0))
     {
         _GfRsINA226.fdata = CALIBRATION_INDEX;
     }
-    if (_GfRsINA226Fresh)
-    {
-        if (_GfRsINA226Fresh != _GfRsINA226.fdata)
-            _GfRsINA226.fdata = _GfRsINA226Fresh;
-    }
-    ulCalibrateValue = (5120.0f / (CURRENT_LSB * RSHUNT * _GfRsINA226.fdata));
-    
-    Write_Calibrt_reg(ulCalibrateValue);
+
+    INA226_Calibrt(_GfRsINA226.fdata);
 }
 
 /**
@@ -311,9 +313,10 @@ void INA226Test(uint8_t ucX)
                         _GfRsINA226.fdata *= 10000;
                         _GfRsINA226.fdata -= (GsEc11CntCW + 1);
                         if(_GfRsINA226.fdata < 0)
+                        {
                             _GfRsINA226.fdata = 0;
+                        }
                         _GfRsINA226.fdata /= 10000;
-                        _GfRsINA226Fresh = _GfRsINA226.fdata;
                         GsEc11CntCW = 0;
                         bScreenValFlg = 1;
                     }
@@ -328,7 +331,6 @@ void INA226Test(uint8_t ucX)
                         _GfRsINA226.fdata *= 10000;
                         _GfRsINA226.fdata += (GsEc11CntCCW + 1);
                         _GfRsINA226.fdata /= 10000;
-                        _GfRsINA226Fresh = _GfRsINA226.fdata;
                         GsEc11CntCCW = 0;
                         bScreenValFlg = 1;
                     }
@@ -336,9 +338,10 @@ void INA226Test(uint8_t ucX)
                 case EC11_SET:
                     if (bEdit_flag)
                     {
+                        FLASH_Write(INA226_ADDR, (uint16_t*)&_GfRsINA226.hdata[0], 2);
                         OLED_PutNumber(72, OLED_LINE1, _GfRsINA226.fdata, 2, 4, 0, 8, 1);
                         bEdit_flag   = 0;
-                        INA226_Init();
+                        INA226_Calibrt(_GfRsINA226.fdata);
                     }
                     else
                     {
@@ -350,7 +353,7 @@ void INA226Test(uint8_t ucX)
             }
         }
     }
-    FLASH_Write(INA226_ADDR, (uint16_t*)&_GfRsINA226.hdata[0], 2);
+    
     GsEc11CntCW = 0;
     GsEc11CntCCW = 0;
 }
