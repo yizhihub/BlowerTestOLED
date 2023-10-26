@@ -771,6 +771,7 @@ void BlowerBiLTest(uint8_t ucX)
             
             case EC11_SET:
                 if (!bPwmRunning) {
+                    FLASH_Write(PWMCTRL1_ADDR, (uint16_t*)PwmCtrl1.sPwmCtrl, 6);
                     bEdit_flag = !bEdit_flag;
                     (bEdit_flag == 1) ? (bScreenValFlg = 1) : (bScreenIDFlg = 1);
                     if (bEdit_flag) 
@@ -970,6 +971,7 @@ void BlowerC60Test(uint8_t ucX)
             
             case EC11_SET:
                 if (!bPwmRunning) {
+                    FLASH_Write(PWMCTRL2_ADDR, (uint16_t*)PwmCtrl2.sPwmCtrl, 6);
                     bEdit_flag = !bEdit_flag;
                     (bEdit_flag == 1) ? (bScreenValFlg = 1) : (bScreenIDFlg = 1);
                     if (bEdit_flag) 
