@@ -68,7 +68,7 @@ void INA226_Init(void)
                                                                   /*  0x4B27:256 averages 1.1ms convert time */
     
     FLASH_Read(INA226_ADDR, (uint16_t*)&_GfRsINA226.hdata[0], 2);
-    if ((_GfRsINA226.hdata[0] == 0xFF && _GfRsINA226.hdata[1] == 0xFF) || ( _GfRsINA226.fdata == 0.0))
+    if ((_GfRsINA226.hdata[0] == 0xFF && _GfRsINA226.hdata[1] == 0xFF) || ( _GfRsINA226.fdata <= 0.00001f))
     {
         _GfRsINA226.fdata = CALIBRATION_INDEX;
     }

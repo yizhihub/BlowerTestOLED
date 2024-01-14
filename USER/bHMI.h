@@ -79,7 +79,8 @@ extern PWM_CTRL_UNION PwmCtrl;
 
 
 void Menu_Display(void);
-void HMI_Draw(uint8_t ucX, uint8_t ucStart, uint8_t str[], uint16_t ucYn);
+void HMI_DrawName(uint8_t ucX, uint8_t ucStart, uint8_t str[], uint16_t ucYn);
+void HMI_DrawNumber(uint8_t ucX, uint8_t ucStart, uint16_t usNumber, PWM_CTRL_UNION *ptPwmCtrl,  uint16_t ucYn);
 void PWM_ProtoUpdate(PWM_CTRL_DATA * ptPwm, INT16U ePwmProto);
 void PWM_KeyCallback(PWM_CTRL_UNION *PwmCtrl, uint8_t ucItem);
 

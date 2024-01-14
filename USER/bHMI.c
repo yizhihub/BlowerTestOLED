@@ -93,12 +93,12 @@ void VersionInfoDisp(void)
 ** @create yizhi 2023.8.1
 ** @modify 
 *********************************************************************************************************/
-void HMI_Draw(uint8_t ucX, uint8_t ucStart, uint8_t str[], uint16_t ucYn)
+void HMI_DrawName(uint8_t ucX, uint8_t ucStart, uint8_t str[], uint16_t ucYn)
 {
     switch (ucX) {
-        
+         
     case 0:
-        OLED_Print(0 + ucStart, OLED_LINE1, str, ucYn); // 正常显示    
+        OLED_Print(0 + ucStart, OLED_LINE1, str, ucYn); // 正常显示 
         break;
     
     case 1:
@@ -115,6 +115,48 @@ void HMI_Draw(uint8_t ucX, uint8_t ucStart, uint8_t str[], uint16_t ucYn)
     
     case 4:
         OLED_PutStr(0 + ucStart, OLED_LINE3, str, 6, ucYn); // 正常显示    
+        break;
+    
+    default:
+        break;
+    }
+}
+
+
+/**
+********************************************************************************************************
+** @nameis HMI_Draw
+** @effect darw the item according need 
+** @import none
+** @export none
+** @return
+** @create yizhi 2023.8.1
+** @modify 
+*********************************************************************************************************/
+void HMI_DrawNumber(uint8_t ucX, uint8_t ucStart, uint16_t usNumber, PWM_CTRL_UNION *ptPwmCtrl,  uint16_t ucYn)
+{
+    switch (ucX) {
+         
+    case 0:
+        OLED_PutNumber(0 + ucStart, OLED_LINE1 ,                     usNumber / 10.0f, 2, 1 , " %", 6, ucYn);
+        OLED_PutNumber(0 + ucStart, OLED_LINE1 + (LINE_HEIGHT >> 1), ptPwmCtrl->tPwmCtrl.sPwmWidthLow, 4, 0 , "us", 6, ucYn);
+        break;
+    
+    case 1:
+        OLED_PutNumber(64 + ucStart, OLED_LINE1, usNumber * 10,  4, 0, "ms", 6, ucYn);
+        break;
+    
+    case 2:
+        OLED_PutNumber(0 + ucStart, OLED_LINE2 ,                     usNumber / 10.0f, 2, 1 , " %", 6, ucYn);
+        OLED_PutNumber(0 + ucStart, OLED_LINE2 + (LINE_HEIGHT >> 1), ptPwmCtrl->tPwmCtrl.sPwmWidthHigh, 4, 0 , "us", 6, ucYn);
+        break;
+    
+    case 3:
+        OLED_PutNumber(64 + ucStart, OLED_LINE2, usNumber * 10, 4, 0, "ms", 6, ucYn);
+        break;
+    
+    case 4:
+        OLED_PutNumber(0 + ucStart, OLED_LINE3, usNumber, 2, 0, 0, 6, ucYn);
         break;
     
     default:
@@ -152,9 +194,17 @@ void PWM_ProtoUpdate(PWM_CTRL_DATA * ptPwm, INT16U ePwmProto)
         break;
     
     case 2u:                                                         /* 1000Hz Yuwell throttle protocol 100us~2250us   */
-        ptPwm->sPwmWidthStart    = 0;                              /* -50us-80us-100us-900us-950us                   */
+        ptPwm->sPwmWidthStart    = 0;                                /* -50us-80us-100us-900us-950us                   */
         ptPwm->sPwmWidthEnd      = 1000;
         ptPwm->usPwmModulo       = 1000;
+        ptPwm->sPwmWidthRange    = ptPwm->sPwmWidthEnd - ptPwm->sPwmWidthStart;;
+        ptPwm->sPwmWidthDflt     = 50;
+        break;
+    
+    case 3u:                                                         /* 1000Hz Yuwell throttle protocol 100us~2250us   */
+        ptPwm->sPwmWidthStart    = 0;                                /* -50us-80us-100us-900us-950us                   */
+        ptPwm->sPwmWidthEnd      = 3333;
+        ptPwm->usPwmModulo       = 3333;
         ptPwm->sPwmWidthRange    = ptPwm->sPwmWidthEnd - ptPwm->sPwmWidthStart;;
         ptPwm->sPwmWidthDflt     = 50;
         break;
@@ -176,30 +226,24 @@ void PWM_ProtoUpdate(PWM_CTRL_DATA * ptPwm, INT16U ePwmProto)
 *********************************************************************************************************/
 void PWM_KeyCallback(PWM_CTRL_UNION *PwmCtrl, uint8_t ucItem)
 {
-   if (ucItem == 4) {
-        if (PwmCtrl->sPwmCtrl[4] > 2)  PwmCtrl->sPwmCtrl[4] = 2;  /* max ePwmProtocol is 2 */
+   if (ucItem == 4) {                                                                         /* 变更协议 */ 
+        if (PwmCtrl->sPwmCtrl[4] > 3)  PwmCtrl->sPwmCtrl[4] = 3;  /* max ePwmProtocol is 2 */
         PWM_ProtoUpdate(&PwmCtrl->tPwmCtrl, PwmCtrl->tPwmCtrl.ePwmProtocol);
         PWM_PERIOD_SETA(PwmCtrl->tPwmCtrl.usPwmModulo);
         PwmCtrl->tPwmCtrl.sPwmWidthSetting = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
-    } else if (ucItem == 0) {
-        if (PwmCtrl->tPwmCtrl.ePwmProtocol == 1) {                                            /* 协议为 01 时 直接脉宽赋值 */
-            PwmCtrl->tPwmCtrl.sPwmWidthLow  = PwmCtrl->tPwmCtrl.sPwmLowVal;
-        } else {                                                                             /* 协议为 00 或者 02 时采用百分比方式 */ 
-            PwmCtrl->tPwmCtrl.sPwmWidthLow  = PwmCtrl->tPwmCtrl.sPwmWidthStart +              /* PwmCtrl->tPwmCtrl.sPwmLowVal;从调整占空比百分比修改为直接调整脉冲宽度 */
-                                             PwmCtrl->tPwmCtrl.sPwmWidthRange * PwmCtrl->tPwmCtrl.sPwmLowVal /  1000u;
-            if (PwmCtrl->tPwmCtrl.sPwmWidthLow < PwmCtrl->tPwmCtrl.sPwmWidthDflt)
-                PwmCtrl->tPwmCtrl.sPwmWidthLow = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
-       }
-       PwmCtrl->tPwmCtrl.sPwmWidthSetting =  PwmCtrl->tPwmCtrl.sPwmWidthLow;
-    } else if (ucItem == 2) {
-        if (PwmCtrl->tPwmCtrl.ePwmProtocol == 1) {                                           /* 协议为 01 时 直接脉宽赋值*/ 
-            PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmHighVal;
-        } else {                                                                            /* 协议为 00 或者 02 时 */ 
-            PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmWidthStart +              /* PwmCtrl->tPwmCtrl.sPwmHighVal;从调整占空比百分比修改为直接调整脉冲宽度 */
-                                             PwmCtrl->tPwmCtrl.sPwmWidthRange * PwmCtrl->tPwmCtrl.sPwmHighVal /  1000u; 
-            if (PwmCtrl->tPwmCtrl.sPwmWidthHigh < PwmCtrl->tPwmCtrl.sPwmWidthDflt)
-                PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
-        }
+    } else if (ucItem == 0) {                                                                /* 设定低转速平台 */
+        
+        PwmCtrl->tPwmCtrl.sPwmWidthLow  = PwmCtrl->tPwmCtrl.sPwmWidthStart +              /* PwmCtrl->tPwmCtrl.sPwmLowVal;从调整占空比百分比修改为直接调整脉冲宽度 */
+                                         PwmCtrl->tPwmCtrl.sPwmWidthRange * PwmCtrl->tPwmCtrl.sPwmLowVal /  1000u;
+        if (PwmCtrl->tPwmCtrl.sPwmWidthLow < PwmCtrl->tPwmCtrl.sPwmWidthDflt)
+            PwmCtrl->tPwmCtrl.sPwmWidthLow = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
+        PwmCtrl->tPwmCtrl.sPwmWidthSetting =  PwmCtrl->tPwmCtrl.sPwmWidthLow;
+    } else if (ucItem == 2) {                                                              /* 设定高转速平台 */
+        PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmHighVal;
+        PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmWidthStart +              /* PwmCtrl->tPwmCtrl.sPwmHighVal;从调整占空比百分比修改为直接调整脉冲宽度 */
+                                         PwmCtrl->tPwmCtrl.sPwmWidthRange * PwmCtrl->tPwmCtrl.sPwmHighVal /  1000u; 
+        if (PwmCtrl->tPwmCtrl.sPwmWidthHigh < PwmCtrl->tPwmCtrl.sPwmWidthDflt)
+            PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
         PwmCtrl->tPwmCtrl.sPwmWidthSetting =  PwmCtrl->tPwmCtrl.sPwmWidthHigh;
     } else {
         PwmCtrl->tPwmCtrl.sPwmWidthSetting = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
@@ -620,8 +664,6 @@ void BlowerBiLTest(uint8_t ucX)
     INA226_Init();
     BraoCalibrate();
     
-    OLED_Fill(0x00);
-    OLED_PutStr(104, OLED_LINE3, (uint8_t *)"RPM", 8, 1); 
     FLASH_Read(PWMCTRL1_ADDR, (uint16_t*)PwmCtrl1.sPwmCtrl, 6);
     if ((uint8_t)PwmCtrl1.sPwmCtrl[0] == 0xFF && (uint8_t)(PwmCtrl1.sPwmCtrl[0]>>8) == 0xFF)
     {
@@ -631,6 +673,9 @@ void BlowerBiLTest(uint8_t ucX)
         PwmCtrl1.tPwmCtrl.sPwmHighDur = 100;
         PwmCtrl1.tPwmCtrl.ePwmProtocol = 0;
     }
+    
+    OLED_Fill(0x00);
+    OLED_PutStr(104, OLED_LINE3, (uint8_t *)"RPM", 8, 1); 
     PWM_KeyCallback(&PwmCtrl1, 4);                         /* stimulate Press KeyProtocol KeyUP KEYDOWN update related value */
     PWM_KeyCallback(&PwmCtrl1, 0);
     PWM_KeyCallback(&PwmCtrl1, 2);
@@ -676,45 +721,45 @@ void BlowerBiLTest(uint8_t ucX)
             {
                 bScreenIDFlg=0;
                 
-                strcpy((char*)MenuItem[0], "H:");
+                strcpy((char*)MenuItem[0], "L:");
                 strcpy((char*)MenuItem[1], "T:");
-                strcpy((char*)MenuItem[2], "L:");
+                strcpy((char*)MenuItem[2], "H:");
                 strcpy((char*)MenuItem[3], "T:");
                 strcpy((char*)MenuItem[4], "P:");
                 
-                sprintf((char*)MenuValue[0], "%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmLowVal / 10.0f);
-                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmLowDur * 10);
-                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmHighVal / 10.0f);
-                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmHighDur * 10);
-                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl1.tPwmCtrl.ePwmProtocol);
+//                sprintf((char*)MenuValue[0], "%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmLowVal / 10.0f);
+//                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmLowDur * 10);
+//                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmHighVal / 10.0f);
+//                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmHighDur * 10);
+//                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl1.tPwmCtrl.ePwmProtocol);
                 
                 for(ii=0; ii < ucEntrysEveryScreen; ii++)                                          
                 {
                     if((ucNowItem != ii) || bPwmRunning == 1)
                     {   
-                        HMI_Draw(ii, 0, MenuItem[ucFirstItem+ii], 1); // 正常显示
+                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 1); // 正常显示
                     }
                     else
                     {
-                        HMI_Draw(ii, 0, MenuItem[ucFirstItem+ii], 0); // 反黑显示
+                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 0); // 反黑显示
                     }
                 }
 
                 for(ii=0; ii < ucEntrysEveryScreen; ii++)                                          
                 {
-                      HMI_Draw(ii, 16, MenuValue[ucFirstItem+ii], 1); // 正常显示
+                      HMI_DrawNumber(ii, 16, PwmCtrl1.sPwmCtrl[ii], &PwmCtrl1, 1); // 正常显示每一个Name下的Number
                 }
             }
             
             if (bScreenValFlg)
             {
                 bScreenValFlg = 0;
-                sprintf((char*)MenuValue[0], "%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmLowVal / 10.0f);
-                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmLowDur*10);
-                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmHighVal / 10.0f);
-                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmHighDur*10);
-                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl1.tPwmCtrl.ePwmProtocol);
-                HMI_Draw(ucNowItem, 16, MenuValue[ucFirstItem+ucNowItem], 0); // 反黑显示
+//                sprintf((char*)MenuValue[0], "%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmLowVal / 10.0f);
+//                sprintf((char*)MenuValue[1] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmLowDur*10);
+//                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmHighVal / 10.0f);
+//                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmHighDur*10);
+//                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl1.tPwmCtrl.ePwmProtocol);
+                HMI_DrawNumber(ucNowItem, 16, PwmCtrl1.sPwmCtrl[ucFirstItem+ucNowItem], &PwmCtrl1, 0);                 /* 当前选中条目反黑显示  */
 
             }
             eKeyPress = ADKey_Check();
@@ -734,11 +779,17 @@ void BlowerBiLTest(uint8_t ucX)
                     bScreenIDFlg = 1;
                     bPwmRunning  = 0;                                   /* once rotate stop pwm run */ 
                 } else {
-                    PwmCtrl1.sPwmCtrl[ucNowItem] -= (GsEc11CntCW + 1);
+                    PwmCtrl1.sPwmCtrl[ucNowItem] -= (GsEc11CntCW + 1);          /* 对选中的值进行减少 */
                     GsEc11CntCW                  = 0;
                    if (PwmCtrl1.sPwmCtrl[ucNowItem] < 0) PwmCtrl1.sPwmCtrl[ucNowItem] = 0;
                     bScreenValFlg = 1;
                     PWM_KeyCallback(&PwmCtrl1, ucNowItem);
+                    if (ucNowItem == 4) {
+                        PWM_KeyCallback(&PwmCtrl1, 0);
+                        PWM_KeyCallback(&PwmCtrl1, 2);
+                        PwmCtrl1.tPwmCtrl.sPwmWidthSetting = PwmCtrl1.tPwmCtrl.sPwmWidthDflt;
+                        bScreenIDFlg = 1;
+                    }
                 }
                 break;
             
@@ -755,11 +806,17 @@ void BlowerBiLTest(uint8_t ucX)
                     bScreenIDFlg = 1;
                     bPwmRunning  = 0;                                   /* once rotate stop pwm run */ 
                 } else {
-                    PwmCtrl1.sPwmCtrl[ucNowItem] += (GsEc11CntCCW + 1);
+                    PwmCtrl1.sPwmCtrl[ucNowItem] += (GsEc11CntCCW + 1);       /* 对选中的值进行增加 */
                     GsEc11CntCCW                 = 0;
                     if (PwmCtrl1.sPwmCtrl[ucNowItem] > 999) PwmCtrl1.sPwmCtrl[ucNowItem] = 999;
                     bScreenValFlg = 1;
                     PWM_KeyCallback(&PwmCtrl1, ucNowItem);
+                    if (ucNowItem == 4) {
+                        PWM_KeyCallback(&PwmCtrl1, 0);
+                        PWM_KeyCallback(&PwmCtrl1, 2);
+                        PwmCtrl1.tPwmCtrl.sPwmWidthSetting = PwmCtrl1.tPwmCtrl.sPwmWidthDflt;
+                        bScreenIDFlg = 1;
+                    }
                 }
                 break;
             
@@ -786,13 +843,13 @@ void BlowerBiLTest(uint8_t ucX)
             default:
                 break;
             }
-            if (bEdit_flag)
-                sPwmDutyValue = PwmCtrl1.tPwmCtrl.sPwmHighVal;
-            else 
-                sPwmDutyValue = 0;
-            
-            if (sPwmDutyValue >= 999)  sPwmDutyValue = 999;
-            if (sPwmDutyValue <= 0)      sPwmDutyValue = 0;
+//            if (bEdit_flag)
+//                sPwmDutyValue = PwmCtrl1.tPwmCtrl.sPwmHighVal;
+//            else 
+//                sPwmDutyValue = 0;
+//            
+//            if (sPwmDutyValue >= 999)  sPwmDutyValue = 999;
+//            if (sPwmDutyValue <= 0)      sPwmDutyValue = 0;
             
             
             if (bPwmRunning)  {
@@ -839,7 +896,7 @@ void BlowerC60Test(uint8_t ucX)
     BraoCalibrate();
     
     OLED_Fill(0x00);
-    OLED_Print(22,  OLED_LINE0, (uint8_t *)"C60测试", 1);
+    OLED_Print(22,  OLED_LINE0, (uint8_t *)"C61测试", 1);
     OLED_PutStr(104, OLED_LINE3, (uint8_t *)"RPM", 8, 1);
     FLASH_Read(PWMCTRL2_ADDR, (uint16_t*)PwmCtrl2.sPwmCtrl, 6);
     if ((uint8_t)PwmCtrl2.sPwmCtrl[0] == 0xFF && (uint8_t)(PwmCtrl2.sPwmCtrl[0]>>8) == 0xFF)
@@ -892,17 +949,17 @@ void BlowerC60Test(uint8_t ucX)
                 {
                     if((ucNowItem != ii) || bPwmRunning == 1)
                     {   
-                        HMI_Draw(ii, 0, MenuItem[ucFirstItem+ii], 1); // 正常显示
+                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 1); // 正常显示
                     }
                     else
                     {
-                        HMI_Draw(ii, 0, MenuItem[ucFirstItem+ii], 0); // 反黑显示
+                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 0); // 反黑显示
                     }
                 }
 
                 for(ii=0; ii < ucEntrysEveryScreen; ii++)                                          
                 {
-                      HMI_Draw(ii, 16, MenuValue[ucFirstItem+ii], 1); // 正常显示
+                      HMI_DrawNumber(ii, 16, PwmCtrl2.sPwmCtrl[ucFirstItem+ii], &PwmCtrl2, 1); // 正常显示
                 }
             }
             
@@ -914,7 +971,7 @@ void BlowerC60Test(uint8_t ucX)
                 sprintf((char*)MenuValue[2] ,"%04dus", PwmCtrl2.tPwmCtrl.sPwmWidthHigh);
                 sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl2.tPwmCtrl.sPwmHighDur * 10);
                 sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl2.tPwmCtrl.ePwmProtocol);
-                HMI_Draw(ucNowItem, 16, MenuValue[ucFirstItem+ucNowItem], 0); // 反黑显示
+                HMI_DrawNumber(ucNowItem, 16,  PwmCtrl2.sPwmCtrl[ucFirstItem+ucNowItem],&PwmCtrl2, 0); // 反黑显示
 
             }
             eKeyPress = ADKey_Check();
@@ -957,7 +1014,11 @@ void BlowerC60Test(uint8_t ucX)
                 } else {
                     PwmCtrl2.sPwmCtrl[ucNowItem] += (GsEc11CntCCW + 1);
                     GsEc11CntCCW                 = 0;
-                    if (PwmCtrl2.sPwmCtrl[ucNowItem] > 3000) PwmCtrl2.sPwmCtrl[ucNowItem] = 3000;
+                    if (ucNowItem == 0 || ucNowItem == 2) {                                 /* ucNowItem is 0 or 2   */
+                        if (PwmCtrl2.sPwmCtrl[ucNowItem] > 3000) PwmCtrl2.sPwmCtrl[ucNowItem] = 3000;
+                    } else {
+                        if (PwmCtrl2.sPwmCtrl[ucNowItem] > 500) PwmCtrl2.sPwmCtrl[ucNowItem] = 500;
+                    }
                     bScreenValFlg = 1;
                     PWM_KeyCallback(&PwmCtrl2, ucNowItem);
                 }
@@ -1037,8 +1098,9 @@ void Menu_Display(void)
 
     while(1)  // 根菜单
     { 
-        strcpy((char*)MenuItem[0] ,"1:BlowerC65Test ");     //BlowerBiLTest 
-        strcpy((char*)MenuItem[1] ,"2:BlowerC60Test ");    //BlowerC60Test
+        PWM_DUTY_SETA(0);
+        strcpy((char*)MenuItem[0] ,"1:BlowerBiLTest ");     //BlowerBiLTest 
+        strcpy((char*)MenuItem[1] ,"2:Blower-NONAME ");    //BlowerC60Test
         strcpy((char*)MenuItem[2] ,"3:INA226Test    ");
         strcpy((char*)MenuItem[3] ,"4:SDP800Test    ");
         strcpy((char*)MenuItem[4] ,"5:BraoCalibrate ");
