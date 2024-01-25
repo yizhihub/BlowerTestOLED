@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Output\Objects\</OutputDirectory>
-          <OutputName>BlowerTestOLED.out</OutputName>
+          <OutputName>BlowerTestPlatformV0.0.A.out</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>

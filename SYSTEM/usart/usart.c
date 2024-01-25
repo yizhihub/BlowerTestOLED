@@ -129,7 +129,7 @@ void uart_init(u32 bound)
   
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;// PA2
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; //GPIO_Mode_AF_PP;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
    
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;//PA3

@@ -7,7 +7,7 @@
 #include "bBraoAdc.h"
 
 const char GscBuildDate[]   __attribute__((section(".ARM.__at_0x8000200"))) = __DATE__;
-const char GscSoftRelease[] __attribute__((section(".ARM.__at_0x800020C"))) = "009";
+const char GscSoftRelease[] __attribute__((section(".ARM.__at_0x800020C"))) = "00A";
 const char GscBuildTIme[]   __attribute__((section(".ARM.__at_0x8000210"))) = __TIME__;
 
 
