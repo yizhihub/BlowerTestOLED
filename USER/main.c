@@ -14,21 +14,22 @@ const char GscBuildTIme[]   __attribute__((section(".ARM.__at_0x8000210"))) = __
  int main(void)
  {
     hwInit();
+	gpioInit();	
     uart_init(115200); 
-    ledInit();
+    ledInit();	
     timInit();
-    keyInit();
+    keyInit();	 
     ec11Init();
-    OLED_Init();
+    OLED_Init(); 
     msDelay(50);
-    BraoAdcInit();                               /* 必须要在这里加上初始化一次才行，上电先初始化 */
+//    BraoAdcInit();                               /* 必须要在这里加上初始化一次才行，上电先初始化 */
 //  OLED_PutStr(0,OLED_LINE0, (uint8_t *)"abcdefghijklmnopqrstuvwxyz!@#$%^&*()_123456789~!", 6, RED);
 //  OLED_PutStr(0, OLED_LINE0, (uint8_t *)"123456789~!{}|AaBbCc", 6, GREEN);
 //  OLED_PutStr(0, OLED_LINE1, (uint8_t *)"Aa123456789~!{}|", 8, BLUE);
 //  OLED_PutStr(0, OLED_LINE2, (uint8_t *)"Am12345", 16, BLUE);
 //  OLED_PutHan(22,  OLED_LINE0, (uint8_t *)"风机测试平台", 1);
     __enable_irq();
-     
+
 //    strcpy((char*)MenuItem[0] ,"1:MPU  ");
 //    strcpy((char*)MenuItem[1] ,"2:NRF  ");
 //    strcpy((char*)MenuItem[2] ,"3:RTC   ");

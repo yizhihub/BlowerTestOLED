@@ -75,6 +75,7 @@ extern INT32U GulEc11IntervalCnt;
 //#define BOARD_V1
 #define BORAD_V2
 
+void  gpioInit(void);
 void  ledInit(void);
 void  hwInit(void);
 void  timInit(void);
