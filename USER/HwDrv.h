@@ -46,6 +46,8 @@ extern INT32U GulEc11IntervalCnt;
 #define LED1_ON()       LED1 = 1//  FM3_GPIO->PDOR8 &= ~(1 << 1)                   /* LED 亮                       */
 #define LED1_TOG()      LED1 = !LED1// FM3_GPIO->PDOR8 ^=  (1 << 1)                   /* LED 反转                     */
 
+#define MC_FOC_HALL_PU1     (PBin(0) << 2)+(PAin(7) << 1)+PAin(6)
+#define HALL_DEFAULT_ANG    1.0l / 6.0l * (0xFFFFFFFF)
 /*
  * LED指示结果描述
  * LED_MODE_ON  ： 上电后未进入for循环
@@ -63,19 +65,18 @@ extern INT32U GulEc11IntervalCnt;
 #define LED_MODE_OFF    6                                               /* LED模式, 常灭               */
 
 #define PWM_DUTY_SETA(usX)   {    \
-    TIM_SetCompare1(TIM3, usX);   \
     TIM_SetCompare1(TIM1, usX);   \
     }
 
 #define PWM_PERIOD_SETA(usX)   {    \
-    TIM_SetAutoreload(TIM3, usX);   \
     TIM_SetAutoreload(TIM1, usX);   \
     }
 
 //#define BOARD_V1
 #define BORAD_V2
-
-void  gpioInit(void);
+void  HallGpioInit(void);
+void  TIM3HallCapInit(void);
+void  HallCalibrationEn(void);
 void  ledInit(void);
 void  hwInit(void);
 void  timInit(void);

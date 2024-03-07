@@ -10,19 +10,18 @@ const char GscBuildDate[]   __attribute__((section(".ARM.__at_0x8000200"))) = __
 const char GscSoftRelease[] __attribute__((section(".ARM.__at_0x800020C"))) = "00A";
 const char GscBuildTIme[]   __attribute__((section(".ARM.__at_0x8000210"))) = __TIME__;
 
-
  int main(void)
  {
     hwInit();
-	gpioInit();	
+    TIM3HallCapInit();
     uart_init(115200); 
-    ledInit();	
+    ledInit();    
     timInit();
-    keyInit();	 
+    keyInit();     
     ec11Init();
     OLED_Init(); 
     msDelay(50);
-//    BraoAdcInit();                               /* 必须要在这里加上初始化一次才行，上电先初始化 */
+    BraoAdcInit();                               /* 必须要在这里加上初始化一次才行，上电先初始化 */
 //  OLED_PutStr(0,OLED_LINE0, (uint8_t *)"abcdefghijklmnopqrstuvwxyz!@#$%^&*()_123456789~!", 6, RED);
 //  OLED_PutStr(0, OLED_LINE0, (uint8_t *)"123456789~!{}|AaBbCc", 6, GREEN);
 //  OLED_PutStr(0, OLED_LINE1, (uint8_t *)"Aa123456789~!{}|", 8, BLUE);

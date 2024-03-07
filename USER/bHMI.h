@@ -48,7 +48,7 @@ enum pwm_type_data {
 
 typedef enum pwm_type_data PWM_TYPE_DATA;
 
-
+    
 struct pwm_ctrl_data {
     INT16S sPwmLowVal;    /* ±ÈÀý 0 ~ 1000 */ 
     INT16S sPwmLowDur;

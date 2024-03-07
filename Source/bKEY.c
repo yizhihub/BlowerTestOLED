@@ -298,8 +298,10 @@ void ec11Step(INT16S sStep)
 ** @create
 ** @modify 
 *********************************************************************************************************/
+INT16U GsHallTim = 0;
 void EXTI0_IRQHandler(void)
 {
+#if 1
     INT32U ulStep = 0;;
 //    if (EXTI_GetITStatus(EXTI_Line0) != RESET) {
         EXTI_ClearITPendingBit(EXTI_Line0);
@@ -320,7 +322,7 @@ void EXTI0_IRQHandler(void)
                 GsEc11CntCCW += ulStep;
                 GulEc11IntervalCnt = 0;
             }
-            
+
 //            if (eEndEdge == A_FALLING) {eEndEdge = AB_NONE; return;}
 //            if (ePreEdge == B_FALLING) {
 //                ePreEdge = AB_NONE;
@@ -340,6 +342,11 @@ void EXTI0_IRQHandler(void)
 //            }
 //        }
 //    }
+#else
+	EXTI_ClearITPendingBit(EXTI_Line0);
+	GsHallTim = TIM3->CNT;
+	TIM3->CNT = 0;
+#endif
 }
 /**
 ********************************************************************************************************
@@ -394,4 +401,19 @@ void EXTI1_IRQHandler(void)
 //    }
 }
 
+void EXTI9_5_IRQHandler(void)
+{
+	if (EXTI_GetITStatus(EXTI_Line6) != RESET)  
+	{
+		EXTI_ClearITPendingBit(EXTI_Line6);
+		GsHallTim = TIM3->CNT;
+		TIM3->CNT = 0;
+	}
+	else if (EXTI_GetITStatus(EXTI_Line7) != RESET)  
+	{		
+		EXTI_ClearITPendingBit(EXTI_Line7);
+		GsHallTim = TIM3->CNT;
+		TIM3->CNT = 0;
+	}
+}
 #endif

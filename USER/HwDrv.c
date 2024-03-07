@@ -159,44 +159,67 @@ void hwdDisable(void)
 ** @create yizhi 2023.06.23
 ** @modify 
 *********************************************************************************************************/
+ INT16U usTim3Cnt, usTim3Ccr1;
+ INT32U GusHallSpd;
+ extern INT8U  GucPolePair;
+ static INT8U  ucHallState, ucHallValue = 0;
+ static INT32U ulHallSampSum = 0;
+ static INT32U ulHallAngSum[6] = {0};
+ static INT32U q32HallAngTab[6] = {HALL_DEFAULT_ANG, HALL_DEFAULT_ANG, HALL_DEFAULT_ANG, HALL_DEFAULT_ANG, HALL_DEFAULT_ANG, HALL_DEFAULT_ANG};
+ static INT16U usHallSampCnt = 0;
+
+ 
+ void HallCalibrationEn(void)
+ {
+     ucHallState = 1;
+     ulHallSampSum = 0;
+     memset(ulHallAngSum, 0, sizeof(ulHallAngSum));
+ }
+ 
  void TIM3_IRQHandler(void) 
  {
-      if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) {
+    int i;
+    if(TIM_GetITStatus(TIM3,TIM_IT_CC1)!=RESET)
+      {
+          TIM_ClearITPendingBit(TIM3,TIM_IT_CC1);  //清除触发中断标志位
+          LED0_TOG();
+          ucHallValue = MC_FOC_HALL_PU1;
+          usTim3Ccr1 = TIM3->CCR1;
+          switch (ucHallState)
+          {
+              case 0: GusHallSpd  = ((long long )q32HallAngTab[ucHallValue-1]*2000000*360) / (usTim3Ccr1*6) / 0xFFFFFFFF / GucPolePair;
+                      break;
+              
+              case 1: if (usHallSampCnt/6 < 100)
+                      {
+                          ulHallAngSum[ucHallValue-1] += usTim3Ccr1;
+                          ulHallSampSum += usTim3Ccr1;
+                          usHallSampCnt++;
+                      }
+                      else
+                      {
+                          usHallSampCnt = 0;
+                          ucHallState = 2;
+                      }
+                      break;
+              
+              case 2: for(i = 0; i < 6; i++)
+                      {
+                          q32HallAngTab[i] = (long long)ulHallAngSum[i] * 0xFFFFFFFF / ulHallSampSum; 
+                      }
+                      ucHallState = 0;
+                      break;
+                      
+              default:break;
+          }
+      }
       
-          TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-//          GulEscReoprtT1msCnt++;
-//          GulPrintTimeCnt++;
-//          LED0_TOG();
+      if(TIM_GetITStatus(TIM3, TIM_IT_Update)!=RESET)
+      {
+          TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  //清除触发中断标志位
+          GusHallSpd = 0;
       }
  }
-
-/*********************************************************************************************************
-** Function name:           gpioInit
-** Descriptions:            LED 初始化函数
-** input parameters:        none
-** output parameters:       none
-** Returned value:          none
-** Created by:              lgd
-** Created Date:             
-**--------------------------------------------------------------------------------------------------------
-** Modified by:             
-** Modified date:           
-**
-*********************************************************************************************************/
-void gpioInit(void)
-{
-	GPIO_InitTypeDef  GPIO_InitStructure;
-    
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-    GPIO_InitStructure.GPIO_Pin    = GPIO_Pin_6 | GPIO_Pin_7;
-    GPIO_InitStructure.GPIO_Speed  = GPIO_Speed_50MHz;                
-    GPIO_InitStructure.GPIO_Mode   = GPIO_Mode_IN_FLOATING; 
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
-	
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-    GPIO_InitStructure.GPIO_Pin    = GPIO_Pin_0;
-    GPIO_Init(GPIOB, &GPIO_InitStructure);
-}
 /*********************************************************************************************************
 ** Function name:           ledInit
 ** Descriptions:            LED 初始化函数
@@ -337,7 +360,6 @@ void timInit(void)
     TIM_TimeBaseInitTypeDef    tTimeBaseConfig;
     GPIO_InitTypeDef  GPIO_InitStructure;
     TIM_OCInitTypeDef  TIM_OCInitStructure;
-
     
     /*
      * 初始化一个定时器， 用于产生一个1ms的时间基准
@@ -358,35 +380,7 @@ void timInit(void)
      *  初始化一个定时器，用于产生一个400Hz， 1ms~2ms的脉冲信号 
      *  测试平台V1.0 使用PA6、测试平台V2.0使用PA8
      */
-    /* PA6 TIM3*/
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
-    
-//    GPIO_InitStructure.GPIO_Pin    = GPIO_Pin_6;
-//    GPIO_InitStructure.GPIO_Speed  = GPIO_Speed_50MHz;                
-//    GPIO_InitStructure.GPIO_Mode   = GPIO_Mode_AF_PP; 
-//    GPIO_Init(GPIOA,&GPIO_InitStructure);
-    
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
-    TIM_DeInit(TIM3);
-    TIM_InternalClockConfig(TIM3);
-
-    tTimeBaseConfig.TIM_Prescaler     = 72 - 1;                 /* Time Unit  1000ns                         */
-    tTimeBaseConfig.TIM_ClockDivision = TIM_CKD_DIV1;
-    tTimeBaseConfig.TIM_CounterMode   = TIM_CounterMode_Up; 
-    tTimeBaseConfig.TIM_Period        = 2500 - 1; 
-    tTimeBaseConfig.TIM_RepetitionCounter = 0;                  
-    TIM_TimeBaseInit(TIM3, &tTimeBaseConfig);
-    TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE);
-    
-    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //选择定时器模式:TIM脉冲宽度调制模式2
-    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //比较输出使能
-    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; //输出极性:TIM输出比较极性高
-    TIM_OC1Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM3 OC2
-
-    TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);  //使能TIM3在CCR2上的预装载寄存器
-    TIM_SetCompare1(TIM3,1000);
-
+     
     /*PA8  TIM1*/
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
@@ -400,7 +394,7 @@ void timInit(void)
     TIM_DeInit(TIM1);
     TIM_InternalClockConfig(TIM1);
 
-    tTimeBaseConfig.TIM_Prescaler     = 72 - 1;                 /* Time Unit  1000ns                         */
+    tTimeBaseConfig.TIM_Prescaler     = 72 - 1;                 /* Time Unit  1000ns    */
     tTimeBaseConfig.TIM_ClockDivision = TIM_CKD_DIV1;
     tTimeBaseConfig.TIM_CounterMode   = TIM_CounterMode_Up; 
     tTimeBaseConfig.TIM_Period        = 2500 - 1; 
@@ -421,18 +415,125 @@ void timInit(void)
     
     /* 开启所有定时器 */
     TIM_Cmd(TIM2, ENABLE);
-    TIM_Cmd(TIM3, ENABLE);
     TIM_Cmd(TIM1, ENABLE);
     
-    NVIC_DisableIRQ(TIM3_IRQn);
-    NVIC_SetPriority(TIM3_IRQn, 2);                                 /* 设置中断优先级               */
-    NVIC_EnableIRQ(TIM3_IRQn);
- 
     NVIC_DisableIRQ(TIM2_IRQn);
     NVIC_SetPriority(TIM2_IRQn, 1);                                 /* 设置中断优先级               */
     NVIC_EnableIRQ(TIM2_IRQn);
 
 }
+void HallGpioInit(void)
+{
+    GPIO_InitTypeDef   GPIO_InitStructure;
+//    EXTI_InitTypeDef   EXIT_InitStructure;
+    
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
+    
+    GPIO_InitStructure.GPIO_Pin    = GPIO_Pin_6 | GPIO_Pin_7;
+    GPIO_InitStructure.GPIO_Speed  = GPIO_Speed_50MHz;                
+    GPIO_InitStructure.GPIO_Mode   = GPIO_Mode_IPU; 
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    GPIO_InitStructure.GPIO_Pin    = GPIO_Pin_0;
+    GPIO_InitStructure.GPIO_Speed  = GPIO_Speed_50MHz;                
+    GPIO_InitStructure.GPIO_Mode   = GPIO_Mode_IPU; 
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+    
+//    GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource0);
+//    EXIT_InitStructure.EXTI_Line = EXTI_Line0;
+//    EXIT_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+//    EXIT_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+//    EXIT_InitStructure.EXTI_LineCmd = ENABLE;
+//    EXTI_Init(&EXIT_InitStructure);
+//    
+//    GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource6);
+//    EXIT_InitStructure.EXTI_Line = EXTI_Line6;
+//    EXIT_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+//    EXIT_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+//    EXIT_InitStructure.EXTI_LineCmd = ENABLE;
+//    EXTI_Init(&EXIT_InitStructure);
+//    
+//    GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource7);
+//    EXIT_InitStructure.EXTI_Line = EXTI_Line7;
+//    EXIT_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+//    EXIT_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+//    EXIT_InitStructure.EXTI_LineCmd = ENABLE;
+//    EXTI_Init(&EXIT_InitStructure);
+//    
+//    EXTI_ClearITPendingBit(EXTI_Line0);
+//    NVIC_DisableIRQ(EXTI0_IRQn); 
+//    NVIC_SetPriority(EXTI0_IRQn, 0);
+//    NVIC_EnableIRQ(EXTI0_IRQn);
+//    
+//    EXTI_ClearITPendingBit(EXTI_Line6);
+//    NVIC_DisableIRQ(EXTI9_5_IRQn);
+//    NVIC_SetPriority(EXTI9_5_IRQn, 0);
+//    NVIC_EnableIRQ(EXTI9_5_IRQn);
+//    
+//    EXTI_ClearITPendingBit(EXTI_Line7);
+//    NVIC_DisableIRQ(EXTI9_5_IRQn); 
+//    NVIC_SetPriority(EXTI9_5_IRQn, 0);
+//    NVIC_EnableIRQ(EXTI9_5_IRQn);
+    
+}
+void TIM3HallCapInit(void)
+{
+    TIM_TimeBaseInitTypeDef  tTimeBaseConfig;
+    TIM_ICInitTypeDef        TIM3_ICInitStructure;
+    
+    HallGpioInit();
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+    
+    TIM_DeInit(TIM3);
+    TIM_InternalClockConfig(TIM3);
+
+    tTimeBaseConfig.TIM_Prescaler     = 36 - 1;                 /* Time Unit  1000ns                         */
+    tTimeBaseConfig.TIM_ClockDivision = TIM_CKD_DIV1;
+    tTimeBaseConfig.TIM_CounterMode   = TIM_CounterMode_Up; 
+    tTimeBaseConfig.TIM_Period        = 0xFFFF; 
+    tTimeBaseConfig.TIM_RepetitionCounter = 0;                  
+    TIM_TimeBaseInit(TIM3, &tTimeBaseConfig);
+    
+    TIM3_ICInitStructure.TIM_Channel     = TIM_Channel_1;
+    TIM3_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_BothEdge;    //上升沿捕获TIM_ICPolarity_BothEdge
+    TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_TRC; //映射到TI1上
+    TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;     //配置输入分频,不分频 
+    TIM3_ICInitStructure.TIM_ICFilter    = 0x05;//IC1F=0000 配置输入滤波器 不滤波
+    TIM_ICInit(TIM3, &TIM3_ICInitStructure);
+//    
+//    TIM3_ICInitStructure.TIM_Channel     = TIM_Channel_2;
+//    TIM3_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_BothEdge;    //上升沿捕获TIM_ICPolarity_BothEdge
+//      TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_IndirectTI; //映射到TI1上
+//      TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;     //配置输入分频,不分频 
+//      TIM3_ICInitStructure.TIM_ICFilter    = 0x05;//IC1F=0000 配置输入滤波器 不滤波
+//    TIM_ICInit(TIM3, &TIM3_ICInitStructure);
+//    
+//    TIM3_ICInitStructure.TIM_Channel     = TIM_Channel_3;
+//    TIM3_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_BothEdge;    //上升沿捕获TIM_ICPolarity_BothEdge
+//      TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_IndirectTI; //映射到TI1上
+//      TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;     //配置输入分频,不分频 
+//      TIM3_ICInitStructure.TIM_ICFilter    = 0x05;//IC1F=0000 配置输入滤波器 不滤波
+//    TIM_ICInit(TIM3, &TIM3_ICInitStructure);
+
+    NVIC_DisableIRQ(TIM3_IRQn);
+    NVIC_SetPriority(TIM3_IRQn, 3);                                 /* 设置中断优先级               */
+    NVIC_EnableIRQ(TIM3_IRQn);
+    
+    TIM_SelectHallSensor(TIM3, ENABLE);
+    TIM_SelectInputTrigger(TIM3, TIM_TS_TI1F_ED);
+    TIM_SelectSlaveMode(TIM3, TIM_SlaveMode_Reset);
+    TIM_SelectMasterSlaveMode(TIM3, TIM_MasterSlaveMode_Enable); 
+
+    TIM_UpdateRequestConfig(TIM3, TIM_UpdateSource_Regular);
+    TIM_ITConfig(TIM3, TIM_IT_Update | TIM_IT_CC1, ENABLE);
+    
+    TIM_Cmd(TIM3, ENABLE);
+    
+    TIM_ClearITPendingBit(TIM3, TIM_IT_Update | TIM_IT_CC1);
+}
+
 
 /**
 ********************************************************************************************************

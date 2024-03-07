@@ -72,6 +72,7 @@ u8 USART1_RX_BUF[USART_REC_LEN];
 //bit13~0，    接收到的有效字节数目
 u8 GbUartRxDone   = 0;       //接收状态标记     
 u8 GucUartRxIndex = 0;
+u8 GucUartRxCnt   = 0;
 u8 GbUartRxDone1   = 0;       //接收状态标记     
 u8 GucUartRxIndex1 = 0;
   
@@ -88,6 +89,7 @@ void uart_init(u32 bound)
      */ 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);    //使能USART1，GPIOA时钟
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
   
     //USART1_TX   GPIOA.9
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9; //PA.9
@@ -129,7 +131,7 @@ void uart_init(u32 bound)
   
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;// PA2
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; //GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP; //GPIO_Mode_AF_PP;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
    
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;//PA3
@@ -137,11 +139,11 @@ void uart_init(u32 bound)
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
     NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3 ;//抢占优先级3
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;        //子优先级3
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;            //IRQ通道使能
     NVIC_Init(&NVIC_InitStructure);    //根据指定的参数初始化VIC寄存器
-  
+
     USART_InitStructure.USART_BaudRate = bound;//串口波特率
     USART_InitStructure.USART_WordLength = USART_WordLength_8b;//字长为8位数据格式
     USART_InitStructure.USART_StopBits = USART_StopBits_1;//一个停止位
@@ -149,10 +151,12 @@ void uart_init(u32 bound)
     USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制
     USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;    //收发模式
 
-    USART_Init(USART2, &USART_InitStructure); //初始化串口1
+    USART_Init(USART2, &USART_InitStructure); //初始化串口2
     USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);//开启串口接受中断
     USART_ITConfig(USART2, USART_IT_IDLE, DISABLE);//开启串口接受中断
-    USART_Cmd(USART2, ENABLE);                    //使能串口1 
+    USART_Cmd(USART2, ENABLE);                    //使能串口2
+    
+    
 }
 
 void USART1_IRQHandler(void)                    //串口1中断服务程序
@@ -192,22 +196,32 @@ void USART2_IRQHandler(void)                    //串口1中断服务程序
     {
         u8 com_data = USART2->DR;
     }
-    
+//    if(USART_GetITStatus(USART2, USART_IT_IDLE) != RESET) 
+//    {
+//        USART_ClearITPendingBit(USART2, USART_IT_IDLE);
+//        GbUartRxDone   = 0;
+//        GucUartRxIndex = GucUartRxCnt;
+//        GucUartRxCnt   = 0;
+//    }
     if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
     {
         Res =USART_ReceiveData(USART2);              /* 每隔开大概32ms收到一次遥测报文  */ 
-        
+
         if (GbUartRxDone == 0) {                     /* 等待消费完成 */
         
             if (GulEscReoprtT1msCnt > 5)                      /* 间隔超过5ms认为是新的报文     */
             {
                 GucUartRxIndex = 0;
             }
-            USART_RX_BUF[GucUartRxIndex++] = Res; 
+            USART_RX_BUF[GucUartRxIndex++] = Res;   //GucUartRxCnt
             
-            if (GucUartRxIndex == 10) {
+            if (GucUartRxIndex == 8) {
                 GbUartRxDone = 1;                    /* 生产完毕 */ 
             }
+						else if (GucUartRxIndex == 10) {
+                GbUartRxDone = 1;                    /* 生产完毕 */ 
+            }
+
         }
         GulEscReoprtT1msCnt = 0;
     }

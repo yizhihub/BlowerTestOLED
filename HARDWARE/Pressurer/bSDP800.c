@@ -159,7 +159,7 @@ void SDP800_TEST(uint8_t ucX)
         sSclFct = (cData[6] << 8) + cData[7];
     }
     OLED_PutNum(56, OLED_LINE1, sSclFct, 5, 8, 1);
-//    FLASH_Read(BRAOCALIB_ARRR, (uint16_t*)&_GsBraoAdcOffset, 1);
+//    FLASH_Read(BRAOCALIB_ADDR, (uint16_t*)&_GsBraoAdcOffset, 1);
 //    if ((uint8_t)_GsBraoAdcOffset == 0xFF && (uint8_t)(_GsBraoAdcOffset>>8) == 0xFF)
 //    {
 //        BraoCalibrate();
@@ -193,7 +193,7 @@ void SDP800_TEST(uint8_t ucX)
             if (ADKey_Scan() == KEY_DOWN)
             {
 //                OLED_PutNum(24, OLED_LINE3, _GsBraoAdcOffset, 4, 6, 1);
-//                FLASH_Write(BRAOCALIB_ARRR, (uint16_t*)&_GsBraoAdcOffset, 1);
+//                FLASH_Write(BRAOCALIB_ADDR, (uint16_t*)&_GsBraoAdcOffset, 1);
             }
         }
     }

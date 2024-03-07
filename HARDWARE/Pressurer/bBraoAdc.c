@@ -100,9 +100,9 @@ void BraoAdcInit(void)
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2 | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC, ENABLE);
     RCC_ADCCLKConfig(RCC_PCLK2_Div8);
     
-    GPIO_InitStruct.GPIO_Pin  = GPIO_Pin_0; 
-    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN;
-    GPIO_Init(GPIOB, &GPIO_InitStruct);
+//    GPIO_InitStruct.GPIO_Pin  = GPIO_Pin_0; 
+//    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN;
+//    GPIO_Init(GPIOB, &GPIO_InitStruct);
     GPIO_InitStruct.GPIO_Pin  = GPIO_Pin_5; 
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AIN;
     GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -288,7 +288,7 @@ void BraoCalibration(uint8_t ucX)
     OLED_PutStr(0, OLED_LINE3,     (uint8_t *)"Cali", 6, 1);
     OLED_PutStr(0, OLED_LINE3 + 1, (uint8_t *)"Raw", 6, 1);
     OLED_Print(50, OLED_LINE3, "Ñ¹Á¦:", 1);
-    FLASH_Read(BRAOCALIB_ARRR, (uint16_t*)&_GsBraoAdcOffset, 1);
+    FLASH_Read(BRAOCALIB_ADDR, (uint16_t*)&_GsBraoAdcOffset, 1);
     if ((uint8_t)_GsBraoAdcOffset == 0xFF && (uint8_t)(_GsBraoAdcOffset>>8) == 0xFF)
     {
     BraoCalibrate();
@@ -311,7 +311,7 @@ void BraoCalibration(uint8_t ucX)
             {
                 BraoCalibrate();
                 OLED_PutNum(24, OLED_LINE3, _GsBraoAdcOffset, 4, 6, 1);
-                FLASH_Write(BRAOCALIB_ARRR, (uint16_t*)&_GsBraoAdcOffset, 1);
+                FLASH_Write(BRAOCALIB_ADDR, (uint16_t*)&_GsBraoAdcOffset, 1);
             }
         }
     }

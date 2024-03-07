@@ -10,7 +10,8 @@
 #define PWMCTRL1_ADDR   0x0803F000
 #define PWMCTRL2_ADDR   0x0803F00C
 #define INA226_ADDR     0x0803F00E
-#define BRAOCALIB_ARRR  0x0803F012
+#define BRAOCALIB_ADDR  0x0803F012
+#define MOTORCHOS_ADDR  0X0803F014
 
 /*********************************************************************************************************
   通用数据类型重定义
