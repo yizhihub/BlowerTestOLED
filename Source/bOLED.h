@@ -327,6 +327,7 @@ void OLED_WrDat(unsigned char dat);
 void OLED_WrCmd(unsigned char cmd);
 void OLED_Init(void);
 void OLED_Fill(unsigned int usData);
+void OLED_ClearLine(uint8_t ucStartDine, uint8_t ucEndDine,unsigned int usData);
 void OLED_PutPixel(uint8_t x,uint8_t y);
 void OLED_DrawBMP(uint8_t x0,uint8_t y0,uint8_t x1,uint8_t y1);
 /* ∫∫◊÷œ‘ æ */

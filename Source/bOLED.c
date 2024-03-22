@@ -1037,6 +1037,44 @@ void OLED_Fill(unsigned int usData)
 #endif
 }
 
+void OLED_ClearLine(uint8_t ucStartDine, uint8_t ucEndDine,unsigned int usData)
+{
+    unsigned short y,x;
+
+#if defined(CHIP_SSD1331) || defined(CHIP_SSD1351) || defined(CHIP_ST7735) || defined(CHIP_ST7789V2)
+    OLED_Address_Set(0,0,OLED_WIDTH - 1,OLED_HIGH-1);
+    for(x=0; x < OLED_HIGH; x++)
+    {
+        for (y=0; y < OLED_WIDTH; y++)
+        {
+            OLED_WrDat(usData >> 8);
+            OLED_WrDat(usData);
+        }
+    }
+#elif defined(CHIP_SSD1322) || defined(CHIP_SSD1327)
+    OLED_Address_Set(0,0,OLED_WIDTH - 1,OLED_HIGH - 1);
+    for(x=0; x < (OLED_WIDTH >> 1); x++)                                /* 每次外循环写2竖列， 需要循环64次    */ 
+    {
+        for (y=0; y < OLED_HIGH; y++)                                   /* 写这两竖列需要循环128次             */
+        {
+            OLED_WrDat(usData);                                         /* 高四位为第一个点灰度，低四位为第二个*/
+        }
+    }
+#else
+    for(y = ucStartDine; y< (ucEndDine + LINE_HEIGHT/2); y++)
+    {
+        OLED_WrCmd(0xb0+y);  //设置页地址（0~7）
+        #ifdef CHIP_SH1106   //设置显示位置—列低地址
+        OLED_WrCmd(0x02);
+        #else 
+        OLED_WrCmd(0x00);
+        #endif
+        OLED_WrCmd(0x10);    //设置显示位置—列高地址  
+        for(x = 0;x < OLED_WIDTH;x++)
+            OLED_WrDat(usData);
+    }
+#endif
+}
 //初始化
 void OLED_Init(void)        
 {
