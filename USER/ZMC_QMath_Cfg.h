@@ -51,4 +51,4 @@ extern "C" {
     }
 #endif
 
-#endif 								        /* __ZMC_QMATH_CFG_H            */
+#endif                                         /* __ZMC_QMATH_CFG_H            */

@@ -107,20 +107,20 @@ typedef struct zmc_pid_data   ZMC_PID_DATA;
   PID Macro Definition  
 *********************************************************************************************************/
 #define ZMC_PID(ptPid, qFdb)                                                                             \
-	(ptPid)->qErr 	    = (ptPid)->qRef - (qFdb);                   /* Compute the error           */\
-	(ptPid)->qUp  	    = ZMC_QNMPY( (ptPid)->qKp, (ptPid)->qErr,    (ptPid)->ulQn );                \
-                                                                        /* Proportional output 	       */\
+    (ptPid)->qErr         = (ptPid)->qRef - (qFdb);                   /* Compute the error           */\
+    (ptPid)->qUp          = ZMC_QNMPY( (ptPid)->qKp, (ptPid)->qErr,    (ptPid)->ulQn );                \
+                                                                        /* Proportional output            */\
         (ptPid)->qUi       += ZMC_QNMPY( (ptPid)->qKi, (ptPid)->qUp,     (ptPid)->ulQn ) +               \
-                              ZMC_QNMPY( (ptPid)->qKc, (ptPid)->qSatErr, (ptPid)->ulQn );	         \
-		                                                        /* Integral output             */\
-	(ptPid)->qUd        = ZMC_QNMPY( (ptPid)->qKd, ((ptPid)->qUp - (ptPid)->qUp1), (ptPid)->ulQn );  \
+                              ZMC_QNMPY( (ptPid)->qKc, (ptPid)->qSatErr, (ptPid)->ulQn );             \
+                                                                /* Integral output             */\
+    (ptPid)->qUd        = ZMC_QNMPY( (ptPid)->qKd, ((ptPid)->qUp - (ptPid)->qUp1), (ptPid)->ulQn );  \
                                                                         /* Derivative output           */\
         (ptPid)->qOutPreSat = (ptPid)->qUp + (ptPid)->qUi + (ptPid)->qUd;                                \
                                                                         /* Pre-saturated output        */\
-	(ptPid)->qOut       = ZMC_QSAT( (ptPid)->qOutPreSat, (ptPid)->qOutMax, (ptPid)->qOutMin);        \
-                                                                        /* Saturate the output	       */\
+    (ptPid)->qOut       = ZMC_QSAT( (ptPid)->qOutPreSat, (ptPid)->qOutMax, (ptPid)->qOutMin);        \
+                                                                        /* Saturate the output           */\
         (ptPid)->qSatErr    = (ptPid)->qOut - (ptPid)->qOutPreSat;      /* Saturate difference         */\
-        (ptPid)->qUp1       = (ptPid)->qUp;	
+        (ptPid)->qUp1       = (ptPid)->qUp;    
 
 
 #ifdef __cplusplus

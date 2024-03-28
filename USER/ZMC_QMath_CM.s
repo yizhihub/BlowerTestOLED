@@ -42,19 +42,19 @@
     __ZMC_ASM_EXPORT(zmcQnDiv)
     
              
-    __ZMC_ASM_STACK_ALIGN()	                                            ; 8-byte alignment of the stack
+    __ZMC_ASM_STACK_ALIGN()                                                ; 8-byte alignment of the stack
     __ZMC_ASM_CODE_SECTION(ZMC_QMath_CM)
     __ZMC_ASM_SECTION(THUMB)                                            ; Set to Thumb instruction seg.
 
 
 ;*********************************************************************************************************
 ;** Function name:      zmcQFloatSqrt
-;** Descriptions:	    Floating-point Square Root.
-;** Input parameters:	S0:
-;** Output parameters:	None 无
-;** Returned value:	    S0
-;** Created by:		    Steven Zhou 周绍刚
-;** Created Date:	    2011.10.31
+;** Descriptions:        Floating-point Square Root.
+;** Input parameters:    S0:
+;** Output parameters:    None 无
+;** Returned value:        S0
+;** Created by:            Steven Zhou 周绍刚
+;** Created Date:        2011.10.31
 ;**-------------------------------------------------------------------------------------------------------
 ;** Modified by:         
 ;** Modified date:       

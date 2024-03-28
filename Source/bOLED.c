@@ -654,16 +654,16 @@ void IIC_Respons()
 
 void IIC_Answer(uint8_t ucAns) // 主机应答期间， 1 应答 0 不应答
 {
-	 if(ucAns==1)
-	 {
-		 OLED_SDA_0;
-		 usDelayOne();
-	 }
-	 else
-	 {
+     if(ucAns==1)
+     {
+         OLED_SDA_0;
+         usDelayOne();
+     }
+     else
+     {
          OLED_SDA_1;
-	     usDelayOne();
-	  }
+         usDelayOne();
+      }
       OLED_SCL_1;
       usDelayOne();// 等待slave读取应答信号
       OLED_SCL_0;
@@ -675,24 +675,24 @@ void IIC_Answer(uint8_t ucAns) // 主机应答期间， 1 应答 0 不应答
 
 void IIC_WriteByte(unsigned char IIC_Byte)
 {
-	unsigned char i;
-	unsigned char m,da;
-	da=IIC_Byte;
-	OLED_SCL_0;
-	for(i=0;i<8;i++)
-	{
+    unsigned char i;
+    unsigned char m,da;
+    da=IIC_Byte;
+    OLED_SCL_0;
+    for(i=0;i<8;i++)
+    {
         m=da;
-		m=m&0x80;
-		if(m==0x80) {
+        m=m&0x80;
+        if(m==0x80) {
             OLED_SDA_1;
         } else {
             OLED_SDA_0;
         }
         usDelayOne();
         da=da<<1;
-		OLED_SCL_1;
+        OLED_SCL_1;
         usDelayOne();
-		OLED_SCL_0;
+        OLED_SCL_0;
     }
 }
 
@@ -768,7 +768,7 @@ void I2C_WrCmd(unsigned char IIC_Command)
     IIC_Start();
     IIC_WriteByte(0x78);            //Slave address,SA0=0
     IIC_Respons();
-    IIC_WriteByte(0x00);			//write command
+    IIC_WriteByte(0x00);            //write command
     IIC_Respons();
     IIC_WriteByte(IIC_Command);
     IIC_Respons();
@@ -780,9 +780,9 @@ void I2C_WrCmd(unsigned char IIC_Command)
 void I2C_WrDat(unsigned char IIC_Data)
 {
     IIC_Start();
-    IIC_WriteByte(0x78);			//D/C#=0; R/W#=0
+    IIC_WriteByte(0x78);            //D/C#=0; R/W#=0
     IIC_Respons();
-    IIC_WriteByte(0x40);			//write data
+    IIC_WriteByte(0x40);            //write data
     IIC_Respons();
     IIC_WriteByte(IIC_Data);
     IIC_Respons();
@@ -795,9 +795,9 @@ void I2C_WrDatN(CONST_DATA unsigned char *pucData, unsigned char ucLen, unsigned
 {
     uint8_t i;
     IIC_Start();
-    IIC_WriteByte(0x78);			//D/C#=0; R/W#=0
+    IIC_WriteByte(0x78);            //D/C#=0; R/W#=0
     IIC_Respons();
-    IIC_WriteByte(0x40);			//write data
+    IIC_WriteByte(0x40);            //write data
     IIC_Respons();
     for (i = 0; i < ucLen; i++) {
         IIC_WriteByte(ucY ? (*pucData++) : ~(*pucData++));
@@ -1022,18 +1022,18 @@ void OLED_Fill(unsigned int usData)
         }
     }
 #else
-	for(y=0; y< (OLED_LINE_MAX + LINE_HEIGHT); y++)
-	{
-		OLED_WrCmd(0xb0+y);  //设置页地址（0~7）
+    for(y=0; y< (OLED_LINE_MAX + LINE_HEIGHT); y++)
+    {
+        OLED_WrCmd(0xb0+y);  //设置页地址（0~7）
         #ifdef CHIP_SH1106   //设置显示位置—列低地址
         OLED_WrCmd(0x02);
         #else 
-		OLED_WrCmd(0x00);
+        OLED_WrCmd(0x00);
         #endif
-		OLED_WrCmd(0x10);    //设置显示位置—列高地址  
-		for(x=0;x<OLED_WIDTH;x++)
-			OLED_WrDat(usData);
-	}
+        OLED_WrCmd(0x10);    //设置显示位置—列高地址  
+        for(x=0;x<OLED_WIDTH;x++)
+            OLED_WrDat(usData);
+    }
 #endif
 }
 
@@ -1326,83 +1326,83 @@ void OLED_Init(void)
     }
 #elif defined(CHIP_ST7789V2)
     {
-	LCD_BLK_1;//打开背光
+    LCD_BLK_1;//打开背光
   msDelay(10);
-	
-	//************* Start Initial Sequence **********//
-	OLED_WrCmd(0x11); //Sleep out 
-	msDelay(120);              //Delay 120ms 
-	//************* Start Initial Sequence **********// 
-	OLED_WrCmd(0x36);
-	OLED_WrDat(0x00);
+    
+    //************* Start Initial Sequence **********//
+    OLED_WrCmd(0x11); //Sleep out 
+    msDelay(120);              //Delay 120ms 
+    //************* Start Initial Sequence **********// 
+    OLED_WrCmd(0x36);
+    OLED_WrDat(0x00);
 
 
-	OLED_WrCmd(0x3A);			
-	OLED_WrDat(0x05);
+    OLED_WrCmd(0x3A);            
+    OLED_WrDat(0x05);
 
-	OLED_WrCmd(0xB2);			
-	OLED_WrDat(0x0C);
-	OLED_WrDat(0x0C); 
-	OLED_WrDat(0x00); 
-	OLED_WrDat(0x33); 
-	OLED_WrDat(0x33); 			
+    OLED_WrCmd(0xB2);            
+    OLED_WrDat(0x0C);
+    OLED_WrDat(0x0C); 
+    OLED_WrDat(0x00); 
+    OLED_WrDat(0x33); 
+    OLED_WrDat(0x33);             
 
-	OLED_WrCmd(0xB7);			
-	OLED_WrDat(0x35);
+    OLED_WrCmd(0xB7);            
+    OLED_WrDat(0x35);
 
-	OLED_WrCmd(0xBB);			
-	OLED_WrDat(0x32); //Vcom=1.35V
-					
-	OLED_WrCmd(0xC2);
-	OLED_WrDat(0x01);
+    OLED_WrCmd(0xBB);            
+    OLED_WrDat(0x32); //Vcom=1.35V
+                    
+    OLED_WrCmd(0xC2);
+    OLED_WrDat(0x01);
 
-	OLED_WrCmd(0xC3);			
-	OLED_WrDat(0x15); //GVDD=4.8V  颜色深度
-				
-	OLED_WrCmd(0xC4);			
-	OLED_WrDat(0x20); //VDV, 0x20:0v
+    OLED_WrCmd(0xC3);            
+    OLED_WrDat(0x15); //GVDD=4.8V  颜色深度
+                
+    OLED_WrCmd(0xC4);            
+    OLED_WrDat(0x20); //VDV, 0x20:0v
 
-	OLED_WrCmd(0xC6);			
-	OLED_WrDat(0x0F); //0x0F:60Hz        	
+    OLED_WrCmd(0xC6);            
+    OLED_WrDat(0x0F); //0x0F:60Hz            
 
-	OLED_WrCmd(0xD0);			
-	OLED_WrDat(0xA4);
-	OLED_WrDat(0xA1); 
+    OLED_WrCmd(0xD0);            
+    OLED_WrDat(0xA4);
+    OLED_WrDat(0xA1); 
 
-	OLED_WrCmd(0xE0);
-	OLED_WrDat(0xD0);   
-	OLED_WrDat(0x08);   
-	OLED_WrDat(0x0E);   
-	OLED_WrDat(0x09);   
-	OLED_WrDat(0x09);   
-	OLED_WrDat(0x05);   
-	OLED_WrDat(0x31);   
-	OLED_WrDat(0x33);   
-	OLED_WrDat(0x48);   
-	OLED_WrDat(0x17);   
-	OLED_WrDat(0x14);   
-	OLED_WrDat(0x15);   
-	OLED_WrDat(0x31);   
-	OLED_WrDat(0x34);   
+    OLED_WrCmd(0xE0);
+    OLED_WrDat(0xD0);   
+    OLED_WrDat(0x08);   
+    OLED_WrDat(0x0E);   
+    OLED_WrDat(0x09);   
+    OLED_WrDat(0x09);   
+    OLED_WrDat(0x05);   
+    OLED_WrDat(0x31);   
+    OLED_WrDat(0x33);   
+    OLED_WrDat(0x48);   
+    OLED_WrDat(0x17);   
+    OLED_WrDat(0x14);   
+    OLED_WrDat(0x15);   
+    OLED_WrDat(0x31);   
+    OLED_WrDat(0x34);   
 
-	OLED_WrCmd(0xE1);     
-	OLED_WrDat(0xD0);   
-	OLED_WrDat(0x08);   
-	OLED_WrDat(0x0E);   
-	OLED_WrDat(0x09);   
-	OLED_WrDat(0x09);   
-	OLED_WrDat(0x15);   
-	OLED_WrDat(0x31);   
-	OLED_WrDat(0x33);   
-	OLED_WrDat(0x48);   
-	OLED_WrDat(0x17);   
-	OLED_WrDat(0x14);   
-	OLED_WrDat(0x15);   
-	OLED_WrDat(0x31);   
-	OLED_WrDat(0x34);
-	OLED_WrCmd(0x21); 
+    OLED_WrCmd(0xE1);     
+    OLED_WrDat(0xD0);   
+    OLED_WrDat(0x08);   
+    OLED_WrDat(0x0E);   
+    OLED_WrDat(0x09);   
+    OLED_WrDat(0x09);   
+    OLED_WrDat(0x15);   
+    OLED_WrDat(0x31);   
+    OLED_WrDat(0x33);   
+    OLED_WrDat(0x48);   
+    OLED_WrDat(0x17);   
+    OLED_WrDat(0x14);   
+    OLED_WrDat(0x15);   
+    OLED_WrDat(0x31);   
+    OLED_WrDat(0x34);
+    OLED_WrCmd(0x21); 
 
-	OLED_WrCmd(0x29);
+    OLED_WrCmd(0x29);
     }
 #elif defined(CHIP_SSD1322)
     {
@@ -1411,19 +1411,19 @@ void OLED_Init(void)
 
     OLED_WrCmd(0xae); //Sleep In 
 
-    OLED_WrCmd(0xb3);	//Set Display Clock Divide Ratio/Oscillator Frequency 
+    OLED_WrCmd(0xb3);    //Set Display Clock Divide Ratio/Oscillator Frequency 
     OLED_WrDat(0x91);
 
-    OLED_WrCmd(0xca);	//Set Multiplex Ratio 
+    OLED_WrCmd(0xca);    //Set Multiplex Ratio 
     OLED_WrDat(0x3f);
 
-    OLED_WrCmd(0xa2);	//Set Display Offset 
-    OLED_WrDat(0x00);	//
+    OLED_WrCmd(0xa2);    //Set Display Offset 
+    OLED_WrDat(0x00);    //
 
-    OLED_WrCmd(0xa1);	//Set Display Start Line 
-    OLED_WrDat(0x00);	//
+    OLED_WrCmd(0xa1);    //Set Display Start Line 
+    OLED_WrDat(0x00);    //
 
-    OLED_WrCmd(0xa0);	//Set Re-Map $ Dual COM Line Mode
+    OLED_WrCmd(0xa0);    //Set Re-Map $ Dual COM Line Mode
     if(0)
     {
     OLED_WrDat(0x14);  // 0x14 = 0b00010100, A2 = 1(enable Nibble Re-map) A4 = 1(scan from COM[N-1] to COM[0], where N is the Multiplex ratio) A[5] = 0
@@ -1437,43 +1437,43 @@ void OLED_Init(void)
     OLED_WrDat(0x12);         // 0x12 正置竖屏  0x10 倒置竖屏
     }
 
-    OLED_WrCmd(0xB5);	//Set GPIO 
+    OLED_WrCmd(0xB5);    //Set GPIO 
     OLED_WrDat(0x00);
 
-    OLED_WrCmd(0xab);	//Function Selection
-    OLED_WrDat(0x01);	//
+    OLED_WrCmd(0xab);    //Function Selection
+    OLED_WrDat(0x01);    //
 
-    OLED_WrCmd(0xb4);	//Enable External VSL 
-    OLED_WrDat(0xa0);	//
-    OLED_WrDat(0xfd);	//
+    OLED_WrCmd(0xb4);    //Enable External VSL 
+    OLED_WrDat(0xa0);    //
+    OLED_WrDat(0xfd);    //
 
-    OLED_WrCmd(0xc1);	//Set Contrast Current
-    OLED_WrDat(0xff);	
+    OLED_WrCmd(0xc1);    //Set Contrast Current
+    OLED_WrDat(0xff);    
 
-    OLED_WrCmd(0xc7);	//Master Contrast Current Control
-    OLED_WrDat(0x0f);	//
+    OLED_WrCmd(0xc7);    //Master Contrast Current Control
+    OLED_WrDat(0x0f);    //
 
-    OLED_WrCmd(0xb9);	//Select Default Linear Gray Scale Table 
+    OLED_WrCmd(0xb9);    //Select Default Linear Gray Scale Table 
 
-    OLED_WrCmd(0xb1);	//Set Phase Length
-    OLED_WrDat(0xe2);	
+    OLED_WrCmd(0xb1);    //Set Phase Length
+    OLED_WrDat(0xe2);    
 
-    OLED_WrCmd(0xd1);	//Enhance Driving Scheme Capability 
-    OLED_WrDat(0x82);	
-    OLED_WrDat(0x20);	
+    OLED_WrCmd(0xd1);    //Enhance Driving Scheme Capability 
+    OLED_WrDat(0x82);    
+    OLED_WrDat(0x20);    
 
-    OLED_WrCmd(0xbb);	//Set Pre-Charge Voltage 
-    OLED_WrDat(0x1f);	
+    OLED_WrCmd(0xbb);    //Set Pre-Charge Voltage 
+    OLED_WrDat(0x1f);    
 
-    OLED_WrCmd(0xb6);	//Set Second Pre-Charge Period 
-    OLED_WrDat(0x08);	
+    OLED_WrCmd(0xb6);    //Set Second Pre-Charge Period 
+    OLED_WrDat(0x08);    
 
-    OLED_WrCmd(0xbe);	//Set VCOMH Deselect Level 
-    OLED_WrDat(0x07);		
+    OLED_WrCmd(0xbe);    //Set VCOMH Deselect Level 
+    OLED_WrDat(0x07);        
 
-    OLED_WrCmd(0xa6);	//Set Display Mode
+    OLED_WrCmd(0xa6);    //Set Display Mode
     OLED_Fill(0x00);   //Clear Screen
-    OLED_WrCmd(0xaf);	//Sleep Out        
+    OLED_WrCmd(0xaf);    //Sleep Out        
     
     }
 #elif defined(CHIP_SSD1327)
@@ -1644,7 +1644,7 @@ void OLED_Init(void)
 ///* m^n */  
 uint32_t mypow(uint8_t m,uint8_t n)
 {
-    uint32_t result=1;	 
+    uint32_t result=1;     
     while(n--)result*=m;    
     return result;
 }
@@ -2047,7 +2047,7 @@ void OLED_PutNumber(uint8_t x,uint8_t y,float m, uint8_t M, uint8_t N, char* pUn
         m = -m;
         negative=1; 
     }
-    x_decimal = x + M * ucSize;	
+    x_decimal = x + M * ucSize;    
     if (N != 0) {
         OLED_PutChar(x_decimal,y,'.', ucSize, ucYn); // 小数点位置固定   
         x_decimal += ucSize;
@@ -2088,37 +2088,37 @@ void OLED_PutNumber(uint8_t x,uint8_t y,float m, uint8_t M, uint8_t N, char* pUn
     }
 #endif 
 /******ALienTek 数字灭零显示方式*****************************／
-	for(t=0;t<len;t++)
-	{
-		temp=(num/mypow(10,len-t-1))%10; //  从整数的最高位开始输出  
-		if(enshow==0&&t<(len-1))         // 当enshow为0时说明还遇到第一个非0最高整数位
-		{
-			if(temp==0)
-			{
-				LCD_ShowChar(x+(size/2)*t,y,' ',size,0);//灭零吧 yizhi 
-				continue; // 本次循环立即结束 
-			}
-			else 
-			{
-			  enshow=1; // 遇到第一个非零的最高速，之后无需进行灭零判断。
-			}
-		 	 
-		}
-	 	LCD_ShowChar(x+(size/2)*t,y,temp+'0',size,0); 
-	}　*/
-	/**********************野火 数字显示灭零方式**************************
-		while(temp)  //  这个算法我当时想了好久，野火一下子就解决了, 厉害了，比正点原子更佳，野火从个位开始输出。 yizhi 
-	{// 得到num的长度
-		temp /= 10;
-		length ++;
-	}
-	
-	while( num ) // 野火用 while 用的溜呀 
-	{
-		/／ 从个位开始显示 
-		LCD_DispChar((x+STR_WIDTH*(length--)-STR_WIDTH), y, (num%10)+'0', color);
-		num /= 10;
-	}	 */
+    for(t=0;t<len;t++)
+    {
+        temp=(num/mypow(10,len-t-1))%10; //  从整数的最高位开始输出  
+        if(enshow==0&&t<(len-1))         // 当enshow为0时说明还遇到第一个非0最高整数位
+        {
+            if(temp==0)
+            {
+                LCD_ShowChar(x+(size/2)*t,y,' ',size,0);//灭零吧 yizhi 
+                continue; // 本次循环立即结束 
+            }
+            else 
+            {
+              enshow=1; // 遇到第一个非零的最高速，之后无需进行灭零判断。
+            }
+              
+        }
+         LCD_ShowChar(x+(size/2)*t,y,temp+'0',size,0); 
+    }　*/
+    /**********************野火 数字显示灭零方式**************************
+        while(temp)  //  这个算法我当时想了好久，野火一下子就解决了, 厉害了，比正点原子更佳，野火从个位开始输出。 yizhi 
+    {// 得到num的长度
+        temp /= 10;
+        length ++;
+    }
+    
+    while( num ) // 野火用 while 用的溜呀 
+    {
+        /／ 从个位开始显示 
+        LCD_DispChar((x+STR_WIDTH*(length--)-STR_WIDTH), y, (num%10)+'0', color);
+        num /= 10;
+    }     */
 }
 /*********prepare to lanqiao competition*************************
 #function: 16进制显示uint8数组,中间加上'-'分隔符, 若形参dat传入的是一个整形指针注意大小端。
@@ -2130,7 +2130,7 @@ void OLED_PutNumber(uint8_t x,uint8_t y,float m, uint8_t M, uint8_t N, char* pUn
 ******************************************************************/
 void OLED_HexDisp(uint8_t x,uint8_t y,uint8_t *dat,uint8_t N, uint8_t ucSize, uint16_t ucYn)
 {
-	uint8_t temp,i;
+    uint8_t temp,i;
     if (ucYn == 1) ucYn = FRONT_COLOR; 
     
     OLED_PutChar(x,y,'0', ucSize, ucYn);  x += ucSize;
@@ -2181,7 +2181,7 @@ void OLED_PutTime(uint8_t x,uint8_t y,RTC_Time_s * time, uint8_t ucSize, uint16_
     OLED_PutChar(x,y,time->minute%10+0x30, ucSize, ucYn);     x += ucSize; 
     OLED_PutChar(x,y,':', ucSize, ucYn);                      x += ucSize;
     OLED_PutChar(x,y,time->second%100/10+0x30, ucSize, ucYn); x += ucSize;
-    OLED_PutChar(x,y,time->second%10+0x30, ucSize, ucYn);      	
+    OLED_PutChar(x,y,time->second%10+0x30, ucSize, ucYn);          
 }
 
 #ifdef FEATURE_HANZI
@@ -2322,8 +2322,8 @@ void OLED_Print(uint8_t x,uint8_t y,uint8_t ch[], uint16_t ucYn)
             }
             ch2[0] = ch[ii];
             ch2[1] = ch[ii + 1];
-            ch2[2] = '\0';			//汉字为两个字节
-            OLED_PutHan(x , y, ch2, ucYn);	//显示汉字
+            ch2[2] = '\0';            //汉字为两个字节
+            OLED_PutHan(x , y, ch2, ucYn);    //显示汉字
             x += 14;
             ii += 2;
         }
@@ -2340,8 +2340,8 @@ void OLED_Print(uint8_t x,uint8_t y,uint8_t ch[], uint16_t ucYn)
                 if (y > OLED_LINE_MAX)       // 此处有一个待处理的BUG，若显示字体为6号，最后一行书写不了。
                     return;
             }
-            ch2[0] = ch[ii];	
-            OLED_PutChar(x, y , ch2[0], 8, ucYn);	//显示字母
+            ch2[0] = ch[ii];    
+            OLED_PutChar(x, y , ch2[0], 8, ucYn);    //显示字母
             x += 8;
             ii+= 1;
         }
@@ -2739,7 +2739,7 @@ void timeClockStep(RTC_Time_s *ptTime)
 //返回：无
 //==============================================================
 void OLED_DrawBMP(uint8_t x0,uint8_t y0,uint8_t x1,uint8_t y1)
-{ 	
+{     
     unsigned int  ii=0;
     uint8_t x,y;
     
@@ -2747,15 +2747,15 @@ void OLED_DrawBMP(uint8_t x0,uint8_t y0,uint8_t x1,uint8_t y1)
    // else y=y1/8+1;
     for(y=y0;y<=y1;y++)
     {
-        OLED_Set_Pos(x0,y);				
+        OLED_Set_Pos(x0,y);                
         for(x=x0;x<x1;x++)
         {      
-            OLED_WrDat(Scale1_8x128[ii++]);	    	
+            OLED_WrDat(Scale1_8x128[ii++]);            
         }
     }
-//	for(i=0;i<128;i++)
-//	{
-//     		
+//    for(i=0;i<128;i++)
+//    {
+//             
 //  }
 }
 #endif

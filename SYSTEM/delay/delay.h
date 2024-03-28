@@ -1,7 +1,7 @@
 #ifndef __DELAY_H
-#define __DELAY_H 			   
+#define __DELAY_H                
 #include "sys.h"  
-//////////////////////////////////////////////////////////////////////////////////	 
+//////////////////////////////////////////////////////////////////////////////////     
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
 //ALIENTEK STM32开发板
 //使用SysTick的普通计数模式对延迟进行管理（适合STM32F10x系列）
@@ -39,7 +39,7 @@
 //delay_tickspersec改为：delay_ostickspersec
 //delay_intnesting改为：delay_osintnesting
 ////////////////////////////////////////////////////////////////////////////////// 
-	 
+     
 void delay_init(void);
 void ms_Delay(u16 nms);
 void us_Delay(u32 nus);

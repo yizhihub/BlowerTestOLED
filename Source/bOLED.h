@@ -43,12 +43,12 @@
 #define OLED_COLOR
 #endif
 
-#define XLevelL		0x00
-#define XLevelH		0x10
-#define XLevel		((XLevelH&0x0F)*16+XLevelL)
-#define Max_Column	128
-#define Max_Row		64
-#define	Brightness	0x7F 
+#define XLevelL        0x00
+#define XLevelH        0x10
+#define XLevel        ((XLevelH&0x0F)*16+XLevelL)
+#define Max_Column    128
+#define Max_Row        64
+#define    Brightness    0x7F 
 #define OLED_WIDTH 128
 #define OLED_HIGH  64
 #define LINE_HEIGHT 2
@@ -155,16 +155,16 @@ typedef struct yizhi_RTC_Time_s
     sbit OLED_RST= P1^4;
     sbit OLED_DC = P1^3;
     sbit OLED_CS = P1^2;
-	#elif defined(IAP15W413ASSOP20)
-	sbit OLED_SCL= P1^2;                                                    /* 15W408AS  SOP20 Left 正置 */
+    #elif defined(IAP15W413ASSOP20)
+    sbit OLED_SCL= P1^2;                                                    /* 15W408AS  SOP20 Left 正置 */
     sbit OLED_SDA= P1^3;
     sbit OLED_RST= P1^4;
     sbit OLED_DC = P1^5;
     sbit OLED_CS = P1^6;
-	sbit LCD_BLK = P1^7;
+    sbit LCD_BLK = P1^7;
     #endif
     
-	#define LCD_BLK_0    LCD_BLK = 0
+    #define LCD_BLK_0    LCD_BLK = 0
     #define LCD_BLK_1    LCD_BLK = 1
     #define OLED_SCL_0    OLED_SCL = 0
     #define OLED_SCL_1    OLED_SCL = 1
@@ -350,29 +350,29 @@ void timeClockStep(RTC_Time_s *ptTime);
 extern uint16_t BACK_COLOR;
 extern uint16_t FRONT_COLOR;
 //颜色
-#define WHITE         	 0xFFFF
-#define BLACK         	 0x0000	  
-#define BLUE           	 0x001F  
+#define WHITE              0xFFFF
+#define BLACK              0x0000      
+#define BLUE                0x001F  
 #define BRED             0XF81F
-#define GRED 			       0XFFE0
-#define GBLUE			       0X07FF
-#define RED           	 0xF800
-#define MAGENTA       	 0xF81F
-#define GREEN         	 0x07E0
-#define CYAN          	 0x7FFF
-#define YELLOW        	 0xFFE0
-#define BROWN 			     0XBC40 //棕色
-#define BRRED 			     0XFC07 //棕红色
-#define GRAY  			     0X8430 //灰色
+#define GRED                    0XFFE0
+#define GBLUE                   0X07FF
+#define RED                0xF800
+#define MAGENTA            0xF81F
+#define GREEN              0x07E0
+#define CYAN               0x7FFF
+#define YELLOW             0xFFE0
+#define BROWN                  0XBC40 //棕色
+#define BRRED                  0XFC07 //棕红色
+#define GRAY                   0X8430 //灰色
 //GUI颜色
 
-#define DARKBLUE      	 0X01CF	//深蓝色
-#define LIGHTBLUE      	 0X7D7C	//浅蓝色  
-#define GRAYBLUE       	 0X5458 //灰蓝色
+#define DARKBLUE           0X01CF    //深蓝色
+#define LIGHTBLUE           0X7D7C    //浅蓝色  
+#define GRAYBLUE            0X5458 //灰蓝色
 //以上三色为PANEL的颜色 
  
-#define LIGHTGREEN     	 0X841F //浅绿色
-#define LGRAY 			     0XC618 //浅灰色(PANNEL),窗体背景色
+#define LIGHTGREEN          0X841F //浅绿色
+#define LGRAY                  0XC618 //浅灰色(PANNEL),窗体背景色
 
 #define LGRAYBLUE        0XA651 //浅灰蓝色(中间层颜色)
 #define LBBLUE           0X2B12 //浅棕蓝色(选择条目的反色)

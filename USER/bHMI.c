@@ -47,6 +47,7 @@ INT8U  GucPolePair;
 static uchar MenuItem[9][17];
 static uchar NowItem;
 static uchar FirstItem;
+u8 VerSionStr[24] = {0};
 PWM_CTRL_UNION PwmCtrl1, PwmCtrl2;
 
 extern const char GscBuildDate[];
@@ -66,10 +67,13 @@ extern const char GscBuildTIme[];
 ** @create yizhi 2023.06.24
 ** @modify 
 *********************************************************************************************************/
+uchar UartCmdVerTxBuf[10] = {0x2B, 0xC2, 0x3E};
 void VersionInfoDisp(void)
 {
     OLED_Fill(0x00);
+    GbUartRxDone = 0;
     
+    uartDrvPutBuf(USART2, UartCmdVerTxBuf, 3);    /* ask for version frame */ 
     while (ADKey_Scan() != KEY_CANCEL) {
         
         OLED_PutChar(10, OLED_LINE0, 'V', 8, 1);
@@ -78,6 +82,13 @@ void VersionInfoDisp(void)
         OLED_PutChar(34, OLED_LINE0, GscSoftRelease[1], 8, 1);
         OLED_PutChar(42, OLED_LINE0, '.', 8, 1);
         OLED_PutChar(50, OLED_LINE0, GscSoftRelease[2], 8, 1);
+        if (GbUartRxDone) {
+            OLED_PutStr(10, OLED_LINE1, VerSionStr,  6, 1);
+//            OLED_PutStr(10, OLED_LINE1 + LINE_HEIGHT / 2, "String Null",  6, 1);
+        } else {            
+            uartDrvPutBuf(USART2, UartCmdVerTxBuf, 3); 
+        }
+            
         OLED_PutStr(10, OLED_LINE2, (uint8_t *)GscBuildDate,   6, 1);
         OLED_PutStr(10, OLED_LINE2 + LINE_HEIGHT / 2, (uint8_t *)GscBuildTIme,   6, 1);
         OLED_PutNumber(10, OLED_LINE3, RSHUNT*_GfRsINA226.fdata, 2, 3, "mΩ", 6, 1);
@@ -651,7 +662,7 @@ INT16U ulVoltage10Mv;
 INT16U uleRpm, uleRpmFilter;
 INT32U uleErrorCode = 0;
 INT16U uleRpmLPFilterArray[20];
-INT8U  ucArrayIndex = 0;
+INT8U  ucArrayIndex = 0, GucLingORptEn = 1;
 INT32U uleRpmFilterSum = 0;
 INT16S sPwmDutyValue  = 0;
 uchar UartCMDSpeedTxBuf[10] = {0x2B, 0xC1, 0x3F};
@@ -669,6 +680,7 @@ void BlowerBiLTest(uint8_t ucX)
     INT16U  usVol;
     INT16S  sCur;
     
+    GbUartRxDone = 0;
     GucPolePair = 1;
     bPwmRunning  = 0;
     bScreenIDFlg = 1;
@@ -690,7 +702,7 @@ void BlowerBiLTest(uint8_t ucX)
     }
     
     OLED_Fill(0x00);
-//		OLED_PutStr(105, OLED_LINE0, (uint8_t *)"ErCd", 6, 1); 
+//        OLED_PutStr(105, OLED_LINE0, (uint8_t *)"ErCd", 6, 1); 
     OLED_PutStr(104, OLED_LINE3, (uint8_t *)"RPM", 6, 1); 
     OLED_PutStr(104, OLED_LINE3 + (LINE_HEIGHT >> 1), (uint8_t *)"RPM", 6, 1); 
     PWM_KeyCallback(&PwmCtrl1, 4);                         /* stimulate Press KeyProtocol KeyUP KEYDOWN update related value */
@@ -700,7 +712,7 @@ void BlowerBiLTest(uint8_t ucX)
     while(ADKey_Scan()!=KEY_CANCEL)
     {
        if (GbUartRxDone) {
-          if (GucUartRxIndex == 8 && USART_RX_BUF[0] == 0x2B) {
+          if (GucUartRxIndex == 8 && USART_RX_BUF[0] == 0x2B) {              /* 三代机LingO电调协议 */
               uleRpm        = USART_RX_BUF[3] << 8 | USART_RX_BUF[4];
               GbUartRxDone =  0;                                     /* 消费完成 */ 
               uleRpmFilterSum += uleRpm;
@@ -715,7 +727,8 @@ void BlowerBiLTest(uint8_t ucX)
 //                  OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpmFilter * 100,     5,          6, 1);
                   OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpmFilter,     5,          6, 1);
               }
-          } else if (GucUartRxIndex == 10 && USART_RX_BUF[0] != 0x5A) {              /* LingO协议 */
+          } else if (GucUartRxIndex == 10 && USART_RX_BUF[0] != 0x5A) {              /* 方波电调协议 */
+              GucLingORptEn = 0;
               ucTemperature = USART_RX_BUF[0];
               ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];
               uleRpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[8];
@@ -733,36 +746,39 @@ void BlowerBiLTest(uint8_t ucX)
 //                  OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpm,     5,          6, 1);
               }
           } else if (GucUartRxIndex == 10 && USART_RX_BUF[0] == 0x5A) {             /* 大无创协议 */
+              GucLingORptEn = 0;                                                    /* 禁能LingO发送 */
               uleRpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[6];
-						  uleErrorCode  = USART_RX_BUF[4] << 8 | USART_RX_BUF[5];
+                          uleErrorCode  = USART_RX_BUF[4] << 8 | USART_RX_BUF[5];
               GbUartRxDone =  0;                                   /* 消费完成 */               
               OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpm,     5,          6, 1);
-						  if (uleErrorCode)
-						  {
-								  bErDispFlg = !bErDispFlg;
-								  if (bErDispFlg) {
-									    OLED_ClearLine(OLED_LINE0, OLED_LINE0 + (LINE_HEIGHT >> 1), 0x00);
+                          if (uleErrorCode)
+                          {
+                                  bErDispFlg = !bErDispFlg;
+                                  if (bErDispFlg) {
+                                        OLED_ClearLine(OLED_LINE0, OLED_LINE0 + (LINE_HEIGHT >> 1), 0x00);
                   } else {
-										  OLED_PutStr(0, OLED_LINE0, (uint8_t *)"Error:", 8, 1); 
+                                          OLED_PutStr(0, OLED_LINE0, (uint8_t *)"Error:", 8, 1); 
                       OLED_HexDisp(64, OLED_LINE0, (uint8_t *)&uleErrorCode, 2, 8, 1);
-                  }									
-						  }
-          }	else {
-						  uleRpm = 0;
+                  }                                    
+                          }
+          }    else {
+                          uleRpm = 0;
               GbUartRxDone = 0;                                     /* 直接消费完成 */
           }
         }
         if (GulPrintTimeCnt > 10) { 
             GulPrintTimeCnt = 0;
-            uartDrvPutBuf(USART2, UartCMDSpeedTxBuf, 3);    /* ask for speed frame */ 
+            
             if (ul10msCnt++ > 10) {
                 ul10msCnt = 0;
+                if (GucLingORptEn == 1)
+                    uartDrvPutBuf(USART2, UartCMDSpeedTxBuf, 3);    /* ask for speed frame */ 
                 bFlip = !bFlip;
             
                 if (bFlip) {
 //                    OLED_PutNumber(0, OLED_LINE3 + (LINE_HEIGHT >> 1),  BraoGet(), 2, 1, "cmH", 6, 1); 
                 } else if (!uleErrorCode){
-									  
+                                      
                     INA226_Read(&usVol, &sCur);
                     OLED_PutNumber(0,  OLED_LINE0, usVol / 100.0f, 2, 2, "V", 8, 1);
                     OLED_PutNumber(72, OLED_LINE0, sCur / 1000.0f, 2, 3, "A", 8, 1);
@@ -889,8 +905,8 @@ void BlowerBiLTest(uint8_t ucX)
                 break;
             
             case EC11_SET:
-							  if (uleErrorCode)
-									  OLED_ClearLine(OLED_LINE0, OLED_LINE0 + (LINE_HEIGHT >> 1), 0x00);
+                              if (uleErrorCode)
+                                      OLED_ClearLine(OLED_LINE0, OLED_LINE0 + (LINE_HEIGHT >> 1), 0x00);
                 if (!bPwmRunning) {
                     FLASH_Write(PWMCTRL1_ADDR, (uint16_t*)PwmCtrl1.sPwmCtrl, 6);
                     bEdit_flag = !bEdit_flag;

@@ -34,34 +34,34 @@
 
 
 #ifdef __IASMARM__                                                      /* IAR assembler                */
-    #define __ZMC_ASM_IMPORT(sLabel)     	    EXTERN sLabel
-    #define __ZMC_ASM_EXPORT(sLabel)       		PUBLIC sLabel
+    #define __ZMC_ASM_IMPORT(sLabel)             EXTERN sLabel
+    #define __ZMC_ASM_EXPORT(sLabel)               PUBLIC sLabel
 
-    #define __ZMC_ASM_CODE_SECTION(sLabel) 		RSEG sLabel: CODE: NOROOT(4)
+    #define __ZMC_ASM_CODE_SECTION(sLabel)         RSEG sLabel: CODE: NOROOT(4)
     
     #define __ZMC_ASM_EQUATE(sLabel, ulValue)   sLabel  EQU  ulValue
 
-    #define __ZMC_ASM_STACK_ALIGN()   	   	
+    #define __ZMC_ASM_STACK_ALIGN()              
     #define __ZMC_ASM_FILE_END()                END
-    #define __ZMC_ASM_SECTION(sLable)  		    sLable 
-    #define __ZMC_ASM_CODE_ALIGN(ucValue)  		ALIGNROM ucValue
+    #define __ZMC_ASM_SECTION(sLable)              sLable 
+    #define __ZMC_ASM_CODE_ALIGN(ucValue)          ALIGNROM ucValue
 
     #ifdef __ARMVFP__ 
     #define __ZMC_ASM_ARM_FPU                   1u         
     #endif
 
 #elif defined (__CC_ARM)                                                /* KEIL assembler               */
-    #define __ZMC_ASM_IMPORT(sLabel)     	    EXTERN sLabel
-    #define __ZMC_ASM_EXPORT(sLabel)       		EXPORT sLabel
+    #define __ZMC_ASM_IMPORT(sLabel)             EXTERN sLabel
+    #define __ZMC_ASM_EXPORT(sLabel)               EXPORT sLabel
 
     #define __ZMC_ASM_CODE_SECTION(sLabel)      AREA    sLabel, CODE, READONLY
     
     #define __ZMC_ASM_EQUATE(sLabel, ulValue)   sLabel  EQU  ulValue
 
-    #define __ZMC_ASM_STACK_ALIGN()   	   	    PRESERVE8
+    #define __ZMC_ASM_STACK_ALIGN()                  PRESERVE8
     #define __ZMC_ASM_FILE_END()                END
-    #define __ZMC_ASM_SECTION(sLable)  		    sLable 
-    #define __ZMC_ASM_CODE_ALIGN(ucValue)  		ALIGN ucValue
+    #define __ZMC_ASM_SECTION(sLable)              sLable 
+    #define __ZMC_ASM_CODE_ALIGN(ucValue)          ALIGN ucValue
  
     #ifdef __TARGET_FPU_VFP 
     #define __ZMC_ASM_FPU                       1u    

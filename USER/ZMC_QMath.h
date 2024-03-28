@@ -802,7 +802,7 @@ static  __inline  long  zmcQ32Sqrt (unsigned long  ulValue)
 {
     unsigned long  ulRem, ulRoot, ulIdx;
 
-    ulRem  = 0;	                                                        /* Init. the rem. and root to 0.*/
+    ulRem  = 0;                                                            /* Init. the rem. and root to 0.*/
     ulRoot = 0;                                                         /* 把余数和根复位为0            */
 
     for (ulIdx = 0; ulIdx < 16; ulIdx++) {                              /* Loop over the 16bits in root */

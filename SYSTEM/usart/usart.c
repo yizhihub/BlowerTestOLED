@@ -66,11 +66,12 @@ int fputc(int ch, FILE *f)
 //注意,读取USARTx->SR能避免莫名其妙的错误       
 u8 USART_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.
 u8 USART1_RX_BUF[USART_REC_LEN];
+extern u8 VerSionStr[24];
 //接收状态
 //bit15，    接收完成标志
 //bit14，    接收到0x0d
 //bit13~0，    接收到的有效字节数目
-u8 GbUartRxDone   = 0;       //接收状态标记     
+u8 GbUartRxDone   = 1;       //接收状态标记     
 u8 GucUartRxIndex = 0;
 u8 GucUartRxCnt   = 0;
 u8 GbUartRxDone1   = 0;       //接收状态标记     
@@ -153,7 +154,7 @@ void uart_init(u32 bound)
 
     USART_Init(USART2, &USART_InitStructure); //初始化串口2
     USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);//开启串口接受中断
-    USART_ITConfig(USART2, USART_IT_IDLE, DISABLE);//开启串口接受中断
+    USART_ITConfig(USART2, USART_IT_IDLE, ENABLE);//开启串口接受中断
     USART_Cmd(USART2, ENABLE);                    //使能串口2
     
     
@@ -169,7 +170,7 @@ void USART1_IRQHandler(void)                    //串口1中断服务程序
     
     if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
     {
-        Res =USART_ReceiveData(USART1);              /* 每隔开大概32ms收到一次遥测报文  */ 
+        Res = USART_ReceiveData(USART1);              /* 每隔开大概32ms收到一次遥测报文  */ 
         
         if (GbUartRxDone1 == 0) {                     /* 等待消费完成 */
         
@@ -196,34 +197,41 @@ void USART2_IRQHandler(void)                    //串口1中断服务程序
     {
         u8 com_data = USART2->DR;
     }
-//    if(USART_GetITStatus(USART2, USART_IT_IDLE) != RESET) 
-//    {
+    if(USART_GetITStatus(USART2, USART_IT_IDLE) != RESET) 
+    {
 //        USART_ClearITPendingBit(USART2, USART_IT_IDLE);
-//        GbUartRxDone   = 0;
-//        GucUartRxIndex = GucUartRxCnt;
-//        GucUartRxCnt   = 0;
-//    }
+        USART_ReceiveData(USART2);
+        if (GbUartRxDone == 0) {                     /* 等待消费完成 */
+            if (GucUartRxCnt == 24 && USART_RX_BUF[0] == 0x5A) {
+                memcpy(VerSionStr, &USART_RX_BUF[4], 18);
+                GbUartRxDone = 1;                                    /* 大无创固件号生产完毕 */ 
+            }
+            else if (GucUartRxCnt == 22 && USART_RX_BUF[0] == 0x2B) {
+                memcpy(VerSionStr, &USART_RX_BUF[3], 18);
+                GbUartRxDone = 1;                                    /* 三代机固件号生产完毕 */ 
+            }
+            else if (GucUartRxCnt == 8) {
+                GbUartRxDone = 1;                    /* 三代机错误转速帧生产完毕 */ 
+            }
+            else if (GucUartRxCnt == 10) {
+                GbUartRxDone = 1;                    /* 大无创错误转速帧生产完毕 */ 
+            }
+//            else {
+//                GbUartRxDone = 1;
+//            }
+            GucUartRxIndex = GucUartRxCnt;
+            
+        }
+        memset(USART_RX_BUF, 0, sizeof(USART_RX_BUF));
+        GucUartRxCnt   = 0;
+    }
+    
     if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
     {
-        Res =USART_ReceiveData(USART2);              /* 每隔开大概32ms收到一次遥测报文  */ 
-
-        if (GbUartRxDone == 0) {                     /* 等待消费完成 */
-        
-            if (GulEscReoprtT1msCnt > 5)                      /* 间隔超过5ms认为是新的报文     */
-            {
-                GucUartRxIndex = 0;
-            }
-            USART_RX_BUF[GucUartRxIndex++] = Res;   //GucUartRxCnt
-            
-            if (GucUartRxIndex == 8) {
-                GbUartRxDone = 1;                    /* 生产完毕 */ 
-            }
-						else if (GucUartRxIndex == 10) {
-                GbUartRxDone = 1;                    /* 生产完毕 */ 
-            }
-
-        }
-        GulEscReoprtT1msCnt = 0;
+        Res = USART_ReceiveData(USART2);              /* 每隔开大概32ms收到一次遥测报文  */ 
+        USART_RX_BUF[GucUartRxCnt++] = Res;   //GucUartRxCnt
+        if (GucUartRxCnt >= USART_REC_LEN)
+            GucUartRxCnt = 0;
     }
 } 
     

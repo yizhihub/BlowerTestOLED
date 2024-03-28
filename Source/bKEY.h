@@ -14,7 +14,7 @@
 #endif
 
 
-#if	defined(IAP15W413ASDIP28)
+#if    defined(IAP15W413ASDIP28)
 sbit INDEPKEY1 = P2^5;
 sbit INDEPKEY2 = P2^4;
 sbit INDEPKEY3 = P2^3;
