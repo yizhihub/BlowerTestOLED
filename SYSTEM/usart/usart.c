@@ -222,7 +222,7 @@ void USART2_IRQHandler(void)                    //串口1中断服务程序
             GucUartRxIndex = GucUartRxCnt;
             
         }
-        memset(USART_RX_BUF, 0, sizeof(USART_RX_BUF));
+        
         GucUartRxCnt   = 0;
     }
     

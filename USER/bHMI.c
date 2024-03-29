@@ -765,6 +765,7 @@ void BlowerBiLTest(uint8_t ucX)
                           uleRpm = 0;
               GbUartRxDone = 0;                                     /* 直接消费完成 */
           }
+          memset(USART_RX_BUF, 0, sizeof(USART_RX_BUF));
         }
         if (GulPrintTimeCnt > 10) { 
             GulPrintTimeCnt = 0;
