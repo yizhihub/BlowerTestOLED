@@ -160,6 +160,7 @@ void uart_init(u32 bound)
     
 }
 
+
 void USART1_IRQHandler(void)                    //串口1中断服务程序
 {
     u8 Res;
@@ -210,7 +211,7 @@ void USART2_IRQHandler(void)                    //串口1中断服务程序
                 memcpy(VerSionStr, &USART_RX_BUF[3], 18);
                 GbUartRxDone = 1;                                    /* 三代机固件号生产完毕 */ 
             }
-            else if (GucUartRxCnt == 8) {
+            else if (GucUartRxCnt == 8 || GucUartRxCnt == 6) {
                 GbUartRxDone = 1;                    /* 三代机错误转速帧生产完毕 */ 
             }
             else if (GucUartRxCnt == 10) {
