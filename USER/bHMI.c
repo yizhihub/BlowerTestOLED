@@ -67,7 +67,7 @@ extern const char GscBuildTIme[];
 ** @create yizhi 2023.06.24
 ** @modify 
 *********************************************************************************************************/
-uchar UartCmdVerTxBuf[10] = {0x2B, 0xC2, 0x3E};
+uchar UartCmdVerTxBuf[10] = {0x2B, 0xC0, 0x40};
 void VersionInfoDisp(void)
 {
     OLED_Fill(0x00);
@@ -666,7 +666,7 @@ INT16U uleRpmLPFilterArray[20];
 INT8U  ucArrayIndex = 0, GucLingORptEn = 1;
 INT32U uleRpmFilterSum = 0;
 INT16S sPwmDutyValue  = 0;
-uchar UartCMDSpeedTxBuf[10] = {0x2B, 0xC1, 0x3F};
+uchar UartCMDSpeedTxBuf[10] = {0x2B, 0xC5, 0x3B};
 uchar MenuValue[7][16];
 uchar ucNowItem = 0;
 uchar ucFirstItem = 0;
@@ -714,10 +714,10 @@ void BlowerBiLTest(uint8_t ucX)
     {
        if (GbUartRxDone) {
           if (USART_RX_BUF[0] == 0x2B) {              /* 三代机LingO电调协议 */
-              if (GucUartRxIndex == 8)
+              if (GucUartRxIndex == 10 && USART_RX_BUF[0] == 0x2B)
               {
                   uleErrorCode = 0;
-                  uleRpm        = USART_RX_BUF[3] << 8 | USART_RX_BUF[4];
+                  uleRpm        = USART_RX_BUF[6] << 8 | USART_RX_BUF[5];
                   GbUartRxDone =  0;                                     /* 消费完成 */ 
                   uleRpmFilterSum += uleRpm;
                   ucArrayIndex++;
@@ -746,7 +746,7 @@ void BlowerBiLTest(uint8_t ucX)
                       }
                   }
               }
-          } else if (GucUartRxIndex == 10 && USART_RX_BUF[0] != 0x5A) {              /* 方波电调协议 */
+          } else if (GucUartRxIndex == 10 && USART_RX_BUF[0] != 0x2B) {              /* 方波电调协议 */
               GucLingORptEn = 0;
               ucTemperature = USART_RX_BUF[0];
               ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];

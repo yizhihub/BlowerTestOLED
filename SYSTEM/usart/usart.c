@@ -203,19 +203,22 @@ void USART2_IRQHandler(void)                    //串口1中断服务程序
 //        USART_ClearITPendingBit(USART2, USART_IT_IDLE);
         USART_ReceiveData(USART2);
         if (GbUartRxDone == 0) {                     /* 等待消费完成 */
-            if (GucUartRxCnt == 24 && USART_RX_BUF[0] == 0x5A) {
-                memcpy(VerSionStr, &USART_RX_BUF[4], 18);
-                GbUartRxDone = 1;                                    /* 大无创固件号生产完毕 */ 
+            if (GucUartRxCnt == 38 && USART_RX_BUF[0] == 0x2B) {
+                memcpy(VerSionStr, &USART_RX_BUF[12], 18);
+                GbUartRxDone = 1;                                    /* 大无创&呼吸制氧一体机固件号生产完毕 */ 
             }
             else if (GucUartRxCnt == 22 && USART_RX_BUF[0] == 0x2B) {
                 memcpy(VerSionStr, &USART_RX_BUF[3], 18);
                 GbUartRxDone = 1;                                    /* 三代机固件号生产完毕 */ 
             }
-            else if (GucUartRxCnt == 8 || GucUartRxCnt == 6) {
-                GbUartRxDone = 1;                    /* 三代机错误转速帧生产完毕 */ 
+//            else if (GucUartRxCnt == 8 || GucUartRxCnt == 6) {
+//                GbUartRxDone = 1;                    /* 三代机错误转速帧生产完毕 */ 
+//            }
+            else if (GucUartRxCnt == 10 && USART_RX_BUF[0] == 0x2B) {
+                GbUartRxDone = 1;                    /* 大无创&呼吸制氧一体机转速帧生产完毕 */ 
             }
-            else if (GucUartRxCnt == 10) {
-                GbUartRxDone = 1;                    /* 大无创错误转速帧生产完毕 */ 
+            else if (GucUartRxCnt == 6 && USART_RX_BUF[0] == 0x2B) {
+                GbUartRxDone = 1;                    /* 大无创&呼吸制氧一体机错误帧生产完毕 */ 
             }
 //            else {
 //                GbUartRxDone = 1;

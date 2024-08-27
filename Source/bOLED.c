@@ -2138,7 +2138,7 @@ void OLED_HexDisp(uint8_t x,uint8_t y,uint8_t *dat,uint8_t N, uint8_t ucSize, ui
     
     for(i=0;i<N;i++)
     {
-        temp=dat[i];//数组下标方式访问指针数据
+        temp = dat[i];//数组下标方式访问指针数据
         temp = dat[i] >> 4; 
         if(temp<10)
             OLED_PutChar(x,y,'0'+temp, ucSize, ucYn);
