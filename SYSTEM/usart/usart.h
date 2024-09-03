@@ -40,6 +40,9 @@ void uart_init(u32 bound);
 void  uartDrvPutChar (USART_TypeDef* USARTx, INT8U ucData);
 INT8U uartDrvPutBuf(USART_TypeDef* USARTx, const INT8U *pucTxBuff, INT32U ulTxSize);
 
+uint8_t checksum_calc(uint8_t * data_ptr, uint8_t first_num, uint8_t len);
+uint8_t crc8_calc(uint8_t *data, uint8_t first_num, uint16_t len);
+uint8_t CheckXor_calc(uint8_t *Buffer, uint16_t NByte);
 #endif
 
 
