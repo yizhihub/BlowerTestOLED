@@ -5,13 +5,13 @@
 ** File Name:               HwDrv.h
 ** Last modified Date:      2023-07-25
 ** Last Version:            1.0
-** Description:             Ö÷º¯ÊýÎÄ¼þ
+** Description:             ä¸»å‡½æ•°æ–‡ä»¶
 **
 **--------------------------------------------------------------------------------------------------------
 ** Created By:              liguagndao
 ** Created date:            2023-07-25
 ** Version:                 1.0
-** Descriptions:            The original version ³õÊ¼°æ±¾
+** Descriptions:            The original version åˆå§‹ç‰ˆæœ¬
 **
 **--------------------------------------------------------------------------------------------------------
 ** Modified by:             
@@ -35,34 +35,34 @@ extern INT32U GulEc11IntervalCnt;
 
 
 /*********************************************************************************************************
-#  LED Ïà¹Ø      GD32F103°å×ÓÊÇ PB9  GD32F303°å×Ó PD2
+#  LED ç›¸å…³      GD32F103æ¿å­æ˜¯ PB9  GD32F303æ¿å­ PD2
 **********************************************************************************************************/
 #define LED0 PCout(6)     // PA8
 #define LED1 PCout(7)     // PD2
-#define LED0_OFF()      LED0 = 1// FM3_GPIO->PDOR8 |=  (1 << 1)                   /* LED Ãð                       */
-#define LED0_ON()       LED0 = 0//  FM3_GPIO->PDOR8 &= ~(1 << 1)                   /* LED ÁÁ                       */
-#define LED0_TOG()      LED0 = !LED0// FM3_GPIO->PDOR8 ^=  (1 << 1)                   /* LED ·´×ª                     */
-#define LED1_OFF()      LED1 = 0// FM3_GPIO->PDOR8 |=  (1 << 1)                   /* LED Ãð                       */
-#define LED1_ON()       LED1 = 1//  FM3_GPIO->PDOR8 &= ~(1 << 1)                   /* LED ÁÁ                       */
-#define LED1_TOG()      LED1 = !LED1// FM3_GPIO->PDOR8 ^=  (1 << 1)                   /* LED ·´×ª                     */
+#define LED0_OFF()      LED0 = 1// FM3_GPIO->PDOR8 |=  (1 << 1)                   /* LED ç­                       */
+#define LED0_ON()       LED0 = 0//  FM3_GPIO->PDOR8 &= ~(1 << 1)                   /* LED äº®                       */
+#define LED0_TOG()      LED0 = !LED0// FM3_GPIO->PDOR8 ^=  (1 << 1)                   /* LED åè½¬                     */
+#define LED1_OFF()      LED1 = 0// FM3_GPIO->PDOR8 |=  (1 << 1)                   /* LED ç­                       */
+#define LED1_ON()       LED1 = 1//  FM3_GPIO->PDOR8 &= ~(1 << 1)                   /* LED äº®                       */
+#define LED1_TOG()      LED1 = !LED1// FM3_GPIO->PDOR8 ^=  (1 << 1)                   /* LED åè½¬                     */
 
 #define MC_FOC_HALL_PU1     (PBin(0) << 2)+(PAin(7) << 1)+PAin(6)
 #define HALL_DEFAULT_ANG    1.0l / 6.0l * (0xFFFFFFFF)
 /*
- * LEDÖ¸Ê¾½á¹ûÃèÊö
- * LED_MODE_ON  £º ÉÏµçºóÎ´½øÈëforÑ­»·
- * LED_MODE_SLOW£º µç»úÕý³£ÔËÐÐ
- * LED_MODE_FAST£º µç»úÔËÐÐÒì³£
- * LED_SPECIAL_1£º Ô¤Áô
- * LED_SPECIAL_2£º µçµ÷Î´×¢²áÖ¸Ê¾
- * LED_SPECIAL_3£º Ô¤Áô    */
-#define LED_MODE_ON     0                                               /* LEDÄ£Ê½£¬³£ÁÁ                */
-#define LED_MODE_SLOW   1                                               /* LEDÄ£Ê½£¬ÂýÉÁ ÖÜÆÚ1s         */
-#define LED_MODE_FAST   2                                               /* LEDÄ£Ê½£¬¿ìÉÁ ÖÜÆÚ320ms      */
-#define LED_SPECIAL_1   3                                               /* LEDÄ£Ê½£¬ÉÁÒ»´Î£¬³£Ãð1Ãë     */
-#define LED_SPECIAL_2   4                                               /* LEDÄ£Ê½£¬ÉÁÁ½´Î£¬³£Ãð1Ãë     */
-#define LED_SPECIAL_3   5                                               /* LEDÄ£Ê½£¬ÉÁÈý´Î£¬³£Ãð1Ãë     */
-#define LED_MODE_OFF    6                                               /* LEDÄ£Ê½, ³£Ãð               */
+ * LEDæŒ‡ç¤ºç»“æžœæè¿°
+ * LED_MODE_ON  ï¼š ä¸Šç”µåŽæœªè¿›å…¥forå¾ªçŽ¯
+ * LED_MODE_SLOWï¼š ç”µæœºæ­£å¸¸è¿è¡Œ
+ * LED_MODE_FASTï¼š ç”µæœºè¿è¡Œå¼‚å¸¸
+ * LED_SPECIAL_1ï¼š é¢„ç•™
+ * LED_SPECIAL_2ï¼š ç”µè°ƒæœªæ³¨å†ŒæŒ‡ç¤º
+ * LED_SPECIAL_3ï¼š é¢„ç•™    */
+#define LED_MODE_ON     0                                               /* LEDæ¨¡å¼ï¼Œå¸¸äº®                */
+#define LED_MODE_SLOW   1                                               /* LEDæ¨¡å¼ï¼Œæ…¢é—ª å‘¨æœŸ1s         */
+#define LED_MODE_FAST   2                                               /* LEDæ¨¡å¼ï¼Œå¿«é—ª å‘¨æœŸ320ms      */
+#define LED_SPECIAL_1   3                                               /* LEDæ¨¡å¼ï¼Œé—ªä¸€æ¬¡ï¼Œå¸¸ç­1ç§’     */
+#define LED_SPECIAL_2   4                                               /* LEDæ¨¡å¼ï¼Œé—ªä¸¤æ¬¡ï¼Œå¸¸ç­1ç§’     */
+#define LED_SPECIAL_3   5                                               /* LEDæ¨¡å¼ï¼Œé—ªä¸‰æ¬¡ï¼Œå¸¸ç­1ç§’     */
+#define LED_MODE_OFF    6                                               /* LEDæ¨¡å¼, å¸¸ç­               */
 
 #define PWM_DUTY_SETA(usX)   {    \
     TIM_SetCompare1(TIM1, usX);   \

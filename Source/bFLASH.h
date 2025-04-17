@@ -10,20 +10,20 @@
 #error "NO PLEATEFORM DEFINED!"
 #endif
 
-//ÓÃ»§¸ù¾İ×Ô¼ºµÄĞèÒªÉèÖÃ
-#define GD32_FLASH_SIZE 512            //ËùÑ¡STM32µÄFLASHÈİÁ¿´óĞ¡(µ¥Î»ÎªK)
-#define GD32_FLASH_WREN 1              //Ê¹ÄÜFLASHĞ´Èë(0£¬²»ÊÇÄÜ;1£¬Ê¹ÄÜ)
+//ç”¨æˆ·æ ¹æ®è‡ªå·±çš„éœ€è¦è®¾ç½®
+#define GD32_FLASH_SIZE 512            //æ‰€é€‰STM32çš„FLASHå®¹é‡å¤§å°(å•ä½ä¸ºK)
+#define GD32_FLASH_WREN 1              //ä½¿èƒ½FLASHå†™å…¥(0ï¼Œä¸æ˜¯èƒ½;1ï¼Œä½¿èƒ½)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//FLASHÆğÊ¼µØÖ·
-#define GD32_FLASH_BASE 0x08000000     //GD32 FLASHµÄÆğÊ¼µØÖ·
-//FLASH½âËø¼üÖµ
+//FLASHèµ·å§‹åœ°å€
+#define GD32_FLASH_BASE 0x08000000     //GD32 FLASHçš„èµ·å§‹åœ°å€
+//FLASHè§£é”é”®å€¼
  
 
-uint16_t FLASH_ReadHalfWord(uint32_t faddr);          //¶Á³ö°ë×Ö  
-void FLASH_WriteLenByte(uint32_t WriteAddr, uint32_t DataToWrite, uint16_t Len);    //Ö¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ
-uint32_t FLASH_ReadLenByte(uint32_t ReadAddr, uint16_t Len);                        //Ö¸¶¨µØÖ·¿ªÊ¼¶ÁÈ¡Ö¸¶¨³¤¶ÈÊı¾İ
-void FLASH_Write(uint32_t WriteAddr, uint16_t *pBuffer, uint16_t NumToWrite);       //´ÓÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ
-void FLASH_Read(uint32_t ReadAddr, uint16_t *pBuffer, uint16_t NumToRead);          //´ÓÖ¸¶¨µØÖ·¿ªÊ¼¶Á³öÖ¸¶¨³¤¶ÈµÄÊı¾İ
+uint16_t FLASH_ReadHalfWord(uint32_t faddr);          //è¯»å‡ºåŠå­—  
+void FLASH_WriteLenByte(uint32_t WriteAddr, uint32_t DataToWrite, uint16_t Len);    //æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®
+uint32_t FLASH_ReadLenByte(uint32_t ReadAddr, uint16_t Len);                        //æŒ‡å®šåœ°å€å¼€å§‹è¯»å–æŒ‡å®šé•¿åº¦æ•°æ®
+void FLASH_Write(uint32_t WriteAddr, uint16_t *pBuffer, uint16_t NumToWrite);       //ä»æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®
+void FLASH_Read(uint32_t ReadAddr, uint16_t *pBuffer, uint16_t NumToRead);          //ä»æŒ‡å®šåœ°å€å¼€å§‹è¯»å‡ºæŒ‡å®šé•¿åº¦çš„æ•°æ®
 
 #endif

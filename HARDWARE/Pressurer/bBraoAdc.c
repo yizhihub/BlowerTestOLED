@@ -8,7 +8,7 @@
 ** Created By:             
 ** Created date:            
 ** Version:                 1.0
-** Descriptions:            The original version ³õÊ¼°æ±¾
+** Descriptions:            The original version åˆå§‹ç‰ˆæœ¬
 **
 **--------------------------------------------------------------------------------------------------------
 ** Modified by:   
@@ -23,13 +23,13 @@
 #include "bOLED.h"
 
 /*********************************************************************************************************
-  ±äÁ¿¶¨Òå
+  å˜é‡å®šä¹‰
 *********************************************************************************************************/
 INT16S _GsBraoAdcOffset = 0;
 
 
 /*********************************************************************************************************
-  ÄÚ²¿º¯ÊıÉùÃ÷
+  å†…éƒ¨å‡½æ•°å£°æ˜
 *********************************************************************************************************/
 const uint16_t  BRAO_Table[] = {
     4086, //0    -55     (i * 5) - 55
@@ -92,7 +92,7 @@ void BraoAdcInit(void)
     GPIO_InitTypeDef   GPIO_InitStruct; 
      
     /* 
-     * GD32F103CY   ESC            board £º PA2(ADC01_IN2) is the NTC sample channel 
+     * GD32F103CY   ESC            board ï¼š PA2(ADC01_IN2) is the NTC sample channel 
      * GD32F303RET6 BlowerTestOLED boardV1.0 :  PB0(ADC01_IN8) is the Pressure sampler channel 
      * GD32F303RET6 BlowerTestOLED boardV2.0 :  PC5(ADC01_IN15) is the Pressure sampler channel 
      * GD32F303RET6 BlowerTestOLED board :  PC5(ADC01_IN15) is the pressuer sampler channel
@@ -108,7 +108,7 @@ void BraoAdcInit(void)
     GPIO_Init(GPIOC, &GPIO_InitStruct);
     
     /* 
-     *  ADC1, ADC2 »Ö¸´Ä¬ÈÏÖµ. Õâ¸ö»Ö¸´Ä¬ÈÏ²Ù×÷±ØĞë·ñÔòÃ¿´ÎÉÏµçĞ£×¼Öµ²»Ò»ÖÂ¡£
+     *  ADC1, ADC2 æ¢å¤é»˜è®¤å€¼. è¿™ä¸ªæ¢å¤é»˜è®¤æ“ä½œå¿…é¡»å¦åˆ™æ¯æ¬¡ä¸Šç”µæ ¡å‡†å€¼ä¸ä¸€è‡´ã€‚
      */
     ADC_DeInit(ADC2); 
 
@@ -146,16 +146,16 @@ void BraoAdcGet(int16_t *psResult)
     FP32  fUbusTemp = 0;
     
     /*
-     * Ä¸ÏßµçÑ¹ADCÊı¾İ¶ÁÈ¡
+     * æ¯çº¿ç”µå‹ADCæ•°æ®è¯»å–
      */
     for (i = 0; i <= 10; i++) {
 
         ADC_SoftwareStartConvCmd(ADC2, ENABLE); 
         while(!ADC_GetFlagStatus(ADC2, ADC_FLAG_EOC));    
-        fUbusTemp += ADC_GetConversionValue(ADC2);                          /* Ä¸Ïß²É¼¯Îª ADC2µÄÍ¨µÀ4     */
+        fUbusTemp += ADC_GetConversionValue(ADC2);                          /* æ¯çº¿é‡‡é›†ä¸º ADC2çš„é€šé“4     */
     }
     /*
-     * ×ª»»ÎªÊµ¼ÊµçÑ¹±íÊ¾
+     * è½¬æ¢ä¸ºå®é™…ç”µå‹è¡¨ç¤º
      */
 //    fUbusTemp = (FP32)(((FP64)fUbusTemp / 4096.0 / 50.0) * 3.3 * fUratio);
     fUbusTemp = ((fUbusTemp + 5.5f) / 11.0f);
@@ -165,10 +165,10 @@ void BraoAdcGet(int16_t *psResult)
 /**
 *********************************************************************************************************
 ** @nameis LinerInterpolationCalc
-** @effect ¸ù¾İ²É¼¯µÄADCÖµ£¬²é±í²¢ÇÒÏßĞÔ²åÖµ¼ÆËã³öÎÂ¶È¡£
-** @import uint16ÀàĞÍ£¬²É¼¯µÄADCÊıÖµ£¬0~4095
+** @effect æ ¹æ®é‡‡é›†çš„ADCå€¼ï¼ŒæŸ¥è¡¨å¹¶ä¸”çº¿æ€§æ’å€¼è®¡ç®—å‡ºæ¸©åº¦ã€‚
+** @import uint16ç±»å‹ï¼Œé‡‡é›†çš„ADCæ•°å€¼ï¼Œ0~4095
 ** @export none
-** @return int16ÀàĞÍ£¬ -550 ~ 1500±íÊ¾ -55¡æ ~ 150¡æ ¼ÆËã³öÀ´µÄÎÂ¶ÈÖµ£¬Êµ¼ÊÎÂ¶È*10¡£
+** @return int16ç±»å‹ï¼Œ -550 ~ 1500è¡¨ç¤º -55â„ƒ ~ 150â„ƒ è®¡ç®—å‡ºæ¥çš„æ¸©åº¦å€¼ï¼Œå®é™…æ¸©åº¦*10ã€‚
 ** @create yizhi 2023.05.12
 ** @modify  
 *********************************************************************************************************/
@@ -197,10 +197,10 @@ static int16_t LinerInterpolationCalc(uint16_t  usAdc)
 /**
 *********************************************************************************************************
 ** @nameis LinerFunctionCalc
-** @effect ¸ù¾İy = kx + b£¬ xÎªADC²É¼¯Öµ£¬ yÎªÊä³öÎïÀíÁ¿¡£
-** @import uint16ÀàĞÍ£¬²É¼¯µÄADCÊıÖµ£¬0~4095
+** @effect æ ¹æ®y = kx + bï¼Œ xä¸ºADCé‡‡é›†å€¼ï¼Œ yä¸ºè¾“å‡ºç‰©ç†é‡ã€‚
+** @import uint16ç±»å‹ï¼Œé‡‡é›†çš„ADCæ•°å€¼ï¼Œ0~4095
 ** @export none
-** @return floatÀàĞÍ£¬Ñ¹Á¦Öµµ¥Î» hPa
+** @return floatç±»å‹ï¼Œå‹åŠ›å€¼å•ä½ hPa
 ** @create yizhi 2023.09.2
 ** @modify  
 *********************************************************************************************************/
@@ -287,7 +287,7 @@ void BraoCalibration(uint8_t ucX)
     
     OLED_PutStr(0, OLED_LINE3,     (uint8_t *)"Cali", 6, 1);
     OLED_PutStr(0, OLED_LINE3 + 1, (uint8_t *)"Raw", 6, 1);
-    OLED_Print(50, OLED_LINE3, "Ñ¹Á¦:", 1);
+    OLED_Print(50, OLED_LINE3, "å‹åŠ›:", 1);
     FLASH_Read(BRAOCALIB_ADDR, (uint16_t*)&_GsBraoAdcOffset, 1);
     if ((uint8_t)_GsBraoAdcOffset == 0xFF && (uint8_t)(_GsBraoAdcOffset>>8) == 0xFF)
     {

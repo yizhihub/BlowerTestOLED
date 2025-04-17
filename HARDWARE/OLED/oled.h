@@ -3,46 +3,46 @@
 #include "sys.h"
 #include "stdlib.h"	    
 //////////////////////////////////////////////////////////////////////////////////	 
-//������ֻ��ѧϰʹ�ã�δ���������ɣ��������������κ���;
-//Mini STM32������
-//SSD1306 OLED ����IC��������
-//������ʽ:8080����/4�ߴ���
-//����ԭ��@ALIENTEK
-//������̳:www.openedv.com
-//�޸�����:2010/6/3
-//�汾��V1.0
-//��Ȩ���У�����ؾ���
-//Copyright(C) ����ԭ�� 2009-2019
+//本程序只供学习使用，未经作者许可，不得用于其它任何用途
+//Mini STM32开发板
+//SSD1306 OLED 驱动IC驱动代码
+//驱动方式:8080并口/4线串口
+//正点原子@ALIENTEK
+//技术论坛:www.openedv.com
+//修改日期:2010/6/3
+//版本：V1.0
+//版权所有，盗版必究。
+//Copyright(C) 正点原子 2009-2019
 //All rights reserved
 ////////////////////////////////////////////////////////////////////////////////// 	  
 
 
-//OLEDģʽ����
-//0:4�ߴ���ģʽ
-//1:����8080ģʽ
+//OLED模式设置
+//0:4线串行模式
+//1:并行8080模式
 #define OLED_MODE 0
 		    						  
-//-----------------OLED�˿ڶ���---------------- PC6 PB0 PB2 PB4 PB6
+//-----------------OLED端口定义---------------- PC6 PB0 PB2 PB4 PB6
 //#define OLED_CS   PCout(9)
-//#define OLED_RST  PBout(14)            /* ��MINISTM32��ֱ�ӽӵ���STM32�ĸ�λ�ţ�*/
+//#define OLED_RST  PBout(14)            /* 在MINISTM32上直接接到了STM32的复位脚！*/
 //#define OLED_RS   PCout(8)
 //#define OLED_WR   PCout(7)
 //#define OLED_RD   PCout(6)
 
-//PB0~7,��Ϊ������
+//PB0~7,作为数据线
 //#define DATAOUT(DataValue) {GPIO_Write(GPIOB,(GPIO_ReadOutputData(GPIOB)&0xff00)|(DataValue&0x00FF));}  
 
-//ʹ��4�ߴ��нӿ�ʱʹ�� 
+//使用4线串行接口时使用 
 #define OLED_SCLK PCout(6)
 #define OLED_SDIN PBout(0)
-#define OLED_RST  PBout(2)            /* ��MINISTM32��ֱ�ӽӵ���STM32�ĸ�λ�ţ�*/
+#define OLED_RST  PBout(2)            /* 在MINISTM32上直接接到了STM32的复位脚！*/
 #define OLED_RS   PBout(4) 
 #define OLED_CS   PBout(6)
 
 
-#define OLED_CMD  0	//д����
-#define OLED_DATA 1	//д����
-//OLED�����ú���
+#define OLED_CMD  0	//写命令
+#define OLED_DATA 1	//写数据
+//OLED控制用函数
 void OLED_WR_Byte(u8 dat,u8 cmd);	    
 void OLED_Display_On(void);
 void OLED_Display_Off(void);

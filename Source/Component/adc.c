@@ -2,10 +2,10 @@
 #include "intrins.h"
 
 //========================================================================
-// º¯Êý: void	ADC_Inilize(ADC_InitTypeDef *ADCx)
-// ÃèÊö: ADC³õÊ¼»¯³ÌÐò.
-// ²ÎÊý: ADCx: ½á¹¹²ÎÊý,Çë²Î¿¼adc.hÀïµÄ¶¨Òå.
-// ·µ»Ø: none.
+// å‡½æ•°: void	ADC_Inilize(ADC_InitTypeDef *ADCx)
+// æè¿°: ADCåˆå§‹åŒ–ç¨‹åº.
+// å‚æ•°: ADCx: ç»“æž„å‚æ•°,è¯·å‚è€ƒadc.hé‡Œçš„å®šä¹‰.
+// è¿”å›ž: none.
 //========================================================================
 void	ADC_Inilize(ADC_InitTypeDef *ADCx)
 {
@@ -13,20 +13,20 @@ void	ADC_Inilize(ADC_InitTypeDef *ADCx)
 	ADC_CONTR = (ADC_CONTR & ~ADC_90T) | ADCx->ADC_Speed;
 	if(ADCx->ADC_Power == ENABLE)	ADC_CONTR |= 0x80;
 	else							ADC_CONTR &= 0x7F;
-	if(ADCx->ADC_AdjResult == ADC_RES_H2L8)	PCON2 |=  (1<<5);	//10Î»AD½á¹ûµÄ¸ß2Î»·ÅADC_RESµÄµÍ2Î»£¬µÍ8Î»ÔÚADC_RESL¡£
-	else									PCON2 &= ~(1<<5);	//10Î»AD½á¹ûµÄ¸ß8Î»·ÅADC_RES£¬µÍ2Î»ÔÚADC_RESLµÄµÍ2Î»¡£
-	if(ADCx->ADC_Interrupt == ENABLE)	EADC = 1;			//ÖÐ¶ÏÔÊÐí		ENABLE,DISABLE
+	if(ADCx->ADC_AdjResult == ADC_RES_H2L8)	PCON2 |=  (1<<5);	//10ä½ADç»“æžœçš„é«˜2ä½æ”¾ADC_RESçš„ä½Ž2ä½ï¼Œä½Ž8ä½åœ¨ADC_RESLã€‚
+	else									PCON2 &= ~(1<<5);	//10ä½ADç»“æžœçš„é«˜8ä½æ”¾ADC_RESï¼Œä½Ž2ä½åœ¨ADC_RESLçš„ä½Ž2ä½ã€‚
+	if(ADCx->ADC_Interrupt == ENABLE)	EADC = 1;			//ä¸­æ–­å…è®¸		ENABLE,DISABLE
 	else								EADC = 0;
-	if(ADCx->ADC_Polity == PolityHigh)	PADC = 1;		//ÓÅÏÈ¼¶ÉèÖÃ	PolityHigh,PolityLow
+	if(ADCx->ADC_Polity == PolityHigh)	PADC = 1;		//ä¼˜å…ˆçº§è®¾ç½®	PolityHigh,PolityLow
 	else								PADC = 0;
 }
 
 
 //========================================================================
-// º¯Êý: void	ADC_PowerControl(u8 pwr)
-// ÃèÊö: ADCµçÔ´¿ØÖÆ³ÌÐò.
-// ²ÎÊý: pwr: µçÔ´¿ØÖÆ,ENABLE»òDISABLE.
-// ·µ»Ø: none.
+// å‡½æ•°: void	ADC_PowerControl(u8 pwr)
+// æè¿°: ADCç”µæºæŽ§åˆ¶ç¨‹åº.
+// å‚æ•°: pwr: ç”µæºæŽ§åˆ¶,ENABLEæˆ–DISABLE.
+// è¿”å›ž: none.
 //========================================================================
 void	ADC_PowerControl(uchar pwr)
 {
@@ -35,35 +35,35 @@ void	ADC_PowerControl(uchar pwr)
 }
 
 //========================================================================
-// º¯Êý: u16	Get_ADC10bitResult(u8 channel)
-// ÃèÊö: ²éÑ¯·¨¶ÁÒ»´ÎADC½á¹û.
-// ²ÎÊý: channel: Ñ¡ÔñÒª×ª»»µÄADC.
-// ·µ»Ø: 10Î»ADC½á¹û.
+// å‡½æ•°: u16	Get_ADC10bitResult(u8 channel)
+// æè¿°: æŸ¥è¯¢æ³•è¯»ä¸€æ¬¡ADCç»“æžœ.
+// å‚æ•°: channel: é€‰æ‹©è¦è½¬æ¢çš„ADC.
+// è¿”å›ž: 10ä½ADCç»“æžœ.
 //========================================================================
 uint	Get_ADC10bitResult(uchar channel)	//channel = 0~7
 {
 	uint	adc;
 	uchar	i;
 
-	if(channel > ADC_CH7)	return	1024;	//´íÎó,·µ»Ø1024,µ÷ÓÃµÄ³ÌÐòÅÐ¶Ï	
+	if(channel > ADC_CH7)	return	1024;	//é”™è¯¯,è¿”å›ž1024,è°ƒç”¨çš„ç¨‹åºåˆ¤æ–­	
 	ADC_RES = 0;
 	ADC_RESL = 0;
 
 	ADC_CONTR = (ADC_CONTR & 0xe0) | ADC_START | channel; 
-	//NOP(4);			//¶ÔADC_CONTR²Ù×÷ºóÒª4TÖ®ºó²ÅÄÜ·ÃÎÊ
+	//NOP(4);			//å¯¹ADC_CONTRæ“ä½œåŽè¦4Tä¹‹åŽæ‰èƒ½è®¿é—®
 	_nop_();_nop_();_nop_();_nop_();
 
-	for(i=0; i<250; i++)		//³¬Ê±
+	for(i=0; i<250; i++)		//è¶…æ—¶
 	{
 		if(ADC_CONTR & ADC_FLAG)
 		{
 			ADC_CONTR &= ~ADC_FLAG;
-			if(PCON2 &  (1<<5))		//10Î»AD½á¹ûµÄ¸ß2Î»·ÅADC_RESµÄµÍ2Î»£¬µÍ8Î»ÔÚADC_RESL¡£
+			if(PCON2 &  (1<<5))		//10ä½ADç»“æžœçš„é«˜2ä½æ”¾ADC_RESçš„ä½Ž2ä½ï¼Œä½Ž8ä½åœ¨ADC_RESLã€‚
 			{
 				adc = (uint)(ADC_RES & 3);
 				adc = (adc << 8) | ADC_RESL;
 			}
-			else		//10Î»AD½á¹ûµÄ¸ß8Î»·ÅADC_RES£¬µÍ2Î»ÔÚADC_RESLµÄµÍ2Î»¡£
+			else		//10ä½ADç»“æžœçš„é«˜8ä½æ”¾ADC_RESï¼Œä½Ž2ä½åœ¨ADC_RESLçš„ä½Ž2ä½ã€‚
 			{
 				adc = (uint)ADC_RES;
 				adc = (adc << 2) | (ADC_RESL & 3);
@@ -71,16 +71,16 @@ uint	Get_ADC10bitResult(uchar channel)	//channel = 0~7
 			return	adc;
 		}
 	}
-	return	1024;	//´íÎó,·µ»Ø1024,µ÷ÓÃµÄ³ÌÐòÅÐ¶Ï
+	return	1024;	//é”™è¯¯,è¿”å›ž1024,è°ƒç”¨çš„ç¨‹åºåˆ¤æ–­
 }
 
 
 //========================================================================
-// º¯Êý: void ADC_int(void) interrupt ADC_VECTOR
-// ÃèÊö: ADCÖÐ¶Ïº¯Êý.
-// ²ÎÊý: none.
-// ·µ»Ø: none.
-// °æ±¾: V1.0, 2012-10-22
+// å‡½æ•°: void ADC_int(void) interrupt ADC_VECTOR
+// æè¿°: ADCä¸­æ–­å‡½æ•°.
+// å‚æ•°: none.
+// è¿”å›ž: none.
+// ç‰ˆæœ¬: V1.0, 2012-10-22
 //========================================================================
 void ADC_int (void) interrupt 5
 {
@@ -89,14 +89,14 @@ void ADC_int (void) interrupt 5
 
 void	ADC_config(void)
 {
-	ADC_InitTypeDef		ADC_InitStructure;				//½á¹¹¶¨Òå
-	ADC_InitStructure.ADC_Px        = 0x00;	//ÉèÖÃÒª×öADCµÄIO,	ADC_P10 ~ ADC_P17(»ò²Ù×÷),ADC_P1_All
-	ADC_InitStructure.ADC_Speed     = ADC_540T;			//ADCËÙ¶È			ADC_90T,ADC_180T,ADC_360T,ADC_540T
-	ADC_InitStructure.ADC_Power     = ENABLE;			//ADC¹¦ÂÊÔÊÐí/¹Ø±Õ	ENABLE,DISABLE
-	ADC_InitStructure.ADC_AdjResult = ADC_RES_H8L2;		//ADC½á¹ûµ÷Õû,	ADC_RES_H2L8,ADC_RES_H8L2
-	ADC_InitStructure.ADC_Polity    = PolityLow;		//ÓÅÏÈ¼¶ÉèÖÃ	PolityHigh,PolityLow
-	ADC_InitStructure.ADC_Interrupt = DISABLE;			//ÖÐ¶ÏÔÊÐí		ENABLE,DISABLE
-	ADC_Inilize(&ADC_InitStructure);					//³õÊ¼»¯
-	ADC_PowerControl(ENABLE);							//µ¥¶ÀµÄADCµçÔ´²Ù×÷º¯Êý, ENABLE»òDISABLE
+	ADC_InitTypeDef		ADC_InitStructure;				//ç»“æž„å®šä¹‰
+	ADC_InitStructure.ADC_Px        = 0x00;	//è®¾ç½®è¦åšADCçš„IO,	ADC_P10 ~ ADC_P17(æˆ–æ“ä½œ),ADC_P1_All
+	ADC_InitStructure.ADC_Speed     = ADC_540T;			//ADCé€Ÿåº¦			ADC_90T,ADC_180T,ADC_360T,ADC_540T
+	ADC_InitStructure.ADC_Power     = ENABLE;			//ADCåŠŸçŽ‡å…è®¸/å…³é—­	ENABLE,DISABLE
+	ADC_InitStructure.ADC_AdjResult = ADC_RES_H8L2;		//ADCç»“æžœè°ƒæ•´,	ADC_RES_H2L8,ADC_RES_H8L2
+	ADC_InitStructure.ADC_Polity    = PolityLow;		//ä¼˜å…ˆçº§è®¾ç½®	PolityHigh,PolityLow
+	ADC_InitStructure.ADC_Interrupt = DISABLE;			//ä¸­æ–­å…è®¸		ENABLE,DISABLE
+	ADC_Inilize(&ADC_InitStructure);					//åˆå§‹åŒ–
+	ADC_PowerControl(ENABLE);							//å•ç‹¬çš„ADCç”µæºæ“ä½œå‡½æ•°, ENABLEæˆ–DISABLE
 }
 

@@ -51,7 +51,7 @@
 
 
 #if defined(STM32F103VE)                                                
-    #define IIC1_SCL         PDout(3)                                    /* ¾«Ó¢Ö÷°åV.7  CAMERA½Ó¿Ú*/ 
+    #define IIC1_SCL         PDout(3)                                    /* ç²¾è‹±ä¸»æ¿V.7  CAMERAæŽ¥å£*/ 
     #define IIC1_SDA         PGout(13)
     #define IIC1_SDA_R       PGin(13)
     #define IIC1_SCL_R       PDin(3)
@@ -60,7 +60,7 @@
     #define IIC1_SCL_IN      {GPIOD->CRL &= ~(0xFu << (3) * 4); GPIOD->CRL |= 8u << (3) * 4;}
     #define IIC1_SCL_OUT     {GPIOD->CRL &= ~(0xFu << (3) * 4); GPIOD->CRL |= 3u << (3) * 4;}
     
-//    #define IIC1_SCL         PBout(11)                                   /* ¾«Ó¢Ö÷°åV.7  ATK MODULE½Ó¿Ú*/
+//    #define IIC1_SCL         PBout(11)                                   /* ç²¾è‹±ä¸»æ¿V.7  ATK MODULEæŽ¥å£*/
 //    #define IIC1_SDA         PBout(10)
 //    #define IIC1_SDA_R       PBin(10)
 //    #define IIC1_SCL_R       PBin(11)
@@ -75,7 +75,7 @@
     #define IIC1_SDA_IN      {GPIOB->CRL &= 0X0FFFFFFF; GPIOB->CRL |= 8 << 28;}
     #define IIC1_SDA_OUT     {GPIOB->CRL &= 0X0FFFFFFF; GPIOB->CRL |= 3 << 28;}
 #elif defined(GD32F303RE)
-    #define IIC1_SCL         PBout(10)                                    /* ·ç»ú²âÊÔÆ½Ì¨ */ 
+    #define IIC1_SCL         PBout(10)                                    /* é£Žæœºæµ‹è¯•å¹³å° */ 
     #define IIC1_SDA         PBout(11)
     #define IIC1_SCL_R       PBin(10)
     #define IIC1_SDA_R       PBin(11)
@@ -105,7 +105,7 @@ static void usDelayOne(void)
     uint8_t i;
     for (i = 0; i < 10; i++) {      //  k < 5:  used 4 us @ 12.0000MHz
          ___NOP();                  // k < 4:  used 3.64 @ 12.0000MHz
-        }                           // i < 4:  used 0.7~0.8us @ ¾«Ó¢°æ1.7 72.000MHz
+        }                           // i < 4:  used 0.7~0.8us @ ç²¾è‹±ç‰ˆ1.7 72.000MHz
 }
 
 static void i2cInit(void)
@@ -173,13 +173,13 @@ static uint8_t i2cRespons()
 ********************************************************************************************************
 ** @nameis i2cAnswer
 ** @effect send ack signal
-** @import ucAns:1 Ó¦´ð 0 ²»Ó¦´ð
+** @import ucAns:1 åº”ç­” 0 ä¸åº”ç­”
 ** @export none
 ** @return none
 ** @create yizhi 2023.03.20
 ** @modify 
 *********************************************************************************************************/
-static void i2cAnswer(uint8_t ucAns) // Ö÷»úÓ¦´ðÆÚ¼ä£¬ 1 Ó¦´ð 0 ²»Ó¦´ð
+static void i2cAnswer(uint8_t ucAns) // ä¸»æœºåº”ç­”æœŸé—´ï¼Œ 1 åº”ç­” 0 ä¸åº”ç­”
 {
      if(ucAns==1)
      {
@@ -194,7 +194,7 @@ static void i2cAnswer(uint8_t ucAns) // Ö÷»úÓ¦´ðÆÚ¼ä£¬ 1 Ó¦´ð 0 ²»Ó¦´ð
          usDelayOne();
       }
       IIC1_SCL_1;
-      usDelayOne();// ÈÃslave¶ÁÈ¡Ó¦´ðÐÅºÅ
+      usDelayOne();// è®©slaveè¯»å–åº”ç­”ä¿¡å·
       IIC1_SCL_0;
 }
      
@@ -254,7 +254,7 @@ static uint8_t i2cReadByte(uint8_t ans)
 }
 
 /****************************************************
-function:Ð´Ò»¸ö×Ö½Ú
+function:å†™ä¸€ä¸ªå­—èŠ‚
 input:  ad: machine address
         add: ROM   address;
         dat: the data to write;
@@ -271,7 +271,7 @@ static void i2cWriteChar(uint8_t ad,uint8_t add,uint8_t dat)
     
 }
 /****************************************************
-function: ¶ÁÒ»¸ö×Ö½Ú
+function: è¯»ä¸€ä¸ªå­—èŠ‚
 input:  ad: machine address
         add: ROM   address;
 output: the readed data;
@@ -284,7 +284,7 @@ static uint8_t i2cReadChar(uint8_t ad,uint8_t add)
       i2cWriteByte(ad);
       i2cWriteByte(add);
       i2cStart();
-      i2cWriteByte(ad+0x01); // ÏÈ¶ÁºóÐ´
+      i2cWriteByte(ad+0x01); // å…ˆè¯»åŽå†™
       return i2cReadByte(0);
     
 }

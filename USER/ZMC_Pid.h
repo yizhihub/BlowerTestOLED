@@ -7,13 +7,13 @@
 ** File Name:               ZMC_PID.h
 ** Last modified Date:      2012.01.05
 ** Last Version:            v1.0
-** Description:             PID computation.  PID¼ÆËã¡£
+** Description:             PID computation.  PIDè®¡ç®—ã€‚
 ** 
 **--------------------------------------------------------------------------------------------------------
-** Created By:              Steven Zhou ÖÜÉÜ¸Õ
+** Created By:              Steven Zhou å‘¨ç»åˆš
 ** Created date:            2012.01.05
 ** Version:                 v1.0
-** Descriptions:            The original version ³õÊ¼°æ±¾
+** Descriptions:            The original version åˆå§‹ç‰ˆæœ¬
 **
 *********************************************************************************************************/
 

@@ -5,13 +5,13 @@
 ** File Name:               HwDrv.c
 ** Last modified Date:      2023-07-25
 ** Last Version:            1.0
-** Description:             ÷˜∫Ø ˝Œƒº˛
+** Description:             ‰∏ªÂáΩÊï∞Êñá‰ª∂
 **
 **--------------------------------------------------------------------------------------------------------
 ** Created By:              liguagndao
 ** Created date:            2023-07-25
 ** Version:                 1.0
-** Descriptions:            The original version ≥ı º∞Ê±æ
+** Descriptions:            The original version ÂàùÂßãÁâàÊú¨
 **
 **--------------------------------------------------------------------------------------------------------
 ** Modified by:             
@@ -36,15 +36,15 @@ extern INT32U  GulCtnBlockTmsCnt;
 extern INT32U  GucUartRecT1msCnt;
 extern INT32U  GulDelayT1msCnt;
 
-INT8U __GucLedMode  = LED_MODE_ON;                                      /* LEDπ§◊˜ƒ£ Ω                  */
+INT8U __GucLedMode  = LED_MODE_ON;                                      /* LEDÂ∑•‰ΩúÊ®°Âºè                  */
 
 extern INT32U  GulPrintT1msCnt;
 
 
 /*********************************************************************************************************
 ** Function name:           watchdog_init
-** Descriptions:            ø¥√≈π∑≥ı ºªØ
-** input parameters:        time £∫ø¥√≈π∑µπº∆ ± ±º‰ (0.1ms ~ 409.6ms ◊Ó–°µ•Œª0.1ms)
+** Descriptions:            ÁúãÈó®ÁãóÂàùÂßãÂåñ
+** input parameters:        time ÔºöÁúãÈó®ÁãóÂÄíËÆ°Êó∂Êó∂Èó¥ (0.1ms ~ 409.6ms ÊúÄÂ∞èÂçï‰Ωç0.1ms)
 ** output parameters:       none
 ** Returned value:          none
 ** Created by:              Cao Zhongyuan
@@ -60,7 +60,7 @@ void hwdInit(uint16_t usTimeMs)
 
 /*********************************************************************************************************
 ** Function name:           watchdog_enable
-** Descriptions:             πƒ‹ø¥√≈π∑
+** Descriptions:            ‰ΩøËÉΩÁúãÈó®Áãó
 ** input parameters:        none
 ** output parameters:       none
 ** Returned value:          none
@@ -76,7 +76,7 @@ void hwdEnable(void)
 }
 /*********************************************************************************************************
 ** Function name:           watchdog_enable
-** Descriptions:             πƒ‹ø¥√≈π∑
+** Descriptions:            ‰ΩøËÉΩÁúãÈó®Áãó
 ** input parameters:        none
 ** output parameters:       none
 ** Returned value:          none
@@ -93,7 +93,7 @@ void hwdDisable(void)
 
 /*********************************************************************************************************
 ** Function name:           sysTickCallBack
-** Descriptions:            sysTick ÷–∂œªÿµ˜∫Ø ˝
+** Descriptions:            sysTick ‰∏≠Êñ≠ÂõûË∞ÉÂáΩÊï∞
 ** input parameters:        none
 ** output parameters:       none
 ** Returned value:          none
@@ -181,7 +181,7 @@ void hwdDisable(void)
     int i;
     if(TIM_GetITStatus(TIM3,TIM_IT_CC1)!=RESET)
       {
-          TIM_ClearITPendingBit(TIM3,TIM_IT_CC1);  //«Â≥˝¥•∑¢÷–∂œ±Í÷æŒª
+          TIM_ClearITPendingBit(TIM3,TIM_IT_CC1);  //Ê∏ÖÈô§Ëß¶Âèë‰∏≠Êñ≠Ê†áÂøó‰Ωç
           LED0_TOG();
           ucHallValue = MC_FOC_HALL_PU1;
           usTim3Ccr1 = TIM3->CCR1;
@@ -216,13 +216,13 @@ void hwdDisable(void)
       
       if(TIM_GetITStatus(TIM3, TIM_IT_Update)!=RESET)
       {
-          TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  //«Â≥˝¥•∑¢÷–∂œ±Í÷æŒª
+          TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  //Ê∏ÖÈô§Ëß¶Âèë‰∏≠Êñ≠Ê†áÂøó‰Ωç
           GusHallSpd = 0;
       }
  }
 /*********************************************************************************************************
 ** Function name:           ledInit
-** Descriptions:            LED ≥ı ºªØ∫Ø ˝
+** Descriptions:            LED ÂàùÂßãÂåñÂáΩÊï∞
 ** input parameters:        none
 ** output parameters:       none
 ** Returned value:          none
@@ -236,7 +236,7 @@ void hwdDisable(void)
 void  ledInit (void)
 {
     /*
-     * LED GPIO≈‰÷√
+     * LED GPIOÈÖçÁΩÆ
      */
     GPIO_InitTypeDef  GPIO_InitStructure;
     
@@ -249,7 +249,7 @@ void  ledInit (void)
 
 /*********************************************************************************************************
 ** Function name:           ledSet
-** Descriptions:            LED ƒ£ Ω…Ë÷√∫Ø ˝
+** Descriptions:            LED Ê®°ÂºèËÆæÁΩÆÂáΩÊï∞
 ** input parameters:        none
 ** output parameters:       none
 ** Returned value:          none
@@ -267,7 +267,7 @@ void  ledSet (INT8U  ucLedMode)
 
 /*********************************************************************************************************
 ** Function name:           ledTask
-** Descriptions:            LED »ŒŒÒ¥¶¿Ì∫Ø ˝  °™°™ √ø20ms—≠ª∑µ˜”√
+** Descriptions:            LED ‰ªªÂä°Â§ÑÁêÜÂáΩÊï∞  ‚Äî‚Äî ÊØè20msÂæ™ÁéØË∞ÉÁî®
 ** input parameters:        none
 ** output parameters:       none
 ** Returned value:          none
@@ -284,27 +284,27 @@ void  ledTask (void)
     
     switch (__GucLedMode) {
         
-    case LED_MODE_ON:                                                   /* LEDƒ£ Ω£¨≥£¡¡                */
+    case LED_MODE_ON:                                                   /* LEDÊ®°ÂºèÔºåÂ∏∏‰∫Æ                */
         LED1_ON();
         break;
-    case LED_MODE_OFF:                                                  /* LEDƒ£ Ω, ≥£√               */
+    case LED_MODE_OFF:                                                  /* LEDÊ®°Âºè, Â∏∏ÁÅ≠               */
         LED1_OFF();
         break;    
-    case LED_MODE_SLOW:                                                 /* LEDƒ£ Ω£¨¬˝…¡ ÷‹∆⁄1s         */
+    case LED_MODE_SLOW:                                                 /* LEDÊ®°ÂºèÔºåÊÖ¢Èó™ Âë®Êúü1s         */
         if (++GulCnt >= 25) {
             GulCnt = 0;
             LED1_TOG();
         }
         break;
         
-    case LED_MODE_FAST:                                                 /* LEDƒ£ Ω£¨øÏ…¡ ÷‹∆⁄320ms      */
+    case LED_MODE_FAST:                                                 /* LEDÊ®°ÂºèÔºåÂø´Èó™ Âë®Êúü320ms      */
         if (++GulCnt >= 8) {
             GulCnt = 0;
             LED1_TOG();
         }
         break;
  
-    case LED_SPECIAL_1:                                                 /* LEDƒ£ Ω£¨…¡“ª¥Œ£¨≥£√1√Î ZWW */
+    case LED_SPECIAL_1:                                                 /* LEDÊ®°ÂºèÔºåÈó™‰∏ÄÊ¨°ÔºåÂ∏∏ÁÅ≠1Áßí ZWW */
         GulCnt ++;
         if (GulCnt <= 5) {
             LED1_ON();
@@ -315,7 +315,7 @@ void  ledTask (void)
         }
         break;
     
-    case LED_SPECIAL_2:                                                 /* LEDƒ£ Ω£¨…¡¡Ω¥Œ£¨≥£√1√Î ZWW */
+    case LED_SPECIAL_2:                                                 /* LEDÊ®°ÂºèÔºåÈó™‰∏§Ê¨°ÔºåÂ∏∏ÁÅ≠1Áßí ZWW */
         GulCnt ++;
         if (GulCnt <= 5) {
             LED1_ON();
@@ -330,7 +330,7 @@ void  ledTask (void)
         }
         break;
 
-    case LED_SPECIAL_3:                                                 /* LEDƒ£ Ω£¨…¡»˝¥Œ£¨≥£√1√Î ZWW */
+    case LED_SPECIAL_3:                                                 /* LEDÊ®°ÂºèÔºåÈó™‰∏âÊ¨°ÔºåÂ∏∏ÁÅ≠1Áßí ZWW */
         GulCnt ++;
         if (GulCnt <= 5) {
             LED1_ON();
@@ -362,7 +362,7 @@ void timInit(void)
     TIM_OCInitTypeDef  TIM_OCInitStructure;
     
     /*
-     * ≥ı ºªØ“ª∏ˆ∂® ±∆˜£¨ ”√”⁄≤˙…˙“ª∏ˆ1msµƒ ±º‰ª˘◊º
+     * ÂàùÂßãÂåñ‰∏Ä‰∏™ÂÆöÊó∂Âô®Ôºå Áî®‰∫é‰∫ßÁîü‰∏Ä‰∏™1msÁöÑÊó∂Èó¥Âü∫ÂáÜ
      */
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
     TIM_DeInit(TIM2);
@@ -377,8 +377,8 @@ void timInit(void)
     TIM_ITConfig(TIM2,TIM_IT_Update,ENABLE);
 
     /* 
-     *  ≥ı ºªØ“ª∏ˆ∂® ±∆˜£¨”√”⁄≤˙…˙“ª∏ˆ400Hz£¨ 1ms~2msµƒ¬ˆ≥Â–≈∫≈ 
-     *  ≤‚ ‘∆ΩÃ®V1.0  π”√PA6°¢≤‚ ‘∆ΩÃ®V2.0 π”√PA8
+     *  ÂàùÂßãÂåñ‰∏Ä‰∏™ÂÆöÊó∂Âô®ÔºåÁî®‰∫é‰∫ßÁîü‰∏Ä‰∏™400HzÔºå 1ms~2msÁöÑËÑâÂÜ≤‰ø°Âè∑ 
+     *  ÊµãËØïÂπ≥Âè∞V1.0 ‰ΩøÁî®PA6„ÄÅÊµãËØïÂπ≥Âè∞V2.0‰ΩøÁî®PA8
      */
      
     /*PA8  TIM1*/
@@ -402,23 +402,23 @@ void timInit(void)
     TIM_TimeBaseInit(TIM1, &tTimeBaseConfig);
     TIM_ITConfig(TIM1,TIM_IT_Update,ENABLE);
     
-    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //—°‘Ò∂® ±∆˜ƒ£ Ω:TIM¬ˆ≥ÂøÌ∂»µ˜÷∆ƒ£ Ω2
-    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //±»Ωœ ‰≥ˆ πƒ‹
-    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; // ‰≥ˆº´–‘:TIM ‰≥ˆ±»Ωœº´–‘∏ﬂ
-    TIM_OC1Init(TIM1, &TIM_OCInitStructure);  //∏˘æ›T÷∏∂®µƒ≤Œ ˝≥ı ºªØÕ‚…ËTIM3 OC2
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //ÈÄâÊã©ÂÆöÊó∂Âô®Ê®°Âºè:TIMËÑâÂÜ≤ÂÆΩÂ∫¶Ë∞ÉÂà∂Ê®°Âºè2
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //ÊØîËæÉËæìÂá∫‰ΩøËÉΩ
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; //ËæìÂá∫ÊûÅÊÄß:TIMËæìÂá∫ÊØîËæÉÊûÅÊÄßÈ´ò
+    TIM_OC1Init(TIM1, &TIM_OCInitStructure);  //Ê†πÊçÆTÊåáÂÆöÁöÑÂèÇÊï∞ÂàùÂßãÂåñÂ§ñËÆæTIM3 OC2
 
-    TIM_CtrlPWMOutputs(TIM1,ENABLE);          //MOE ÷˜ ‰≥ˆ πƒ‹
-    TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);  // πƒ‹TIM3‘⁄CCR2…œµƒ‘§◊∞‘ÿºƒ¥Ê∆˜
-//    TIM_ARRPreloadConfig(TIM1, ENABLE); // πƒ‹TIMx‘⁄ARR…œµƒ‘§◊∞‘ÿºƒ¥Ê∆˜
+    TIM_CtrlPWMOutputs(TIM1,ENABLE);          //MOE ‰∏ªËæìÂá∫‰ΩøËÉΩ
+    TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);  //‰ΩøËÉΩTIM3Âú®CCR2‰∏äÁöÑÈ¢ÑË£ÖËΩΩÂØÑÂ≠òÂô®
+//    TIM_ARRPreloadConfig(TIM1, ENABLE); //‰ΩøËÉΩTIMxÂú®ARR‰∏äÁöÑÈ¢ÑË£ÖËΩΩÂØÑÂ≠òÂô®
     
     TIM_SetCompare1(TIM1,1000);
     
-    /* ø™∆ÙÀ˘”–∂® ±∆˜ */
+    /* ÂºÄÂêØÊâÄÊúâÂÆöÊó∂Âô® */
     TIM_Cmd(TIM2, ENABLE);
     TIM_Cmd(TIM1, ENABLE);
     
     NVIC_DisableIRQ(TIM2_IRQn);
-    NVIC_SetPriority(TIM2_IRQn, 1);                                 /* …Ë÷√÷–∂œ”≈œ»º∂               */
+    NVIC_SetPriority(TIM2_IRQn, 1);                                 /* ËÆæÁΩÆ‰∏≠Êñ≠‰ºòÂÖàÁ∫ß               */
     NVIC_EnableIRQ(TIM2_IRQn);
 
 }
@@ -497,28 +497,28 @@ void TIM3HallCapInit(void)
     TIM_TimeBaseInit(TIM3, &tTimeBaseConfig);
     
     TIM3_ICInitStructure.TIM_Channel     = TIM_Channel_1;
-    TIM3_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_BothEdge;    //…œ…˝—ÿ≤∂ªÒTIM_ICPolarity_BothEdge
-    TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_TRC; //”≥…‰µΩTI1…œ
-    TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;     //≈‰÷√ ‰»Î∑÷∆µ,≤ª∑÷∆µ 
-    TIM3_ICInitStructure.TIM_ICFilter    = 0x05;//IC1F=0000 ≈‰÷√ ‰»Î¬À≤®∆˜ ≤ª¬À≤®
+    TIM3_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_BothEdge;    //‰∏äÂçáÊ≤øÊçïËé∑TIM_ICPolarity_BothEdge
+    TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_TRC; //Êò†Â∞ÑÂà∞TI1‰∏ä
+    TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;     //ÈÖçÁΩÆËæìÂÖ•ÂàÜÈ¢ë,‰∏çÂàÜÈ¢ë 
+    TIM3_ICInitStructure.TIM_ICFilter    = 0x05;//IC1F=0000 ÈÖçÁΩÆËæìÂÖ•Êª§Ê≥¢Âô® ‰∏çÊª§Ê≥¢
     TIM_ICInit(TIM3, &TIM3_ICInitStructure);
 //    
 //    TIM3_ICInitStructure.TIM_Channel     = TIM_Channel_2;
-//    TIM3_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_BothEdge;    //…œ…˝—ÿ≤∂ªÒTIM_ICPolarity_BothEdge
-//      TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_IndirectTI; //”≥…‰µΩTI1…œ
-//      TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;     //≈‰÷√ ‰»Î∑÷∆µ,≤ª∑÷∆µ 
-//      TIM3_ICInitStructure.TIM_ICFilter    = 0x05;//IC1F=0000 ≈‰÷√ ‰»Î¬À≤®∆˜ ≤ª¬À≤®
+//    TIM3_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_BothEdge;    //‰∏äÂçáÊ≤øÊçïËé∑TIM_ICPolarity_BothEdge
+//      TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_IndirectTI; //Êò†Â∞ÑÂà∞TI1‰∏ä
+//      TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;     //ÈÖçÁΩÆËæìÂÖ•ÂàÜÈ¢ë,‰∏çÂàÜÈ¢ë 
+//      TIM3_ICInitStructure.TIM_ICFilter    = 0x05;//IC1F=0000 ÈÖçÁΩÆËæìÂÖ•Êª§Ê≥¢Âô® ‰∏çÊª§Ê≥¢
 //    TIM_ICInit(TIM3, &TIM3_ICInitStructure);
 //    
 //    TIM3_ICInitStructure.TIM_Channel     = TIM_Channel_3;
-//    TIM3_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_BothEdge;    //…œ…˝—ÿ≤∂ªÒTIM_ICPolarity_BothEdge
-//      TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_IndirectTI; //”≥…‰µΩTI1…œ
-//      TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;     //≈‰÷√ ‰»Î∑÷∆µ,≤ª∑÷∆µ 
-//      TIM3_ICInitStructure.TIM_ICFilter    = 0x05;//IC1F=0000 ≈‰÷√ ‰»Î¬À≤®∆˜ ≤ª¬À≤®
+//    TIM3_ICInitStructure.TIM_ICPolarity  = TIM_ICPolarity_BothEdge;    //‰∏äÂçáÊ≤øÊçïËé∑TIM_ICPolarity_BothEdge
+//      TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_IndirectTI; //Êò†Â∞ÑÂà∞TI1‰∏ä
+//      TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;     //ÈÖçÁΩÆËæìÂÖ•ÂàÜÈ¢ë,‰∏çÂàÜÈ¢ë 
+//      TIM3_ICInitStructure.TIM_ICFilter    = 0x05;//IC1F=0000 ÈÖçÁΩÆËæìÂÖ•Êª§Ê≥¢Âô® ‰∏çÊª§Ê≥¢
 //    TIM_ICInit(TIM3, &TIM3_ICInitStructure);
 
     NVIC_DisableIRQ(TIM3_IRQn);
-    NVIC_SetPriority(TIM3_IRQn, 3);                                 /* …Ë÷√÷–∂œ”≈œ»º∂               */
+    NVIC_SetPriority(TIM3_IRQn, 3);                                 /* ËÆæÁΩÆ‰∏≠Êñ≠‰ºòÂÖàÁ∫ß               */
     NVIC_EnableIRQ(TIM3_IRQn);
     
     TIM_SelectHallSensor(TIM3, ENABLE);
@@ -600,7 +600,7 @@ void  usDelay(uint32_t  ulDly)
 
 /*********************************************************************************************************
 ** Function name:           hwInit
-** Descriptions:            ”≤º˛≥ı ºªØ∫Ø ˝
+** Descriptions:            Á°¨‰ª∂ÂàùÂßãÂåñÂáΩÊï∞
 ** input parameters:        none
 ** output parameters:       none
 ** Returned value:          none
@@ -613,17 +613,17 @@ void  usDelay(uint32_t  ulDly)
 *********************************************************************************************************/
 void  hwInit (void)
 {
-    __disable_irq();                                          /* »´æ÷÷–∂œΩ˚ƒ‹                  */
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_3);// …Ë÷√÷–∂œ”≈œ»º∂∑÷◊È2
+    __disable_irq();                                          /* ÂÖ®Â±Ä‰∏≠Êñ≠Á¶ÅËÉΩ                  */
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_3);// ËÆæÁΩÆ‰∏≠Êñ≠‰ºòÂÖàÁ∫ßÂàÜÁªÑ2
     
     msDelay(50);
 //    NVIC_SetPriority(TIM2_IRQn, 3); 
 //    NVIC_EnableIRQ(TIM2_IRQn);        
-//    NVIC_SetPriority(USART1_IRQn, 4);                                   /* …Ë÷√”≈œ»º∂÷–∂œ               */
+//    NVIC_SetPriority(USART1_IRQn, 4);                                   /* ËÆæÁΩÆ‰ºòÂÖàÁ∫ß‰∏≠Êñ≠               */
 //    NVIC_EnableIRQ(USART1_IRQn);  
     
 
-//    SysTick_Config(120000000 / 1000);                                   /* SysTick≥ı ºªØ 1ms÷–∂œ ±º‰     */
+//    SysTick_Config(120000000 / 1000);                                   /* SysTickÂàùÂßãÂåñ 1ms‰∏≠Êñ≠Êó∂Èó¥     */
 }
 
 

@@ -4,10 +4,10 @@
 
 
 /************To make helicopter***************************
-#function£º ¶ÁĞ´Ò»¸ö×Ö½Ú£¬spiĞ­Òé£¬¶ÁĞ´ÊÇÍ¬Ê±½øĞĞµÄ
+#functionï¼š è¯»å†™ä¸€ä¸ªå­—èŠ‚ï¼Œspiåè®®ï¼Œè¯»å†™æ˜¯åŒæ—¶è¿›è¡Œçš„
 #input:  the data be writed
 #output:  the data read 
-#others: poll style(²éÑ¯·½Ê½)£¬ spi×îµÍ²ã
+#others: poll style(æŸ¥è¯¢æ–¹å¼)ï¼Œ spiæœ€ä½å±‚
 #date:  2014-08-24
 #author:  yizhi 
 ***********************************************************/
@@ -22,7 +22,7 @@ uchar SPI_WriteRead(uchar dat)
 	  return SPDAT;
 }
 /************To make helicopter***************************
-#function£ºspi initialize 
+#functionï¼šspi initialize 
 #input: none
 #output: none
 #others: refer to IAP pdf
@@ -39,8 +39,8 @@ void SPI_Init(void)
 	 IE2&=~(1<<2); // close the interrupt
 }
 /************To make helicopter***************************
-#function£º ÔÚÖ¸¶¨µÄµØÖ·£¬ Ğ´Ò»¸ö×Ö½Ú£¬ Í¬Ê±·µ»ØÒ»¸ö×´Ì¬×Ö
-#input: add£ºRegister address dat: data
+#functionï¼š åœ¨æŒ‡å®šçš„åœ°å€ï¼Œ å†™ä¸€ä¸ªå­—èŠ‚ï¼Œ åŒæ—¶è¿”å›ä¸€ä¸ªçŠ¶æ€å­—
+#input: addï¼šRegister address dat: data
 #output: status( normaly useless)
 #others:  adapted to NRF24L01,other spi machine may be not compatibile
 #date:  2014-08-24
@@ -50,15 +50,15 @@ void SPI_Init(void)
 {
 	  uchar status;
    // CSN=0;	
-	 // SPI_SS(ss,1);// Óöµ½¶àÆ¬Ñ¡Ê±£¬Ïëµ½µÄµÚÒ»ÖÖ·½·¨¡£
-	  switch(pcs)   // µÚ¶şÖÖ·½·¨
+	 // SPI_SS(ss,1);// é‡åˆ°å¤šç‰‡é€‰æ—¶ï¼Œæƒ³åˆ°çš„ç¬¬ä¸€ç§æ–¹æ³•ã€‚
+	  switch(pcs)   // ç¬¬äºŒç§æ–¹æ³•
 	  {
 		case 0: PCS0=0; break;
 	  case 1: PCS1=0; break;
 	  case 2: PCS2=0; break;
 	  default:        break;
     }
-	  //while(SPI_MISO); // waite for CC2500  CC2500 SPIĞ­Òé ×¨ÓÃ
+	  //while(SPI_MISO); // waite for CC2500  CC2500 SPIåè®® ä¸“ç”¨
 	  SPDAT=add;  // write address
 	  while(!(SPSTAT&SPIF));
 		SPSTAT=0xC0;
@@ -76,8 +76,8 @@ void SPI_Init(void)
 	  return status;
 }
 /************To make helicopter***************************
-#function£ºÖ¸¶¨µØÖ·¶ÁÒ»¸ö×Ö½Ú
-#input: add£ºregister address 
+#functionï¼šæŒ‡å®šåœ°å€è¯»ä¸€ä¸ªå­—èŠ‚
+#input: addï¼šregister address 
 #output: the data read
 #others: adapted to NRF24L01,other spi machine may be not compatibile
 #date:  2014-08-24
@@ -87,7 +87,7 @@ uchar SPI_Read1(SPI_PCSn_e pcs,uchar add)
 {
 	 uchar temp;
 	
-	// CSN=0;  //À­´Ó»úµÄSS
+	// CSN=0;  //æ‹‰ä»æœºçš„SS
 	switch(pcs)   
 	{
 	case 0: PCS0=0; break;
@@ -98,12 +98,12 @@ uchar SPI_Read1(SPI_PCSn_e pcs,uchar add)
 	 //while(SPI_MISO);
 	 SPDAT=add;
 	 while(!(SPSTAT&SPIF));
-	 SPSTAT=0xC0;  // Çå±êÖ¾Î»
+	 SPSTAT=0xC0;  // æ¸…æ ‡å¿—ä½
 	
 	 SPDAT=0; 
 	 while(!(SPSTAT&SPIF));
 	 SPSTAT=0xC0;
-	 temp=SPDAT;  //¶Á¼Ä´æÆ÷µÄÊı¾İ 
+	 temp=SPDAT;  //è¯»å¯„å­˜å™¨çš„æ•°æ® 
 	switch(pcs)   
 	{
 	case 0: PCS0=1; break;
@@ -114,8 +114,8 @@ uchar SPI_Read1(SPI_PCSn_e pcs,uchar add)
    return temp;
 }
 /************To make helicopter***************************
-#function£º´ÓÖ¸¶¨µÄµØÖ·¿ªÊ¼ Á¬ĞøĞ´N¸ö×Ö½Ú£¬
-#input: add£º the destination address  dat: the point of data serial 
+#functionï¼šä»æŒ‡å®šçš„åœ°å€å¼€å§‹ è¿ç»­å†™Nä¸ªå­—èŠ‚ï¼Œ
+#input: addï¼š the destination address  dat: the point of data serial 
 #output: status(normal useless)
 #others: adapted to NRF24L01,other spi machine may be not compatibile
 #date:  2014-08-24
@@ -152,8 +152,8 @@ uchar SPI_WriteN(SPI_PCSn_e pcs,uchar add,uchar *dat,uchar N)
 	 return status;
 }
 /************To make helicopter***************************
-#function£º´ÓÖ¸¶¨µÄµØÖ·¿ªÊ¼ Á¬Ğø¶ÁÈ¡N  ¸ö×Ö½Ú£¬
-#input: add£º the destination address  dat: the point of data serial 
+#functionï¼šä»æŒ‡å®šçš„åœ°å€å¼€å§‹ è¿ç»­è¯»å–N  ä¸ªå­—èŠ‚ï¼Œ
+#input: addï¼š the destination address  dat: the point of data serial 
 #output: status(normal useless)
 #others: adapted to NRF24L01,other spi machine may be not compatibile
 #date:  2014-08-24

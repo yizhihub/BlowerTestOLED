@@ -7,13 +7,13 @@
 ** File Name:               ZMC_Filter.c
 ** Last modified Date:      2012.01.05
 ** Last Version:            v1.0
-** Description:             Filters ÂË²¨Æ÷
+** Description:             Filters æ»¤æ³¢å™¨
 ** 
 **--------------------------------------------------------------------------------------------------------
-** Created By:              Steven Zhou ÖÜÉÜ¸Õ
+** Created By:              Steven Zhou å‘¨ç»åˆš
 ** Created date:            2012.01.05
 ** Version:                 v1.0
-** Descriptions:            The original version ³õÊ¼°æ±¾
+** Descriptions:            The original version åˆå§‹ç‰ˆæœ¬
 **
 *********************************************************************************************************/
 #include "ZMC_QMath_cfg.h"

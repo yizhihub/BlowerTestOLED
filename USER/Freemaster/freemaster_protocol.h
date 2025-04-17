@@ -105,7 +105,7 @@
 #define FMSTR_STC_CANTGLERR         0x8EU    /* CAN fragmentation (toggle bit) error */
 #define FMSTR_STC_CANMSGERR         0x8FU    /* CAN message format error */
 #define FMSTR_STC_FLOATDISABLED     0x90U    /* Floating point triggering is not enabled */
-#define FMSTR_STC_DEBUGTX_TEST      0xA9U    /* Artificial +©W test frame sent when DEBUG_TX is enabled */
+#define FMSTR_STC_DEBUGTX_TEST      0xA9U    /* Artificial +ï¿¤ test frame sent when DEBUG_TX is enabled */
 
 /******************************************************************************
 * Protocol constants 

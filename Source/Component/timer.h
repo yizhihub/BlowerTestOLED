@@ -15,7 +15,7 @@ typedef enum timer
 
 /*
 #define Timer0Rst()  TH0=0               
-#define Timer0To(X)	while(TCNT2<(X/8)) _nop_() */ //ÕâÖÖÑÓÊ±µÄË¼ÏëÔ´×ÔKK·É¿ØÔ´³ÌÐò
+#define Timer0To(X)	while(TCNT2<(X/8)) _nop_() */ //è¿™ç§å»¶æ—¶çš„æ€æƒ³æºè‡ªKKé£žæŽ§æºç¨‹åº
 
 void Timer0_Init(uint16 cnt);
 void Timer1_Init(uint16 cnt);

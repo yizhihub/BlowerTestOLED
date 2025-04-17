@@ -8,7 +8,7 @@
 ** Created Date:            2023-10-11
 ** Last Version:            v1.0 
 ** Descriptions:            ARM_PLATEFORM
-**                          FLASHÄ£ÄâEEPROM²Ù×÷£¬Ö§³ÖµØÖ·Á¬Ğø¶ÁĞ´
+**                          FLASHæ¨¡æ‹ŸEEPROMæ“ä½œï¼Œæ”¯æŒåœ°å€è¿ç»­è¯»å†™
 **
 **--------------------------------------------------------------------------------------------------------
 ** Modified by:             
@@ -22,7 +22,7 @@
 #include "bFLASH.h"
 
 #if GD32_FLASH_SIZE < 256
-#define GD_SECTOR_SIZE 1024 //×Ö½Ú
+#define GD_SECTOR_SIZE 1024 //å­—èŠ‚
 #else 
 #define GD_SECTOR_SIZE    2048
 #endif
@@ -31,10 +31,10 @@
 /**
 ********************************************************************************************************
 ** @nameis FLASH_ReadHalfWord
-** @effect ¶ÁÈ¡Ö¸¶¨µØÖ·µÄ°ë×Ö(16Î»Êı¾İ)
-** @import faddr:¶ÁµØÖ·(´ËµØÖ·±ØĞëÎª2µÄ±¶Êı!!)
+** @effect è¯»å–æŒ‡å®šåœ°å€çš„åŠå­—(16ä½æ•°æ®)
+** @import faddr:è¯»åœ°å€(æ­¤åœ°å€å¿…é¡»ä¸º2çš„å€æ•°!!)
 ** @export none
-** @return ·µ»ØÖµ:¶ÔÓ¦Êı¾İ.
+** @return è¿”å›å€¼:å¯¹åº”æ•°æ®.
 ** @create
 ** @modify 
 *********************************************************************************************************/
@@ -43,13 +43,13 @@ uint16_t FLASH_ReadHalfWord(uint32_t faddr)
     return *(vu16*)faddr; 
 }
 
-#if GD32_FLASH_WREN    //Èç¹ûÊ¹ÄÜÁËĞ´  
+#if GD32_FLASH_WREN    //å¦‚æœä½¿èƒ½äº†å†™  
 /**
 ********************************************************************************************************
 ** @nameis FLASH_Write_NoCheck
-** @effect ÎŞ¼ì²éĞ´Èë
+** @effect æ— æ£€æŸ¥å†™å…¥
 ** @import ulWriteAddr:Start Address
-**         psBuffer£ºData Pointer
+**         psBufferï¼šData Pointer
 **         usNumToWrite:Number to write16
 ** @export none
 ** @return none
@@ -62,76 +62,76 @@ void FLASH_Write_NoCheck(uint32_t ulWriteAddr, uint16_t *psBuffer, uint16_t usNu
     for(i = 0;i < usNumToWrite;i++)
     {
         FLASH_ProgramHalfWord(ulWriteAddr, psBuffer[i]);
-        ulWriteAddr += 2;//µØÖ·Ôö¼Ó2.
+        ulWriteAddr += 2;//åœ°å€å¢åŠ 2.
     }  
 } 
 
 /**
 ********************************************************************************************************
 ** @nameis FLASH_Write
-** @effect ´ø¼ì²éĞ´Èë
+** @effect å¸¦æ£€æŸ¥å†™å…¥
 ** @import ulWriteAddr:Start Address
-**         psBuffer£ºData Pointer
+**         psBufferï¼šData Pointer
 **         usNumToWrite:Number to write16
 ** @export none
 ** @return none
 ** @create
 ** @modify 
 *********************************************************************************************************/
-uint16_t GDFLASH_BUF[GD_SECTOR_SIZE/2];//×î¶àÊÇ2K×Ö½Ú
+uint16_t GDFLASH_BUF[GD_SECTOR_SIZE/2];//æœ€å¤šæ˜¯2Kå­—èŠ‚
 void FLASH_Write(uint32_t ulWriteAddr, uint16_t *psBuffer, uint16_t usNumToWrite)    
 {
-    uint32_t ulSecpos;     //ÉÈÇøµØÖ·
-    uint16_t usSecoff;     //ÉÈÇøÄÚÆ«ÒÆµØÖ·(16Î»×Ö¼ÆËã)
-    uint16_t usSecremain;  //ÉÈÇøÄÚÊ£ÓàµØÖ·(16Î»×Ö¼ÆËã)       
+    uint32_t ulSecpos;     //æ‰‡åŒºåœ°å€
+    uint16_t usSecoff;     //æ‰‡åŒºå†…åç§»åœ°å€(16ä½å­—è®¡ç®—)
+    uint16_t usSecremain;  //æ‰‡åŒºå†…å‰©ä½™åœ°å€(16ä½å­—è®¡ç®—)       
     uint16_t i;    
-    uint32_t ulOffaddr;    //È¥µô0X08000000ºóµÄµØÖ·
+    uint32_t ulOffaddr;    //å»æ‰0X08000000åçš„åœ°å€
     if (ulWriteAddr < GD32_FLASH_BASE || (ulWriteAddr >= (GD32_FLASH_BASE + 1024*GD32_FLASH_SIZE)))
-        return;     //·Ç·¨µØÖ·
-    FLASH_Unlock();                                 //½âËø
-    ulOffaddr = ulWriteAddr - GD32_FLASH_BASE;         //Êµ¼ÊÆ«ÒÆµØÖ·.
-    ulSecpos = ulOffaddr/GD_SECTOR_SIZE;               //ÉÈÇøµØÖ·  0~127 for STM32F103RBT6
-    usSecoff = (ulOffaddr%GD_SECTOR_SIZE)/2;           //ÔÚÉÈÇøÄÚµÄÆ«ÒÆ(2¸ö×Ö½ÚÎª»ù±¾µ¥Î».)
-    usSecremain = GD_SECTOR_SIZE/2 - usSecoff;         //ÉÈÇøÊ£Óà¿Õ¼ä´óĞ¡   
+        return;     //éæ³•åœ°å€
+    FLASH_Unlock();                                 //è§£é”
+    ulOffaddr = ulWriteAddr - GD32_FLASH_BASE;         //å®é™…åç§»åœ°å€.
+    ulSecpos = ulOffaddr/GD_SECTOR_SIZE;               //æ‰‡åŒºåœ°å€  0~127 for STM32F103RBT6
+    usSecoff = (ulOffaddr%GD_SECTOR_SIZE)/2;           //åœ¨æ‰‡åŒºå†…çš„åç§»(2ä¸ªå­—èŠ‚ä¸ºåŸºæœ¬å•ä½.)
+    usSecremain = GD_SECTOR_SIZE/2 - usSecoff;         //æ‰‡åŒºå‰©ä½™ç©ºé—´å¤§å°   
     if (usNumToWrite <= usSecremain)
-        usSecremain = usNumToWrite;                     //²»´óÓÚ¸ÃÉÈÇø·¶Î§
+        usSecremain = usNumToWrite;                     //ä¸å¤§äºè¯¥æ‰‡åŒºèŒƒå›´
     while(1) 
     {    
-        FLASH_Read(ulSecpos*GD_SECTOR_SIZE + GD32_FLASH_BASE,GDFLASH_BUF,GD_SECTOR_SIZE/2);//¶Á³öÕû¸öÉÈÇøµÄÄÚÈİ
-        for (i = 0;i < usSecremain;i++)//Ğ£ÑéÊı¾İ
+        FLASH_Read(ulSecpos*GD_SECTOR_SIZE + GD32_FLASH_BASE,GDFLASH_BUF,GD_SECTOR_SIZE/2);//è¯»å‡ºæ•´ä¸ªæ‰‡åŒºçš„å†…å®¹
+        for (i = 0;i < usSecremain;i++)//æ ¡éªŒæ•°æ®
         {
             if (GDFLASH_BUF[usSecoff+i] != 0xFFFF)
-                break;//ĞèÒª²Á³ı        
+                break;//éœ€è¦æ“¦é™¤        
         }
-        if (i < usSecremain)//ĞèÒª²Á³ı
+        if (i < usSecremain)//éœ€è¦æ“¦é™¤
         {
-            FLASH_ErasePage(ulSecpos * GD_SECTOR_SIZE + GD32_FLASH_BASE);//²Á³ıÕâ¸öÉÈÇø
-            for (i = 0;i < usSecremain;i++)//¸´ÖÆ
+            FLASH_ErasePage(ulSecpos * GD_SECTOR_SIZE + GD32_FLASH_BASE);//æ“¦é™¤è¿™ä¸ªæ‰‡åŒº
+            for (i = 0;i < usSecremain;i++)//å¤åˆ¶
             {
                 GDFLASH_BUF[i + usSecoff] = psBuffer[i];      
             }
-            FLASH_Write_NoCheck(ulSecpos*GD_SECTOR_SIZE + GD32_FLASH_BASE, GDFLASH_BUF, GD_SECTOR_SIZE/2);//Ğ´ÈëÕû¸öÉÈÇø  
+            FLASH_Write_NoCheck(ulSecpos*GD_SECTOR_SIZE + GD32_FLASH_BASE, GDFLASH_BUF, GD_SECTOR_SIZE/2);//å†™å…¥æ•´ä¸ªæ‰‡åŒº  
         }
         else 
         {
-            FLASH_Write_NoCheck(ulWriteAddr, psBuffer, usSecremain);//Ğ´ÒÑ¾­²Á³ıÁËµÄ,Ö±½ÓĞ´ÈëÉÈÇøÊ£ÓàÇø¼ä.
+            FLASH_Write_NoCheck(ulWriteAddr, psBuffer, usSecremain);//å†™å·²ç»æ“¦é™¤äº†çš„,ç›´æ¥å†™å…¥æ‰‡åŒºå‰©ä½™åŒºé—´.
         }
-        if (usNumToWrite == usSecremain)//Ğ´Èë½áÊøÁË
+        if (usNumToWrite == usSecremain)//å†™å…¥ç»“æŸäº†
             break;
-        else//Ğ´ÈëÎ´½áÊø
+        else//å†™å…¥æœªç»“æŸ
         {
-            ulSecpos++;                //ÉÈÇøµØÖ·Ôö1
-            usSecoff = 0;                //Æ«ÒÆÎ»ÖÃÎª0      
-            psBuffer += usSecremain;      //Ö¸ÕëÆ«ÒÆ
-            ulWriteAddr += usSecremain;    //Ğ´µØÖ·Æ«ÒÆ       
-            usNumToWrite -= usSecremain;    //×Ö½Ú(16Î»)Êıµİ¼õ
+            ulSecpos++;                //æ‰‡åŒºåœ°å€å¢1
+            usSecoff = 0;                //åç§»ä½ç½®ä¸º0      
+            psBuffer += usSecremain;      //æŒ‡é’ˆåç§»
+            ulWriteAddr += usSecremain;    //å†™åœ°å€åç§»       
+            usNumToWrite -= usSecremain;    //å­—èŠ‚(16ä½)æ•°é€’å‡
             if (usNumToWrite > (GD_SECTOR_SIZE/2))
-                usSecremain = GD_SECTOR_SIZE/2;//ÏÂÒ»¸öÉÈÇø»¹ÊÇĞ´²»Íê
+                usSecremain = GD_SECTOR_SIZE/2;//ä¸‹ä¸€ä¸ªæ‰‡åŒºè¿˜æ˜¯å†™ä¸å®Œ
             else
-                usSecremain = usNumToWrite;//ÏÂÒ»¸öÉÈÇø¿ÉÒÔĞ´ÍêÁË
+                usSecremain = usNumToWrite;//ä¸‹ä¸€ä¸ªæ‰‡åŒºå¯ä»¥å†™å®Œäº†
         }     
     }
-    FLASH_Lock();//ÉÏËø
+    FLASH_Lock();//ä¸Šé”
 }
 
 #endif
@@ -139,9 +139,9 @@ void FLASH_Write(uint32_t ulWriteAddr, uint16_t *psBuffer, uint16_t usNumToWrite
 /**
 ********************************************************************************************************
 ** @nameis FLASH_Read
-** @effect ´ÓÖ¸¶¨µØÖ·¿ªÊ¼¶Á³öÖ¸¶¨³¤¶ÈµÄÊı¾İ
+** @effect ä»æŒ‡å®šåœ°å€å¼€å§‹è¯»å‡ºæŒ‡å®šé•¿åº¦çš„æ•°æ®
 ** @import ulReadAddr:Start Address
-**         psBuffer£ºData Pointer
+**         psBufferï¼šData Pointer
 **         usNumToRead:Number to read16
 ** @export none
 ** @return none
@@ -153,7 +153,7 @@ void FLASH_Read(uint32_t ulReadAddr, uint16_t *psBuffer, uint16_t usNumToRead)
     uint16_t i;
     for(i = 0;i < usNumToRead;i++)
     {
-        psBuffer[i] = FLASH_ReadHalfWord(ulReadAddr);//¶ÁÈ¡2¸ö×Ö½Ú.
-        ulReadAddr += 2;//Æ«ÒÆ2¸ö×Ö½Ú.
+        psBuffer[i] = FLASH_ReadHalfWord(ulReadAddr);//è¯»å–2ä¸ªå­—èŠ‚.
+        ulReadAddr += 2;//åç§»2ä¸ªå­—èŠ‚.
     }
 }

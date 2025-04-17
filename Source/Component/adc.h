@@ -4,33 +4,33 @@
 #include "common.h"
 
 /**********************************
-PIN¿Ú¶¨Òå
+PINå£å®šä¹‰
 **********************************/
 //sbit LR_AD = P1^0;
 //sbit FB_AD = P1^1;
 //sbit S_AD = P1^2
 sbit P_AD=P1^2;
 /**********************************
-º¯ÊıÉùÃ÷
+å‡½æ•°å£°æ˜
 **********************************/
 #define NOP(N)    NOP##N()
 
-#define	ADC_P10		0x01	//IOÒı½Å Px.0
-#define	ADC_P11		0x02	//IOÒı½Å Px.1
-#define	ADC_P12		0x04	//IOÒı½Å Px.2
-#define	ADC_P13		0x08	//IOÒı½Å Px.3
-#define	ADC_P14		0x10	//IOÒı½Å Px.4
-#define	ADC_P15		0x20	//IOÒı½Å Px.5
-#define	ADC_P16		0x40	//IOÒı½Å Px.6
-#define	ADC_P17		0x80	//IOÒı½Å Px.7
-#define	ADC_P1_All	0xFF	//IOËùÓĞÒı½Å
+#define	ADC_P10		0x01	//IOå¼•è„š Px.0
+#define	ADC_P11		0x02	//IOå¼•è„š Px.1
+#define	ADC_P12		0x04	//IOå¼•è„š Px.2
+#define	ADC_P13		0x08	//IOå¼•è„š Px.3
+#define	ADC_P14		0x10	//IOå¼•è„š Px.4
+#define	ADC_P15		0x20	//IOå¼•è„š Px.5
+#define	ADC_P16		0x40	//IOå¼•è„š Px.6
+#define	ADC_P17		0x80	//IOå¼•è„š Px.7
+#define	ADC_P1_All	0xFF	//IOæ‰€æœ‰å¼•è„š
 
 #define ADC_90T		(3<<5)
 #define ADC_180T	(2<<5)
 #define ADC_360T	(1<<5)
 #define ADC_540T	0
-#define ADC_FLAG	(1<<4)	//Èí¼şÇå0
-#define ADC_START	(1<<3)	//×Ô¶¯Çå0
+#define ADC_FLAG	(1<<4)	//è½¯ä»¶æ¸…0
+#define ADC_START	(1<<3)	//è‡ªåŠ¨æ¸…0
 #define ADC_CH0		0
 #define ADC_CH1		1
 #define ADC_CH2		2
@@ -46,12 +46,12 @@ sbit P_AD=P1^2;
 
 typedef struct
 {
-	uchar 	ADC_Px;			//ÉèÖÃÒª×öADCµÄIO,	ADC_P10 ~ ADC_P17,ADC_P1_All
-	uchar 	ADC_Speed;		//ADCËÙ¶È			ADC_90T,ADC_180T,ADC_360T,ADC_540T
-	uchar 	ADC_Power;		//ADC¹¦ÂÊÔÊĞí/¹Ø±Õ	ENABLE,DISABLE
-	uchar 	ADC_AdjResult;	//ADC½á¹ûµ÷Õû,	ADC_RES_H2L8,ADC_RES_H8L2
-	uchar 	ADC_Polity;		//ÓÅÏÈ¼¶ÉèÖÃ	PolityHigh,PolityLow
-	uchar 	ADC_Interrupt;	//ÖĞ¶ÏÔÊĞí		ENABLE,DISABLE
+	uchar 	ADC_Px;			//è®¾ç½®è¦åšADCçš„IO,	ADC_P10 ~ ADC_P17,ADC_P1_All
+	uchar 	ADC_Speed;		//ADCé€Ÿåº¦			ADC_90T,ADC_180T,ADC_360T,ADC_540T
+	uchar 	ADC_Power;		//ADCåŠŸç‡å…è®¸/å…³é—­	ENABLE,DISABLE
+	uchar 	ADC_AdjResult;	//ADCç»“æœè°ƒæ•´,	ADC_RES_H2L8,ADC_RES_H8L2
+	uchar 	ADC_Polity;		//ä¼˜å…ˆçº§è®¾ç½®	PolityHigh,PolityLow
+	uchar 	ADC_Interrupt;	//ä¸­æ–­å…è®¸		ENABLE,DISABLE
 } ADC_InitTypeDef;
 
 void	ADC_Inilize(ADC_InitTypeDef *ADCx);

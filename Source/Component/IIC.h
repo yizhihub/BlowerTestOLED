@@ -53,7 +53,7 @@
 
 
 #if defined(STM32F103VE)                                                
-    #define IIC_SCL         PDout(3)                                    /* ¾«Ó¢Ö÷°åV.7  CAMERA½Ó¿Ú*/ 
+    #define IIC_SCL         PDout(3)                                    /* ç²¾è‹±ä¸»æ¿V.7  CAMERAæŽ¥å£*/ 
     #define IIC_SDA         PGout(13)
     #define IIC_SDA_R       PGin(13)
     #define IIC_SCL_R       PDin(3)
@@ -62,7 +62,7 @@
     #define IIC_SCL_IN      {GPIOD->CRL &= ~(0xFu << (3) * 4); GPIOD->CRL |= 8u << (3) * 4;}
     #define IIC_SCL_OUT     {GPIOD->CRL &= ~(0xFu << (3) * 4); GPIOD->CRL |= 3u << (3) * 4;}
     
-//    #define IIC_SCL         PBout(11)                                   /* ¾«Ó¢Ö÷°åV.7  ATK MODULE½Ó¿Ú*/
+//    #define IIC_SCL         PBout(11)                                   /* ç²¾è‹±ä¸»æ¿V.7  ATK MODULEæŽ¥å£*/
 //    #define IIC_SDA         PBout(10)
 //    #define IIC_SDA_R       PBin(10)
 //    #define IIC_SCL_R       PBin(11)
@@ -77,7 +77,7 @@
     #define IIC_SDA_IN      {GPIOB->CRL &= 0X0FFFFFFF; GPIOB->CRL |= 8 << 28;}
     #define IIC_SDA_OUT     {GPIOB->CRL &= 0X0FFFFFFF; GPIOB->CRL |= 3 << 28;}
 #elif defined(GD32F303RE)
-    #define IIC_SCL         PBout(10)                                    /* ·ç»ú²âÊÔÆ½Ì¨ */ 
+    #define IIC_SCL         PBout(10)                                    /* é£Žæœºæµ‹è¯•å¹³å° */ 
     #define IIC_SDA         PBout(11)
     #define IIC_SCL_R       PBin(10)
     #define IIC_SDA_R       PBin(11)
@@ -108,8 +108,8 @@ void i2cAnswer(uint8_t ans);
 uint8_t i2cWriteByte(uint8_t dat);
 uint8_t i2cReadByte(uint8_t ans);
 void IIC_WriteChar(uint8_t ad,uint8_t add,uint8_t dat);
-uint8_t IIC_ReadChar(uint8_t ad,uint8_t add);      // ¶ÁÐ´Ò»¸ö×Ö½Ú 
+uint8_t IIC_ReadChar(uint8_t ad,uint8_t add);      // è¯»å†™ä¸€ä¸ªå­—èŠ‚ 
 //void  IIC_WriteN(uint8_t ad,uint8_t add,uint8_t *j);
-//void  IIC_ReadN(uint8_t ad, uint8_t add,uint8_t k); // ¶ÁÐ´N¸ö×Ö½Ú
+//void  IIC_ReadN(uint8_t ad, uint8_t add,uint8_t k); // è¯»å†™Nä¸ªå­—èŠ‚
 #endif
 

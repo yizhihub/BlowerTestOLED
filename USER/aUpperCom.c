@@ -32,14 +32,14 @@
 #include "bHMI.h"
 
 /*********************************************************************************************************
-  ÄÚ²¿º¯ÊıÉùÃ÷
+  å†…éƒ¨å‡½æ•°å£°æ˜
 *********************************************************************************************************/
 
 /*********************************************************************************************************
-  ÄÚ²¿±äÁ¿¶¨Òå
+  å†…éƒ¨å˜é‡å®šä¹‰
 *********************************************************************************************************/
-//INT16U  __GusDataAdcIa[1];                                                /* ±£´æADC1ÊıÖµ     */
-//INT16U  __GusDataAdcIb[1];                                                /* ±£´æADC2ÊıÖµ     */
+//INT16U  __GusDataAdcIa[1];                                                /* ä¿å­˜ADC1æ•°å€¼     */
+//INT16U  __GusDataAdcIb[1];                                                /* ä¿å­˜ADC2æ•°å€¼     */
 //INT16U  __GusDataAdcIc[1];
 //void (*GpfuncIntPwm) (INT8U) = NULL;
 //void (*GpfuncIntFault) (void) = NULL;
@@ -70,11 +70,11 @@ static uchar ucEntrysTotal       = 0;
 static uchar bPwmRunning  = 0, bScreenIDFlg = 1, bScreenValFlg = 0, bEdit_flag   = 0;
 
 ZMC_LOWPASS_DATA  _GtLowPassVelOne, _GtLowPassVelOneX;
-ZMC_PID_DATA      _GtPidVelOne;                             /* ËÙ¶È»·Vel PID                */
+ZMC_PID_DATA      _GtPidVelOne;                             /* é€Ÿåº¦ç¯Vel PID                */
 INT32S            _GlSetMecVelRpm = 0;
 
 /*********************************************************************************************************
-  È«¾Ö±äÁ¿¶¨Òå
+  å…¨å±€å˜é‡å®šä¹‰
 *********************************************************************************************************/
 
  
@@ -120,9 +120,9 @@ void UpperComCXD7054(uint8_t ucX)
 
 
     /*
-     *  PID-Vel ³õÊ¼»¯  By HHG 151106    
-     *  ÏÂÃæËÙ¶È»·²ÎÊı£¬ ¹ØÓÚqKi qKdµÄ³õÊ¼»¯ĞèÒª°´ÕÕËÙ¶È»·µÄÖ´ĞĞÖÜÆÚ£¬Èç¹û¸Ä±äËÙ¶È»·Ö´ĞĞÖÜÆÚ£¬ĞèÒª
-     *  ×öÏàÓ¦µÄĞŞ¸Ä by lgd £¬ÒÑ¸üÕı @ 2019Äê9ÔÂ10ÈÕ¡£
+     *  PID-Vel åˆå§‹åŒ–  By HHG 151106    
+     *  ä¸‹é¢é€Ÿåº¦ç¯å‚æ•°ï¼Œ å…³äºqKi qKdçš„åˆå§‹åŒ–éœ€è¦æŒ‰ç…§é€Ÿåº¦ç¯çš„æ‰§è¡Œå‘¨æœŸï¼Œå¦‚æœæ”¹å˜é€Ÿåº¦ç¯æ‰§è¡Œå‘¨æœŸï¼Œéœ€è¦
+     *  åšç›¸åº”çš„ä¿®æ”¹ by lgd ï¼Œå·²æ›´æ­£ @ 2019å¹´9æœˆ10æ—¥ã€‚
      */
     _GtPidVelOne.ulQn      = ZMC_QMATH_SIZE;
     _GtPidVelOne.qRef      = 0;
@@ -149,54 +149,54 @@ void UpperComCXD7054(uint8_t ucX)
                 ucTemperature = USART_RX_BUF[0];
                 ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];
                 lEscEleVel100Rpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[8];
-                GbUartRxDone =  0;                                     /* Ïû·ÑÍê³É */                    
+                GbUartRxDone =  0;                                     /* æ¶ˆè´¹å®Œæˆ */                    
                  /* OLED_PutNumber(0 , OLED_LINE1, ulVoltage10Mv / 100.0f, 2, 1, "V",  8, 1);
-                    OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "¡æ", 8, 1); */
+                    OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "â„ƒ", 8, 1); */
                 LED0_TOG();
                 
-                ZMC_LOW_PASS(&_GtLowPassVelOne, lEscEleVel100Rpm);                    /* ÓÃ×÷PIDÔËËãµ±Ç°×ªËÙ */
-                ZMC_LOW_PASS(&_GtLowPassVelOneX, lEscEleVel100Rpm);                   /* ÓÃ×÷ÏÔÊ¾ºÍÉÏ±¨      */ 
+                ZMC_LOW_PASS(&_GtLowPassVelOne, lEscEleVel100Rpm);                    /* ç”¨ä½œPIDè¿ç®—å½“å‰è½¬é€Ÿ */
+                ZMC_LOW_PASS(&_GtLowPassVelOneX, lEscEleVel100Rpm);                   /* ç”¨ä½œæ˜¾ç¤ºå’Œä¸ŠæŠ¥      */ 
                 lEscEleRpmFilter = _GtLowPassVelOne.qOut;
                 
                 /* 
-                 * ÔÚ´Ë´¦½øĞĞPIDÔËËã  ¸ø¶¨Öµ¾ÍÊÇ È«¾Ö±äÁ¿ Êä³öÖµ ×¢Òâ´Ë´¦Éè¶¨·Ö±æÂÊÊÇ 100RPM
+                 * åœ¨æ­¤å¤„è¿›è¡ŒPIDè¿ç®—  ç»™å®šå€¼å°±æ˜¯ å…¨å±€å˜é‡ è¾“å‡ºå€¼ æ³¨æ„æ­¤å¤„è®¾å®šåˆ†è¾¨ç‡æ˜¯ 100RPM
                  */
-                _GtPidVelOne.qRef = _GlSetMecVelRpm * GucPolePairs / 100;               /* ×ª»»ÎªÉè¶¨µçÆø×ªËÙ */ 
+                _GtPidVelOne.qRef = _GlSetMecVelRpm * GucPolePairs / 100;               /* è½¬æ¢ä¸ºè®¾å®šç”µæ°”è½¬é€Ÿ */ 
                 ZMC_PID(&_GtPidVelOne, lEscEleRpmFilter)
                 sPwmDutyValue = _GtPidVelOne.qOut;
                 OLED_PutNum(0,  OLED_LINE3, sPwmDutyValue, 5, 6, 1);
                 OLED_PutNum(80,  OLED_LINE3,  (INT32S)(_GtLowPassVelOneX.qOut + 0.5f) * (100 / GucPolePairs) ,     5,          8, 1);
                 
              } else {
-                GbUartRxDone = 0;                                     /* Ö±½ÓÏû·ÑÍê³É */
+                GbUartRxDone = 0;                                     /* ç›´æ¥æ¶ˆè´¹å®Œæˆ */
              }
         } else if (GbUartRxDone1) {
             
             if (GucUartRxIndex1 == 8) {
                 lSetMecVeRpm    = USART1_RX_BUF[4] << 8 | USART1_RX_BUF[5];
-                GbUartRxDone1 =  0;                                     /* Ïû·ÑÍê³É */
+                GbUartRxDone1 =  0;                                     /* æ¶ˆè´¹å®Œæˆ */
                 UartAckSpdCmdTxBuf[3] = USART1_RX_BUF[3];
-                GusRxFromPcCnt++;                                       /* µçÄÔÊı¾İÖ¡¼ÆÊı    */
+                GusRxFromPcCnt++;                                       /* ç”µè„‘æ•°æ®å¸§è®¡æ•°    */
                 
                 switch (USART1_RX_BUF[3]) {
                     
-                case 0x01:                                               /* Éè¶¨µç»ú×ªËÙ     */
+                case 0x01:                                               /* è®¾å®šç”µæœºè½¬é€Ÿ     */
                     _GlSetMecVelRpm = lSetMecVeRpm;
                     GbUartRxReply1  =  1;                                /* send reply signal */
                     break;
                     
-                case 0x02:                                               /* ¹Ø»ú */
+                case 0x02:                                               /* å…³æœº */
                     _GlSetMecVelRpm = 0;
                     GbUartRxReply1  =  1;                                /* send reply signal */
                     break;
                 
                 case 0x03:
-                    GbSpeedReportEn = 1;                                /* Ê¹ÄÜ×ªËÙ»Ø´« */
-                    uc10msCnt       = 101;                              /* ×ªËÙ»Ø´«Á¢¿Ì */
+                    GbSpeedReportEn = 1;                                /* ä½¿èƒ½è½¬é€Ÿå›ä¼  */
+                    uc10msCnt       = 101;                              /* è½¬é€Ÿå›ä¼ ç«‹åˆ» */
                     break;
                 
                 case 0x04:
-                    GbSpeedReportEn = 0;                               /* ¹Ø±Õ×ªËÙ»Ø´« */
+                    GbSpeedReportEn = 0;                               /* å…³é—­è½¬é€Ÿå›ä¼  */
                     GbUartRxReply1  =  1;                              /* send reply signal */
                     break;
                 
@@ -206,7 +206,7 @@ void UpperComCXD7054(uint8_t ucX)
                 OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  _GlSetMecVelRpm,     5,          6, 1);
             } else {
                     
-                GbUartRxDone1 = 0;                                     /* Ö±½ÓÏû·ÑÍê³É */
+                GbUartRxDone1 = 0;                                     /* ç›´æ¥æ¶ˆè´¹å®Œæˆ */
             }
         }  else  {
             if (GulPrintTimeCnt > 10) { 
@@ -214,7 +214,7 @@ void UpperComCXD7054(uint8_t ucX)
                 
                 if (GbUartRxReply1) {
                     GbUartRxReply1 = 0;
-                    uartDrvPutBuf(USART1, UartAckSpdCmdTxBuf, 8);          /* danger ·µ»ØËÙ¶ÈÂı */ 
+                    uartDrvPutBuf(USART1, UartAckSpdCmdTxBuf, 8);          /* danger è¿”å›é€Ÿåº¦æ…¢ */ 
                 }
                 /* uartDrvPutBuf(USART2, UartCMDSpeedTxBuf, 3);    ask for speed frame */ 
                 if (uc10msCnt++ > 25) {
@@ -227,7 +227,7 @@ void UpperComCXD7054(uint8_t ucX)
                             UartAckSpeedTxBuf[4] = (lSetMecVeRpm * (100 / GucPolePairs)) >> 8;
                             UartAckSpeedTxBuf[5] = (lSetMecVeRpm * (100 / GucPolePairs)) & 0x00ff;
                             uartDrvPutBuf(USART1, UartAckSpeedTxBuf, 8);
-                            GusTx2PcCnt++;                                                  /* ·¢ËÍ¸øµçÄÔ¼ÆÊı  */ 
+                            GusTx2PcCnt++;                                                  /* å‘é€ç»™ç”µè„‘è®¡æ•°  */ 
                         }
                     } else {
                         INA226_Read(&usVol, &sCur);
@@ -235,8 +235,8 @@ void UpperComCXD7054(uint8_t ucX)
                         OLED_PutNumber(72, OLED_LINE2, sCur / 1000.0f, 2, 3, "A", 8, 1);
                     }
                 } else {
-                    OLED_PutNum(40, OLED_LINE3,   GusRxFromPcCnt, 5, 6, 1);                  /* ÏÔÊ¾µçÄÔÊı¾İÖ¡¼ÆÊı */
-                    OLED_PutNum(40, OLED_LINE3 + LINE_HEIGHT / 2, GusTx2PcCnt, 5, 6, 1);     /* ÏÔÊ¾·¢ËÍ¼ÆÊı       */
+                    OLED_PutNum(40, OLED_LINE3,   GusRxFromPcCnt, 5, 6, 1);                  /* æ˜¾ç¤ºç”µè„‘æ•°æ®å¸§è®¡æ•° */
+                    OLED_PutNum(40, OLED_LINE3 + LINE_HEIGHT / 2, GusTx2PcCnt, 5, 6, 1);     /* æ˜¾ç¤ºå‘é€è®¡æ•°       */
                 }
                 eKeyPress = ADKey_Check();
                 switch (eKeyPress) {
@@ -323,9 +323,9 @@ void UpperComBFC68S1(uint8_t ucX)
 
 
     /*
-     *  PID-Vel ³õÊ¼»¯  By HHG 151106    
-     *  ÏÂÃæËÙ¶È»·²ÎÊı£¬ ¹ØÓÚqKi qKdµÄ³õÊ¼»¯ĞèÒª°´ÕÕËÙ¶È»·µÄÖ´ĞĞÖÜÆÚ£¬Èç¹û¸Ä±äËÙ¶È»·Ö´ĞĞÖÜÆÚ£¬ĞèÒª
-     *  ×öÏàÓ¦µÄĞŞ¸Ä by lgd £¬ÒÑ¸üÕı @ 2019Äê9ÔÂ10ÈÕ¡£
+     *  PID-Vel åˆå§‹åŒ–  By HHG 151106    
+     *  ä¸‹é¢é€Ÿåº¦ç¯å‚æ•°ï¼Œ å…³äºqKi qKdçš„åˆå§‹åŒ–éœ€è¦æŒ‰ç…§é€Ÿåº¦ç¯çš„æ‰§è¡Œå‘¨æœŸï¼Œå¦‚æœæ”¹å˜é€Ÿåº¦ç¯æ‰§è¡Œå‘¨æœŸï¼Œéœ€è¦
+     *  åšç›¸åº”çš„ä¿®æ”¹ by lgd ï¼Œå·²æ›´æ­£ @ 2019å¹´9æœˆ10æ—¥ã€‚
      */
     _GtPidVelOne.ulQn      = ZMC_QMATH_SIZE;
     _GtPidVelOne.qRef      = 0;
@@ -352,54 +352,54 @@ void UpperComBFC68S1(uint8_t ucX)
                 ucTemperature = USART_RX_BUF[0];
                 ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];
                 lEscEleVel100Rpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[8];
-                GbUartRxDone =  0;                                     /* Ïû·ÑÍê³É */                    
+                GbUartRxDone =  0;                                     /* æ¶ˆè´¹å®Œæˆ */                    
                  /* OLED_PutNumber(0 , OLED_LINE1, ulVoltage10Mv / 100.0f, 2, 1, "V",  8, 1);
-                    OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "¡æ", 8, 1); */
+                    OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "â„ƒ", 8, 1); */
                 LED0_TOG();
                 
-                ZMC_LOW_PASS(&_GtLowPassVelOne, lEscEleVel100Rpm);                    /* ÓÃ×÷PIDÔËËãµ±Ç°×ªËÙ */
-                ZMC_LOW_PASS(&_GtLowPassVelOneX, lEscEleVel100Rpm);                   /* ÓÃ×÷ÏÔÊ¾ºÍÉÏ±¨      */ 
+                ZMC_LOW_PASS(&_GtLowPassVelOne, lEscEleVel100Rpm);                    /* ç”¨ä½œPIDè¿ç®—å½“å‰è½¬é€Ÿ */
+                ZMC_LOW_PASS(&_GtLowPassVelOneX, lEscEleVel100Rpm);                   /* ç”¨ä½œæ˜¾ç¤ºå’Œä¸ŠæŠ¥      */ 
                 lEscEleRpmFilter = _GtLowPassVelOne.qOut;
                 
                 /* 
-                 * ÔÚ´Ë´¦½øĞĞPIDÔËËã  ¸ø¶¨Öµ¾ÍÊÇ È«¾Ö±äÁ¿ Êä³öÖµ ×¢Òâ´Ë´¦Éè¶¨·Ö±æÂÊÊÇ 100RPM
+                 * åœ¨æ­¤å¤„è¿›è¡ŒPIDè¿ç®—  ç»™å®šå€¼å°±æ˜¯ å…¨å±€å˜é‡ è¾“å‡ºå€¼ æ³¨æ„æ­¤å¤„è®¾å®šåˆ†è¾¨ç‡æ˜¯ 100RPM
                  */
-                _GtPidVelOne.qRef = _GlSetMecVelRpm * GucPolePairs / 100;               /* ×ª»»ÎªÉè¶¨µçÆø×ªËÙ */ 
+                _GtPidVelOne.qRef = _GlSetMecVelRpm * GucPolePairs / 100;               /* è½¬æ¢ä¸ºè®¾å®šç”µæ°”è½¬é€Ÿ */ 
                 ZMC_PID(&_GtPidVelOne, lEscEleRpmFilter)
                 sPwmDutyValue = _GtPidVelOne.qOut;
                 OLED_PutNum(0,  OLED_LINE3, sPwmDutyValue, 5, 6, 1);
                 OLED_PutNum(80,  OLED_LINE3,  (INT32S)(_GtLowPassVelOneX.qOut + 0.5f) * (100 / GucPolePairs) ,     5,          8, 1);
                 
              } else {
-                GbUartRxDone = 0;                                     /* Ö±½ÓÏû·ÑÍê³É */
+                GbUartRxDone = 0;                                     /* ç›´æ¥æ¶ˆè´¹å®Œæˆ */
              }
         } else if (GbUartRxDone1) {
             
             if (GucUartRxIndex1 == 8) {
                 lSetMecVeRpm    = USART1_RX_BUF[4] << 8 | USART1_RX_BUF[5];
-                GbUartRxDone1 =  0;                                     /* Ïû·ÑÍê³É */
+                GbUartRxDone1 =  0;                                     /* æ¶ˆè´¹å®Œæˆ */
                 UartAckSpdCmdTxBuf[3] = USART1_RX_BUF[3];
-                GusRxFromPcCnt++;                                       /* µçÄÔÊı¾İÖ¡¼ÆÊı    */
+                GusRxFromPcCnt++;                                       /* ç”µè„‘æ•°æ®å¸§è®¡æ•°    */
                 
                 switch (USART1_RX_BUF[3]) {
                     
-                case 0x01:                                               /* Éè¶¨µç»ú×ªËÙ     */
+                case 0x01:                                               /* è®¾å®šç”µæœºè½¬é€Ÿ     */
                     _GlSetMecVelRpm = lSetMecVeRpm;
                     GbUartRxReply1  =  1;                                /* send reply signal */
                     break;
                     
-                case 0x02:                                               /* ¹Ø»ú */
+                case 0x02:                                               /* å…³æœº */
                     _GlSetMecVelRpm = 0;
                     GbUartRxReply1  =  1;                                /* send reply signal */
                     break;
                 
                 case 0x03:
-                    GbSpeedReportEn = 1;                                /* Ê¹ÄÜ×ªËÙ»Ø´« */
-                    uc10msCnt       = 101;                              /* ×ªËÙ»Ø´«Á¢¿Ì */
+                    GbSpeedReportEn = 1;                                /* ä½¿èƒ½è½¬é€Ÿå›ä¼  */
+                    uc10msCnt       = 101;                              /* è½¬é€Ÿå›ä¼ ç«‹åˆ» */
                     break;
                 
                 case 0x04:
-                    GbSpeedReportEn = 0;                               /* ¹Ø±Õ×ªËÙ»Ø´« */
+                    GbSpeedReportEn = 0;                               /* å…³é—­è½¬é€Ÿå›ä¼  */
                     GbUartRxReply1  =  1;                              /* send reply signal */
                     break;
                 
@@ -409,7 +409,7 @@ void UpperComBFC68S1(uint8_t ucX)
                 OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  _GlSetMecVelRpm,     5,          6, 1);
             } else {
                     
-                GbUartRxDone1 = 0;                                     /* Ö±½ÓÏû·ÑÍê³É */
+                GbUartRxDone1 = 0;                                     /* ç›´æ¥æ¶ˆè´¹å®Œæˆ */
             }
         }  else  {
             if (GulPrintTimeCnt > 10) { 
@@ -417,7 +417,7 @@ void UpperComBFC68S1(uint8_t ucX)
                 
                 if (GbUartRxReply1) {
                     GbUartRxReply1 = 0;
-                    uartDrvPutBuf(USART1, UartAckSpdCmdTxBuf, 8);          /* danger ·µ»ØËÙ¶ÈÂı */ 
+                    uartDrvPutBuf(USART1, UartAckSpdCmdTxBuf, 8);          /* danger è¿”å›é€Ÿåº¦æ…¢ */ 
                 }
                 /* uartDrvPutBuf(USART2, UartCMDSpeedTxBuf, 3);    ask for speed frame */ 
                 if (uc10msCnt++ > 25) {
@@ -430,7 +430,7 @@ void UpperComBFC68S1(uint8_t ucX)
                             UartAckSpeedTxBuf[4] = (lSetMecVeRpm * (100 / GucPolePairs)) >> 8;
                             UartAckSpeedTxBuf[5] = (lSetMecVeRpm * (100 / GucPolePairs)) & 0x00ff;
                             uartDrvPutBuf(USART1, UartAckSpeedTxBuf, 8);
-                            GusTx2PcCnt++;                                                  /* ·¢ËÍ¸øµçÄÔ¼ÆÊı  */ 
+                            GusTx2PcCnt++;                                                  /* å‘é€ç»™ç”µè„‘è®¡æ•°  */ 
                         }
                     } else {
                         INA226_Read(&usVol, &sCur);
@@ -438,8 +438,8 @@ void UpperComBFC68S1(uint8_t ucX)
                         OLED_PutNumber(72, OLED_LINE2, sCur / 1000.0f, 2, 3, "A", 8, 1);
                     }
                 } else {
-                    OLED_PutNum(40, OLED_LINE3,   GusRxFromPcCnt,              5, 6, 1);                  /* ÏÔÊ¾µçÄÔÊı¾İÖ¡¼ÆÊı */
-                    OLED_PutNum(40, OLED_LINE3 + LINE_HEIGHT / 2, GusTx2PcCnt, 5, 6, 1);     /* ÏÔÊ¾·¢ËÍ¼ÆÊı       */
+                    OLED_PutNum(40, OLED_LINE3,   GusRxFromPcCnt,              5, 6, 1);                  /* æ˜¾ç¤ºç”µè„‘æ•°æ®å¸§è®¡æ•° */
+                    OLED_PutNum(40, OLED_LINE3 + LINE_HEIGHT / 2, GusTx2PcCnt, 5, 6, 1);     /* æ˜¾ç¤ºå‘é€è®¡æ•°       */
                 }
                 eKeyPress = ADKey_Check();
                 switch (eKeyPress) {
@@ -526,9 +526,9 @@ void UpperComNidecTF029B(uint8_t ucX)
 
 
     /*
-     *  PID-Vel ³õÊ¼»¯  By HHG 151106    
-     *  ÏÂÃæËÙ¶È»·²ÎÊı£¬ ¹ØÓÚqKi qKdµÄ³õÊ¼»¯ĞèÒª°´ÕÕËÙ¶È»·µÄÖ´ĞĞÖÜÆÚ£¬Èç¹û¸Ä±äËÙ¶È»·Ö´ĞĞÖÜÆÚ£¬ĞèÒª
-     *  ×öÏàÓ¦µÄĞŞ¸Ä by lgd £¬ÒÑ¸üÕı @ 2019Äê9ÔÂ10ÈÕ¡£
+     *  PID-Vel åˆå§‹åŒ–  By HHG 151106    
+     *  ä¸‹é¢é€Ÿåº¦ç¯å‚æ•°ï¼Œ å…³äºqKi qKdçš„åˆå§‹åŒ–éœ€è¦æŒ‰ç…§é€Ÿåº¦ç¯çš„æ‰§è¡Œå‘¨æœŸï¼Œå¦‚æœæ”¹å˜é€Ÿåº¦ç¯æ‰§è¡Œå‘¨æœŸï¼Œéœ€è¦
+     *  åšç›¸åº”çš„ä¿®æ”¹ by lgd ï¼Œå·²æ›´æ­£ @ 2019å¹´9æœˆ10æ—¥ã€‚
      */
     _GtPidVelOne.ulQn      = ZMC_QMATH_SIZE;
     _GtPidVelOne.qRef      = 0;
@@ -555,54 +555,54 @@ void UpperComNidecTF029B(uint8_t ucX)
                 ucTemperature = USART_RX_BUF[0];
                 ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];
                 lEscEleVel100Rpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[8];
-                GbUartRxDone =  0;                                     /* Ïû·ÑÍê³É */                    
+                GbUartRxDone =  0;                                     /* æ¶ˆè´¹å®Œæˆ */                    
                  /* OLED_PutNumber(0 , OLED_LINE1, ulVoltage10Mv / 100.0f, 2, 1, "V",  8, 1);
-                    OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "¡æ", 8, 1); */
+                    OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "â„ƒ", 8, 1); */
                 LED0_TOG();
                 
-                ZMC_LOW_PASS(&_GtLowPassVelOne, lEscEleVel100Rpm);                    /* ÓÃ×÷PIDÔËËãµ±Ç°×ªËÙ */
-                ZMC_LOW_PASS(&_GtLowPassVelOneX, lEscEleVel100Rpm);                   /* ÓÃ×÷ÏÔÊ¾ºÍÉÏ±¨      */ 
+                ZMC_LOW_PASS(&_GtLowPassVelOne, lEscEleVel100Rpm);                    /* ç”¨ä½œPIDè¿ç®—å½“å‰è½¬é€Ÿ */
+                ZMC_LOW_PASS(&_GtLowPassVelOneX, lEscEleVel100Rpm);                   /* ç”¨ä½œæ˜¾ç¤ºå’Œä¸ŠæŠ¥      */ 
                 lEscEleRpmFilter = _GtLowPassVelOne.qOut;
                 
                 /* 
-                 * ÔÚ´Ë´¦½øĞĞPIDÔËËã  ¸ø¶¨Öµ¾ÍÊÇ È«¾Ö±äÁ¿ Êä³öÖµ ×¢Òâ´Ë´¦Éè¶¨·Ö±æÂÊÊÇ 100RPM
+                 * åœ¨æ­¤å¤„è¿›è¡ŒPIDè¿ç®—  ç»™å®šå€¼å°±æ˜¯ å…¨å±€å˜é‡ è¾“å‡ºå€¼ æ³¨æ„æ­¤å¤„è®¾å®šåˆ†è¾¨ç‡æ˜¯ 100RPM
                  */
-                _GtPidVelOne.qRef = _GlSetMecVelRpm * GucPolePairs / 100;               /* ×ª»»ÎªÉè¶¨µçÆø×ªËÙ */ 
+                _GtPidVelOne.qRef = _GlSetMecVelRpm * GucPolePairs / 100;               /* è½¬æ¢ä¸ºè®¾å®šç”µæ°”è½¬é€Ÿ */ 
                 ZMC_PID(&_GtPidVelOne, lEscEleRpmFilter)
                 sPwmDutyValue = _GtPidVelOne.qOut;
                 OLED_PutNum(0,  OLED_LINE3, sPwmDutyValue, 5, 6, 1);
                 OLED_PutNum(0,  OLED_LINE3 + LINE_HEIGHT / 2,  (INT32S)(_GtLowPassVelOneX.qOut + 0.5f) * (100 / GucPolePairs) ,     5,          6, 1);
                 
              } else {
-                GbUartRxDone = 0;                                     /* Ö±½ÓÏû·ÑÍê³É */
+                GbUartRxDone = 0;                                     /* ç›´æ¥æ¶ˆè´¹å®Œæˆ */
              }
         } else if (GbUartRxDone1) {
             
             if (GucUartRxIndex1 == 8) {
                 lSetMecVeRpm    = USART1_RX_BUF[4] << 8 | USART1_RX_BUF[5];
-                GbUartRxDone1 =  0;                                     /* Ïû·ÑÍê³É */
+                GbUartRxDone1 =  0;                                     /* æ¶ˆè´¹å®Œæˆ */
                 UartAckSpdCmdTxBuf[3] = USART1_RX_BUF[3];
-                GusRxFromPcCnt++;                                       /* µçÄÔÊı¾İÖ¡¼ÆÊı    */
+                GusRxFromPcCnt++;                                       /* ç”µè„‘æ•°æ®å¸§è®¡æ•°    */
                 
                 switch (USART1_RX_BUF[3]) {
                     
-                case 0x01:                                               /* Éè¶¨µç»ú×ªËÙ     */
+                case 0x01:                                               /* è®¾å®šç”µæœºè½¬é€Ÿ     */
                     _GlSetMecVelRpm = lSetMecVeRpm;
                     GbUartRxReply1  =  1;                                /* send reply signal */
                     break;
                     
-                case 0x02:                                               /* ¹Ø»ú */
+                case 0x02:                                               /* å…³æœº */
                     _GlSetMecVelRpm = 0;
                     GbUartRxReply1  =  1;                                /* send reply signal */
                     break;
                 
                 case 0x03:
-                    GbSpeedReportEn = 1;                                /* Ê¹ÄÜ×ªËÙ»Ø´« */
-                    uc10msCnt       = 101;                              /* ×ªËÙ»Ø´«Á¢¿Ì */
+                    GbSpeedReportEn = 1;                                /* ä½¿èƒ½è½¬é€Ÿå›ä¼  */
+                    uc10msCnt       = 101;                              /* è½¬é€Ÿå›ä¼ ç«‹åˆ» */
                     break;
                 
                 case 0x04:
-                    GbSpeedReportEn = 0;                               /* ¹Ø±Õ×ªËÙ»Ø´« */
+                    GbSpeedReportEn = 0;                               /* å…³é—­è½¬é€Ÿå›ä¼  */
                     GbUartRxReply1  =  1;                              /* send reply signal */
                     break;
                 
@@ -612,7 +612,7 @@ void UpperComNidecTF029B(uint8_t ucX)
                 OLED_PutNum(80,  OLED_LINE3,  _GlSetMecVelRpm,     5,          8, 1);
             } else {
                     
-                GbUartRxDone1 = 0;                                     /* Ö±½ÓÏû·ÑÍê³É */
+                GbUartRxDone1 = 0;                                     /* ç›´æ¥æ¶ˆè´¹å®Œæˆ */
             }
         }  else  {
             if (GulPrintTimeCnt > 10) { 
@@ -620,7 +620,7 @@ void UpperComNidecTF029B(uint8_t ucX)
                 
                 if (GbUartRxReply1) {
                     GbUartRxReply1 = 0;
-                    uartDrvPutBuf(USART1, UartAckSpdCmdTxBuf, 8);          /* danger ·µ»ØËÙ¶ÈÂı */ 
+                    uartDrvPutBuf(USART1, UartAckSpdCmdTxBuf, 8);          /* danger è¿”å›é€Ÿåº¦æ…¢ */ 
                 }
                 /* uartDrvPutBuf(USART2, UartCMDSpeedTxBuf, 3);    ask for speed frame */ 
                 if (uc10msCnt++ > 25) {
@@ -633,7 +633,7 @@ void UpperComNidecTF029B(uint8_t ucX)
                             UartAckSpeedTxBuf[4] = (lSetMecVeRpm * (100 / GucPolePairs)) >> 8;
                             UartAckSpeedTxBuf[5] = (lSetMecVeRpm * (100 / GucPolePairs)) & 0x00ff;
                             uartDrvPutBuf(USART1, UartAckSpeedTxBuf, 8);
-                            GusTx2PcCnt++;                                                  /* ·¢ËÍ¸øµçÄÔ¼ÆÊı  */ 
+                            GusTx2PcCnt++;                                                  /* å‘é€ç»™ç”µè„‘è®¡æ•°  */ 
                         }
                     } else {
                         INA226_Read(&usVol, &sCur);
@@ -641,8 +641,8 @@ void UpperComNidecTF029B(uint8_t ucX)
                         OLED_PutNumber(72, OLED_LINE2, sCur / 1000.0f, 2, 3, "A", 8, 1);
                     }
                 } else {
-                    OLED_PutNum(40, OLED_LINE3,   GusRxFromPcCnt, 5, 6, 1);                  /* ÏÔÊ¾µçÄÔÊı¾İÖ¡¼ÆÊı */
-                    OLED_PutNum(40, OLED_LINE3 + LINE_HEIGHT / 2, GusTx2PcCnt, 5, 6, 1);     /* ÏÔÊ¾·¢ËÍ¼ÆÊı       */
+                    OLED_PutNum(40, OLED_LINE3,   GusRxFromPcCnt, 5, 6, 1);                  /* æ˜¾ç¤ºç”µè„‘æ•°æ®å¸§è®¡æ•° */
+                    OLED_PutNum(40, OLED_LINE3 + LINE_HEIGHT / 2, GusTx2PcCnt, 5, 6, 1);     /* æ˜¾ç¤ºå‘é€è®¡æ•°       */
                 }
                 eKeyPress = ADKey_Check();
                 switch (eKeyPress) {

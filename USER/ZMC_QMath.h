@@ -7,13 +7,13 @@
 ** File Name:               ZMC_QMath.h
 ** Last modified Date:      2012.01.05
 ** Last Version:            1.0
-** Description:             The header file of QMath. QMathµÄÍ·ÎÄ¼ş¡£
+** Description:             The header file of QMath. QMathçš„å¤´æ–‡ä»¶ã€‚
 ** 
 **--------------------------------------------------------------------------------------------------------
-** Created By:              Steven Zhou ÖÜÉÜ¸Õ
+** Created By:              Steven Zhou å‘¨ç»åˆš
 ** Created date:            2012.01.05
 ** Version:                 1.0
-** Descriptions:            The original version ³õÊ¼°æ±¾
+** Descriptions:            The original version åˆå§‹ç‰ˆæœ¬
 **
 **--------------------------------------------------------------------------------------------------------
 ** Modified by:             
@@ -37,7 +37,7 @@ extern "C" {
       
 /*********************************************************************************************************
   Constants definitions  
-  ³£Á¿¶¨Òå¡£
+  å¸¸é‡å®šä¹‰ã€‚
 *********************************************************************************************************/
 #define  ZMC_QMATH_32BIT    0u
 #define  ZMC_QMATH_16BIT    1u  
@@ -49,7 +49,7 @@ extern "C" {
   
 /*********************************************************************************************************
   Congfig file Checking 
-  ÅäÖÃÎÄ¼ş¼ì²é
+  é…ç½®æ–‡ä»¶æ£€æŸ¥
 *********************************************************************************************************/
 #if (ZMC_QMATH_TYPE != ZMC_QMATH_32BIT) && \
     (ZMC_QMATH_TYPE != ZMC_QMATH_16BIT) && \
@@ -72,7 +72,7 @@ extern "C" {
       
 /*********************************************************************************************************
   Keywords for compilers
-  ±àÒëÆ÷µÄ¹Ø¼ü×Ö
+  ç¼–è¯‘å™¨çš„å…³é”®å­—
 *********************************************************************************************************/  
 #if  defined ( __CC_ARM )
     #define ZMC_INLINE         __inline                                 /* inline keyword for Keil      */
@@ -84,7 +84,7 @@ extern "C" {
 
   
 /*********************************************************************************************************
-  Date types(Compiler specific)  Êı¾İÀàĞÍ£¨ºÍ±àÒëÆ÷Ïà¹Ø£©                
+  Date types(Compiler specific)  æ•°æ®ç±»å‹ï¼ˆå’Œç¼–è¯‘å™¨ç›¸å…³ï¼‰                
 *********************************************************************************************************/
 #if (ZMC_QMATH_TYPE == ZMC_QMATH_32BIT)                                 /* 32bit fixed-point            */
 typedef   signed  long    ZQ;
@@ -177,7 +177,7 @@ typedef    float   ZQ0;
 
 /*********************************************************************************************************
   Convert a value into Q format. 
-  ½«Ò»¸öÖµ×ª³ÉQ¸ñÊ½¡£                 
+  å°†ä¸€ä¸ªå€¼è½¬æˆQæ ¼å¼ã€‚                 
 *********************************************************************************************************/
 #if (ZMC_QMATH_TYPE == ZMC_QMATH_32BIT)                                 /* 32bit fixed-point            */
 #define ZMC_Q30(fA)             ( (ZQ30)((fA) * (1 << 30u)) )
@@ -347,7 +347,7 @@ typedef    float   ZQ0;
 
 /*********************************************************************************************************
   Converts a value between the global Q format and a specified Q format.
-  ½«Ò»¸öÊıÖµÔÚÈ«¾ÖQ¸ñÊ½ºÍÖ¸¶¨Q¸ñÊ½Ö®¼ä×ª»»¡£
+  å°†ä¸€ä¸ªæ•°å€¼åœ¨å…¨å±€Qæ ¼å¼å’ŒæŒ‡å®šQæ ¼å¼ä¹‹é—´è½¬æ¢ã€‚
 *********************************************************************************************************/  
 #if (ZMC_QMATH_TYPE == ZMC_QMATH_32BIT)                                 /* 32bit fixed-point            */
 #define   ZMC_Q_Q30(qA)     ((ZQ30)(qA) << (30 - ZMC_QMATH_SIZE))
@@ -684,7 +684,7 @@ typedef    float   ZQ0;
 
 /*********************************************************************************************************
   Multiplies two Q numbers.
-  Á½¸öQÖµÊıÏà³Ë
+  ä¸¤ä¸ªQå€¼æ•°ç›¸ä¹˜
 *********************************************************************************************************/
 #if (ZMC_QMATH_TYPE == ZMC_QMATH_32BIT)
 #define ZMC_QNMPY(qA, qB, ucN)          ( (ZQ)(((signed long long)(qA) * (qB)) >> (ucN)) )
@@ -743,7 +743,7 @@ typedef    float   ZQ0;
 
 /*********************************************************************************************************
   Divides two Q numbers, without rounding
-  Á½¸öQÖµÊıÏà³ı
+  ä¸¤ä¸ªQå€¼æ•°ç›¸é™¤
 *********************************************************************************************************/
 #if (ZMC_QMATH_TYPE == ZMC_QMATH_32BIT)
 extern ZQ zmcQnDiv(ZQ qA, ZQ qB, unsigned char ucN);
@@ -787,7 +787,7 @@ static  ZMC_INLINE  ZQ  zmcQnDiv (ZQ qA, ZQ qB, unsigned char ucN)
 
 /*********************************************************************************************************
   Saturates a Q value in a given range.
-  ½«Ò»¸öQÖµÊıÏŞ¶¨ÔÚ¸ø¶¨·¶Î§ÄÚ¡£
+  å°†ä¸€ä¸ªQå€¼æ•°é™å®šåœ¨ç»™å®šèŒƒå›´å†…ã€‚
 *********************************************************************************************************/
 #define ZMC_QSAT(qA, qPos, qNeg)        ( ((qA) > (qPos))  ?                                             \
                                         (qPos)           :                                               \
@@ -795,52 +795,52 @@ static  ZMC_INLINE  ZQ  zmcQnDiv (ZQ qA, ZQ qB, unsigned char ucN)
 
 
 /*********************************************************************************************************
-  Compute the square root of a Q value ¼ÆËãÕûÊıµÄÆ½·½¸ù
-  ¼ÆËãQÖµÊıµÄÆ½·½¸ù   ZMC_INLINE  Aug08
+  Compute the square root of a Q value è®¡ç®—æ•´æ•°çš„å¹³æ–¹æ ¹
+  è®¡ç®—Qå€¼æ•°çš„å¹³æ–¹æ ¹   ZMC_INLINE  Aug08
 *********************************************************************************************************/
 static  __inline  long  zmcQ32Sqrt (unsigned long  ulValue)
 {
     unsigned long  ulRem, ulRoot, ulIdx;
 
     ulRem  = 0;                                                            /* Init. the rem. and root to 0.*/
-    ulRoot = 0;                                                         /* °ÑÓàÊıºÍ¸ù¸´Î»Îª0            */
+    ulRoot = 0;                                                         /* æŠŠä½™æ•°å’Œæ ¹å¤ä½ä¸º0            */
 
     for (ulIdx = 0; ulIdx < 16; ulIdx++) {                              /* Loop over the 16bits in root */
-                                                                        /* ²é¿´¸ùÖĞµÄ16Î»Êı¡£           */
+                                                                        /* æŸ¥çœ‹æ ¹ä¸­çš„16ä½æ•°ã€‚           */
         /*
          *  Shift the root up by a bit to make room for the new bit that is about to be computed.
-         *  °Ñ¸ùµÄÒ»Î»ÏòÉÏÒÆ£¬Áô³ö¿ÕÎ»¼ÆËã¡£
+         *  æŠŠæ ¹çš„ä¸€ä½å‘ä¸Šç§»ï¼Œç•™å‡ºç©ºä½è®¡ç®—ã€‚
          */
         ulRoot <<= 1;
 
         /*  
          *  Get two more bits from the input into the remainder.
-         *  ´ÓÊä³ö²ÎÊıÖĞÔÙÈ¡Á½¸öÎ»£¬·Åµ½ÓàÊıÖĞ
+         *  ä»è¾“å‡ºå‚æ•°ä¸­å†å–ä¸¤ä¸ªä½ï¼Œæ”¾åˆ°ä½™æ•°ä¸­
          */
         ulRem = ((ulRem << 2) + (ulValue >> 30));
         ulValue <<= 2;
 
         /*  
          *  Make the test root be 2n + 1.
-         *  Ê¹²âÊÔµÄ¸ùÎª2n+1
+         *  ä½¿æµ‹è¯•çš„æ ¹ä¸º2n+1
          */
         ulRoot++;
 
         /*
          *  See if the root is greater than the remainder.
-         *  ÅĞ¶Ï¸ùÊÇ·ñ´óÓÚÓàÊı
+         *  åˆ¤æ–­æ ¹æ˜¯å¦å¤§äºä½™æ•°
          */
         if(ulRoot <= ulRem)
         {
             /* 
              *  Subtract the test root from the remainder.
-             *  ´ÓÓàÊıÖĞ¼õÈ¥²âÊÔµÄ¸ù
+             *  ä»ä½™æ•°ä¸­å‡å»æµ‹è¯•çš„æ ¹
              */
             ulRem -= ulRoot;
 
             /*
              *  Increment the root, setting the second LSB.
-             *  ¸ù¼ÓÒ»£¬ÉèÖÃµÚ¶ş¸öLSB
+             *  æ ¹åŠ ä¸€ï¼Œè®¾ç½®ç¬¬äºŒä¸ªLSB
              */
             ulRoot++;
         }
@@ -848,7 +848,7 @@ static  __inline  long  zmcQ32Sqrt (unsigned long  ulValue)
         {
             /*
              *  The root is greater than the remainder, so the new bit of the root is actually zero.
-             *  ¸ù´óÓÚÓàÊı£¬ËùÒÔ¸ùµÄĞÂÎ»Êµ¼ÊÉÏÎª0
+             *  æ ¹å¤§äºä½™æ•°ï¼Œæ‰€ä»¥æ ¹çš„æ–°ä½å®é™…ä¸Šä¸º0
              */
             ulRoot--;
         }
@@ -856,7 +856,7 @@ static  __inline  long  zmcQ32Sqrt (unsigned long  ulValue)
 
     /*
      *  Return the computed root. 
-     *  ·µ»ØËãºÃµÄ¸ù
+     *  è¿”å›ç®—å¥½çš„æ ¹
      */
     return(ulRoot >> 1);
 }
@@ -867,44 +867,44 @@ static __inline  unsigned  short  zmcQ16Sqrt (unsigned short  usValue)
     unsigned long  ulRem, ulRoot, ulIdx;
 
     ulRem  = 0;                                                         /* Init. the rem. and root to 0.*/
-    ulRoot = 0;                                                         /* °ÑÓàÊıºÍ¸ù¸´Î»Îª0            */
+    ulRoot = 0;                                                         /* æŠŠä½™æ•°å’Œæ ¹å¤ä½ä¸º0            */
 
     for (ulIdx = 0; ulIdx < 8; ulIdx++) {                               /* Loop over the 16bits in root */
-                                                                        /* ²é¿´¸ùÖĞµÄ16Î»Êı¡£           */
+                                                                        /* æŸ¥çœ‹æ ¹ä¸­çš„16ä½æ•°ã€‚           */
         /*
          *  Shift the root up by a bit to make room for the new bit that is about to be computed.
-         *  °Ñ¸ùµÄÒ»Î»ÏòÉÏÒÆ£¬Áô³ö¿ÕÎ»¼ÆËã¡£
+         *  æŠŠæ ¹çš„ä¸€ä½å‘ä¸Šç§»ï¼Œç•™å‡ºç©ºä½è®¡ç®—ã€‚
          */
         ulRoot <<= 1;
 
         /*  
          *  Get two more bits from the input into the remainder.
-         *  ´ÓÊä³ö²ÎÊıÖĞÔÙÈ¡Á½¸öÎ»£¬·Åµ½ÓàÊıÖĞ
+         *  ä»è¾“å‡ºå‚æ•°ä¸­å†å–ä¸¤ä¸ªä½ï¼Œæ”¾åˆ°ä½™æ•°ä¸­
          */
         ulRem = ((ulRem << 2) + (usValue >> 14));
         usValue <<= 2;
 
         /*  
          *  Make the test root be 2n + 1.
-         *  Ê¹²âÊÔµÄ¸ùÎª2n+1
+         *  ä½¿æµ‹è¯•çš„æ ¹ä¸º2n+1
          */
         ulRoot++;
 
         /*
          *  See if the root is greater than the remainder.
-         *  ÅĞ¶Ï¸ùÊÇ·ñ´óÓÚÓàÊı
+         *  åˆ¤æ–­æ ¹æ˜¯å¦å¤§äºä½™æ•°
          */
         if(ulRoot <= ulRem)
         {
             /* 
              *  Subtract the test root from the remainder.
-             *  ´ÓÓàÊıÖĞ¼õÈ¥²âÊÔµÄ¸ù
+             *  ä»ä½™æ•°ä¸­å‡å»æµ‹è¯•çš„æ ¹
              */
             ulRem -= ulRoot;
 
             /*
              *  Increment the root, setting the second LSB.
-             *  ¸ù¼ÓÒ»£¬ÉèÖÃµÚ¶ş¸öLSB
+             *  æ ¹åŠ ä¸€ï¼Œè®¾ç½®ç¬¬äºŒä¸ªLSB
              */
             ulRoot++;
         }
@@ -912,7 +912,7 @@ static __inline  unsigned  short  zmcQ16Sqrt (unsigned short  usValue)
         {
             /*
              *  The root is greater than the remainder, so the new bit of the root is actually zero.
-             *  ¸ù´óÓÚÓàÊı£¬ËùÒÔ¸ùµÄĞÂÎ»Êµ¼ÊÉÏÎª0
+             *  æ ¹å¤§äºä½™æ•°ï¼Œæ‰€ä»¥æ ¹çš„æ–°ä½å®é™…ä¸Šä¸º0
              */
             ulRoot--;
         }
@@ -920,7 +920,7 @@ static __inline  unsigned  short  zmcQ16Sqrt (unsigned short  usValue)
 
     /*
      *  Return the computed root. 
-     *  ·µ»ØËãºÃµÄ¸ù
+     *  è¿”å›ç®—å¥½çš„æ ¹
      */
     return(ulRoot >> 1);
 }

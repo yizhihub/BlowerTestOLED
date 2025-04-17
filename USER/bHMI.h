@@ -50,9 +50,9 @@ typedef enum pwm_type_data PWM_TYPE_DATA;
 
     
 struct pwm_ctrl_data {
-    INT16S sPwmLowVal;    /* 比例 0 ~ 1000 */ 
+    INT16S sPwmLowVal;    /* 姣斾緥 0 ~ 1000 */ 
     INT16S sPwmLowDur;
-    INT16S sPwmHighVal;   /* 比例 0 ~ 1000 */  
+    INT16S sPwmHighVal;   /* 姣斾緥 0 ~ 1000 */  
     INT16S sPwmHighDur;
     INT16S ePwmProtocol;
     INT16S usPwmModulo;
@@ -61,8 +61,8 @@ struct pwm_ctrl_data {
     INT16S sPwmWidthEnd;
     INT16S sPwmWidthRange;
     INT16S sPwmWidthDflt;
-    INT16S sPwmWidthHigh;   /* 实际脉宽时间 */
-    INT16S sPwmWidthLow;    /* 实际脉宽时间 */
+    INT16S sPwmWidthHigh;   /* 瀹為檯鑴夊鏃堕棿 */
+    INT16S sPwmWidthLow;    /* 瀹為檯鑴夊鏃堕棿 */
     INT16S sPwmWidthSetting;
     INT16S sPwmDutyValue;
 };

@@ -7,13 +7,13 @@
 ** File Name:               ZMC_QMath_Cfg.h
 ** Last modified Date:      2012.01.05
 ** Last Version:            1.0
-** Description:             The config file of QMath. QMathµÄÅäÖÃÎÄ¼ş¡£
+** Description:             The config file of QMath. QMathçš„é…ç½®æ–‡ä»¶ã€‚
 ** 
 **--------------------------------------------------------------------------------------------------------
-** Created By:              Steven Zhou ÖÜÉÜ¸Õ
+** Created By:              Steven Zhou å‘¨ç»åˆš
 ** Created date:            2012.01.05
 ** Version:                 1.0
-** Descriptions:            The original version ³õÊ¼°æ±¾
+** Descriptions:            The original version åˆå§‹ç‰ˆæœ¬
 **
 **--------------------------------------------------------------------------------------------------------
 ** Modified by:             

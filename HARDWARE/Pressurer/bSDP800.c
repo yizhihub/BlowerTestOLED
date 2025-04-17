@@ -101,7 +101,7 @@ void SDP800_Init(void)
 {
 #ifdef GD32F30X_HD
     /*
-     * GPIO≈‰÷√
+     * GPIOÈÖçÁΩÆ
      */
     GPIO_InitTypeDef  GPIO_InitStructure;
     
@@ -134,9 +134,9 @@ void SDP800_TEST(uint8_t ucX)
 //    OLED_PutStr(0, OLED_LINE3,     (uint8_t *)"Cali", 6, 1);
 //    OLED_PutStr(0, OLED_LINE3 + 1, (uint8_t *)"Raw", 6, 1);
 
-    OLED_Print(0, OLED_LINE0, "Œ¬∂»:", 1);
+    OLED_Print(0, OLED_LINE0, "Ê∏©Â∫¶:", 1);
     OLED_Print(0, OLED_LINE1, "SclFct:", 1);
-    OLED_Print(0, OLED_LINE2, "—π¡¶:", 1);
+    OLED_Print(0, OLED_LINE2, "ÂéãÂäõ:", 1);
     
     SDP800_Init();
     msDelay(100);

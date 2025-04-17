@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-//´ËÎªÊı¾İ±£´æÇøµØÖ·£¨FLSAH×îºóÒ»¸öbank£©
+//æ­¤ä¸ºæ•°æ®ä¿å­˜åŒºåœ°å€ï¼ˆFLSAHæœ€åä¸€ä¸ªbankï¼‰
 #define PWMCTRL1_ADDR   0x0803F000
 #define PWMCTRL2_ADDR   0x0803F00C
 #define INA226_ADDR     0x0803F00E
@@ -14,28 +14,28 @@
 #define MOTORCHOS_ADDR  0X0803F014
 
 /*********************************************************************************************************
-  Í¨ÓÃÊı¾İÀàĞÍÖØ¶¨Òå
+  é€šç”¨æ•°æ®ç±»å‹é‡å®šä¹‰
 *********************************************************************************************************/
-typedef unsigned char           BOOL;                                   /* ²¼¶û±äÁ¿                     */
-typedef unsigned char           INT8U;                                  /* ÎŞ·ûºÅ8Î»ÕûĞÍ±äÁ¿            */
-typedef signed   char           INT8S;                                  /* ÓĞ·ûºÅ8Î»ÕûĞÍ±äÁ¿            */
-typedef unsigned short          INT16U;                                 /* ÎŞ·ûºÅ16Î»ÕûĞÍ±äÁ¿           */
-typedef signed   short          INT16S;                                 /* ÓĞ·ûºÅ16Î»ÕûĞÍ±äÁ¿           */
-typedef unsigned long           INT32U;                                 /* ÎŞ·ûºÅ32Î»ÕûĞÍ±äÁ¿           */
-typedef signed   long           INT32S;                                 /* ÓĞ·ûºÅ32Î»ÕûĞÍ±äÁ¿           */
-typedef unsigned long long      INT64U;                                 /* ÎŞ·ûºÅ64Î»ÕûĞÍ±äÁ¿           */
-typedef signed long long        INT64S;                                 /* ÓĞ·ûºÅ64Î»ÕûĞÍ±äÁ¿           */
-typedef float                   FP32;                                   /* µ¥¾«¶È¸¡µãÊı£¨32Î»³¤¶È£©     */
-typedef double                  FP64;                                   /* Ë«¾«¶È¸¡µãÊı£¨64Î»³¤¶È£©     */
+typedef unsigned char           BOOL;                                   /* å¸ƒå°”å˜é‡                     */
+typedef unsigned char           INT8U;                                  /* æ— ç¬¦å·8ä½æ•´å‹å˜é‡            */
+typedef signed   char           INT8S;                                  /* æœ‰ç¬¦å·8ä½æ•´å‹å˜é‡            */
+typedef unsigned short          INT16U;                                 /* æ— ç¬¦å·16ä½æ•´å‹å˜é‡           */
+typedef signed   short          INT16S;                                 /* æœ‰ç¬¦å·16ä½æ•´å‹å˜é‡           */
+typedef unsigned long           INT32U;                                 /* æ— ç¬¦å·32ä½æ•´å‹å˜é‡           */
+typedef signed   long           INT32S;                                 /* æœ‰ç¬¦å·32ä½æ•´å‹å˜é‡           */
+typedef unsigned long long      INT64U;                                 /* æ— ç¬¦å·64ä½æ•´å‹å˜é‡           */
+typedef signed long long        INT64S;                                 /* æœ‰ç¬¦å·64ä½æ•´å‹å˜é‡           */
+typedef float                   FP32;                                   /* å•ç²¾åº¦æµ®ç‚¹æ•°ï¼ˆ32ä½é•¿åº¦ï¼‰     */
+typedef double                  FP64;                                   /* åŒç²¾åº¦æµ®ç‚¹æ•°ï¼ˆ64ä½é•¿åº¦ï¼‰     */
 typedef unsigned char           uchar;
 
-//Î»´ø²Ù×÷,ÊµÏÖ51ÀàËÆµÄGPIO¿ØÖÆ¹¦ÄÜ
-//¾ßÌåÊµÏÖË¼Ïë,²Î¿¼<<CM3È¨ÍşÖ¸ÄÏ>>µÚÎåÕÂ(87Ò³~92Ò³).
-//IO¿Ú²Ù×÷ºê¶¨Òå
+//ä½å¸¦æ“ä½œ,å®ç°51ç±»ä¼¼çš„GPIOæ§åˆ¶åŠŸèƒ½
+//å…·ä½“å®ç°æ€æƒ³,å‚è€ƒ<<CM3æƒå¨æŒ‡å—>>ç¬¬äº”ç« (87é¡µ~92é¡µ).
+//IOå£æ“ä½œå®å®šä¹‰
 #define BITBAND(addr, bitnum) ((addr & 0xF0000000)+0x2000000+((addr &0xFFFFF)<<5)+(bitnum<<2)) 
 #define MEM_ADDR(addr)  *((volatile unsigned long  *)(addr)) 
 #define BIT_ADDR(addr, bitnum)   MEM_ADDR(BITBAND(addr, bitnum)) 
-//IO¿ÚµØÖ·Ó³Éä
+//IOå£åœ°å€æ˜ å°„
 #define GPIOA_ODR_Addr    (GPIOA_BASE+12) //0x4001080C 
 #define GPIOB_ODR_Addr    (GPIOB_BASE+12) //0x40010C0C 
 #define GPIOC_ODR_Addr    (GPIOC_BASE+12) //0x4001100C 
@@ -52,28 +52,28 @@ typedef unsigned char           uchar;
 #define GPIOF_IDR_Addr    (GPIOF_BASE+8) //0x40011A08 
 #define GPIOG_IDR_Addr    (GPIOG_BASE+8) //0x40011E08 
  
-//IO¿Ú²Ù×÷,Ö»¶Ôµ¥Ò»µÄIO¿Ú!
-//È·±£nµÄÖµĞ¡ÓÚ16!
-#define PAout(n)   BIT_ADDR(GPIOA_ODR_Addr,n)  //Êä³ö 
-#define PAin(n)    BIT_ADDR(GPIOA_IDR_Addr,n)  //ÊäÈë 
+//IOå£æ“ä½œ,åªå¯¹å•ä¸€çš„IOå£!
+//ç¡®ä¿nçš„å€¼å°äº16!
+#define PAout(n)   BIT_ADDR(GPIOA_ODR_Addr,n)  //è¾“å‡º 
+#define PAin(n)    BIT_ADDR(GPIOA_IDR_Addr,n)  //è¾“å…¥ 
 
-#define PBout(n)   BIT_ADDR(GPIOB_ODR_Addr,n)  //Êä³ö 
-#define PBin(n)    BIT_ADDR(GPIOB_IDR_Addr,n)  //ÊäÈë 
+#define PBout(n)   BIT_ADDR(GPIOB_ODR_Addr,n)  //è¾“å‡º 
+#define PBin(n)    BIT_ADDR(GPIOB_IDR_Addr,n)  //è¾“å…¥ 
 
-#define PCout(n)   BIT_ADDR(GPIOC_ODR_Addr,n)  //Êä³ö 
-#define PCin(n)    BIT_ADDR(GPIOC_IDR_Addr,n)  //ÊäÈë 
+#define PCout(n)   BIT_ADDR(GPIOC_ODR_Addr,n)  //è¾“å‡º 
+#define PCin(n)    BIT_ADDR(GPIOC_IDR_Addr,n)  //è¾“å…¥ 
 
-#define PDout(n)   BIT_ADDR(GPIOD_ODR_Addr,n)  //Êä³ö 
-#define PDin(n)    BIT_ADDR(GPIOD_IDR_Addr,n)  //ÊäÈë 
+#define PDout(n)   BIT_ADDR(GPIOD_ODR_Addr,n)  //è¾“å‡º 
+#define PDin(n)    BIT_ADDR(GPIOD_IDR_Addr,n)  //è¾“å…¥ 
 
-#define PEout(n)   BIT_ADDR(GPIOE_ODR_Addr,n)  //Êä³ö 
-#define PEin(n)    BIT_ADDR(GPIOE_IDR_Addr,n)  //ÊäÈë
+#define PEout(n)   BIT_ADDR(GPIOE_ODR_Addr,n)  //è¾“å‡º 
+#define PEin(n)    BIT_ADDR(GPIOE_IDR_Addr,n)  //è¾“å…¥
 
-#define PFout(n)   BIT_ADDR(GPIOF_ODR_Addr,n)  //Êä³ö 
-#define PFin(n)    BIT_ADDR(GPIOF_IDR_Addr,n)  //ÊäÈë
+#define PFout(n)   BIT_ADDR(GPIOF_ODR_Addr,n)  //è¾“å‡º 
+#define PFin(n)    BIT_ADDR(GPIOF_IDR_Addr,n)  //è¾“å…¥
 
-#define PGout(n)   BIT_ADDR(GPIOG_ODR_Addr,n)  //Êä³ö 
-#define PGin(n)    BIT_ADDR(GPIOG_IDR_Addr,n)  //ÊäÈë
+#define PGout(n)   BIT_ADDR(GPIOG_ODR_Addr,n)  //è¾“å‡º 
+#define PGin(n)    BIT_ADDR(GPIOG_IDR_Addr,n)  //è¾“å…¥
 
 typedef union floattohex
 {
@@ -81,10 +81,10 @@ typedef union floattohex
     uint8_t hdata[4];
 } FloatToHex;
 
-//ÒÔÏÂÎª»ã±àº¯Êı
-void WFI_SET(void);     //Ö´ĞĞWFIÖ¸Áî
-void INTX_DISABLE(void);//¹Ø±ÕËùÓĞÖĞ¶Ï
-void INTX_ENABLE(void); //¿ªÆôËùÓĞÖĞ¶Ï
-void MSR_MSP(u32 addr); //ÉèÖÃ¶ÑÕ»µØÖ·
+//ä»¥ä¸‹ä¸ºæ±‡ç¼–å‡½æ•°
+void WFI_SET(void);     //æ‰§è¡ŒWFIæŒ‡ä»¤
+void INTX_DISABLE(void);//å…³é—­æ‰€æœ‰ä¸­æ–­
+void INTX_ENABLE(void); //å¼€å¯æ‰€æœ‰ä¸­æ–­
+void MSR_MSP(u32 addr); //è®¾ç½®å †æ ˆåœ°å€
 
 #endif

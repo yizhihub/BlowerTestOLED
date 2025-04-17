@@ -13,13 +13,13 @@
 ** Created By:              Fan Linyun
 ** Created date:            2012-02-15
 ** Version:                 1.0
-** Descriptions:            The original version ³õÊ¼°æ±¾
+** Descriptions:            The original version åˆå§‹ç‰ˆæœ¬
 **
 **--------------------------------------------------------------------------------------------------------
 ** Modified by:             Fan Linyun
 ** Modified date:           2013-08-15
 ** Version:                 1.1
-** Descriptions:            Ôö¼ÓrampÉÏÉıÏÂ½µÔöÁ¿ÎªÁ½¸ö¶ÀÁ¢±äÁ¿
+** Descriptions:            å¢åŠ rampä¸Šå‡ä¸‹é™å¢é‡ä¸ºä¸¤ä¸ªç‹¬ç«‹å˜é‡
 **
 **--------------------------------------------------------------------------------------------------------
 ** Modified by:             

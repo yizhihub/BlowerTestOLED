@@ -62,7 +62,7 @@ void keyInit(void)
 {
 #ifdef GD32F30X_HD
     /*
-     * KEY GPIOÅäÖÃ
+     * KEY GPIOé…ç½®
      */
     GPIO_InitTypeDef  GPIO_InitStructure;
     
@@ -170,7 +170,7 @@ KEYn_e ADKey_Scan(void)
 }
 
 
-// ¼ÓËÉÊÖ¼ì²â 
+// åŠ æ¾æ‰‹æ£€æµ‹ 
 KEYn_e ADKey_Check(void)
 {
     static KEYn_e last_key;
@@ -213,7 +213,7 @@ KEYn_e ADKey_Check(void)
     last_key=tmp_key;
     return key;
 }
-// ²»¿¨ËÀÊ½  ¿ÉÁ¬Ğø¼Ó¼õ 
+// ä¸å¡æ­»å¼  å¯è¿ç»­åŠ å‡ 
 KEYn_e ADKey_Check2(void)
 {
    static KEYn_e last_key;

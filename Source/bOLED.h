@@ -33,10 +33,10 @@
 
 /*
  * slection among CHIP_SSD1306,CHIP_SH1106,CHIP_SSD1309, CHIP_SSD1312(i2c), CHIP_SSD1322, CHIP_SSD1327, CHIP_SSD1331,CHIP_SSD1351
- * CHIP_ST7735, CHIP_ST7789V2,¡£ 
- * ×¢ÊÍ£º SSD1309ÊÇ 2.42´ç´óÆÁ£¬·Ö±æÂÊ12864
- *        SSD1322ºÍSSD1327ÊÇ»Ò¶È£¬Ç°ÕßÊÇ64x256,ºóÕßÊÇ128x128¡£
- *        SSD1331ºÍSSD1351ÊÇ²ÊÆÁ£¬Ç°ÕßÊÇ96x64£¬ºóÕßÊÇ128x128¡£
+ * CHIP_ST7735, CHIP_ST7789V2,ã€‚ 
+ * æ³¨é‡Šï¼š SSD1309æ˜¯ 2.42å¯¸å¤§å±ï¼Œåˆ†è¾¨çŽ‡12864
+ *        SSD1322å’ŒSSD1327æ˜¯ç°åº¦ï¼Œå‰è€…æ˜¯64x256,åŽè€…æ˜¯128x128ã€‚
+ *        SSD1331å’ŒSSD1351æ˜¯å½©å±ï¼Œå‰è€…æ˜¯96x64ï¼ŒåŽè€…æ˜¯128x128ã€‚
  */
 
 #if  defined(CHIP_SSD1331) || defined(CHIP_SSD1351) || defined(CHIP_SSD1322) || defined(CHIP_SSD1327) || defined(CHIP_ST7735) || defined(CHIP_ST7789V2)
@@ -54,7 +54,7 @@
 #define LINE_HEIGHT 2
 
 /*
- * ÏÔÊ¾ÆÁ³ß´çµ÷Õû
+ * æ˜¾ç¤ºå±å°ºå¯¸è°ƒæ•´
  */
 #if defined(CHIP_SSD1331)
     #undef OLED_WIDTH
@@ -76,7 +76,7 @@
     #define OLED_HIGH    80
     #define LINE_HEIGHT  16
     #define OLED_LINE_MAX  4*LINE_HEIGHT
-#elif defined(CHIP_SSD1322)                                             /* »ùÓÚÄ¿Ç°µÄÁÐÐÐÊ½×ÖÄ£ ¸ÃIC½öÖ§³ÖÊúÆÁÏÔÊ¾ 64x256  */
+#elif defined(CHIP_SSD1322)                                             /* åŸºäºŽç›®å‰çš„åˆ—è¡Œå¼å­—æ¨¡ è¯¥ICä»…æ”¯æŒç«–å±æ˜¾ç¤º 64x256  */
     #undef OLED_WIDTH
     #undef OLED_HIGH
     #undef LINE_HEIGHT
@@ -137,26 +137,26 @@ typedef struct yizhi_RTC_Time_s
 #ifdef C51_PLATEFORM
 
     #if defined(IAP15W413ASDIP16)
-    sbit OLED_SCL= P1^2;                                                  /* 15W408AS  DIP16 Right µ¹ÖÃ*/
+    sbit OLED_SCL= P1^2;                                                  /* 15W408AS  DIP16 Right å€’ç½®*/
     sbit OLED_SDA= P1^3;
     sbit OLED_RST= P1^4;
     sbit OLED_DC = P1^5;
     sbit OLED_CS = P5^4;
     #elif defined(IAP15W413ASDIP28)
-    sbit OLED_SCL= P2^6;                                                  /* 15W408AS  DIP28   µ¹ÖÃ       */
+    sbit OLED_SCL= P2^6;                                                  /* 15W408AS  DIP28   å€’ç½®       */
     sbit OLED_SDA= P2^7;
     sbit OLED_RST= P1^0;
     sbit OLED_DC = P1^1;
     sbit OLED_CS = P1^2;
     sbit LCD_BLK = P1^3;
     #elif defined(STC15W408ASDIP16)
-    sbit OLED_SCL= P5^4;                                                    /* 15W408AS  DIP16 Left ÕýÖÃ */
+    sbit OLED_SCL= P5^4;                                                    /* 15W408AS  DIP16 Left æ­£ç½® */
     sbit OLED_SDA= P1^5;
     sbit OLED_RST= P1^4;
     sbit OLED_DC = P1^3;
     sbit OLED_CS = P1^2;
     #elif defined(IAP15W413ASSOP20)
-    sbit OLED_SCL= P1^2;                                                    /* 15W408AS  SOP20 Left ÕýÖÃ */
+    sbit OLED_SCL= P1^2;                                                    /* 15W408AS  SOP20 Left æ­£ç½® */
     sbit OLED_SDA= P1^3;
     sbit OLED_RST= P1^4;
     sbit OLED_DC = P1^5;
@@ -187,7 +187,7 @@ typedef struct yizhi_RTC_Time_s
         #ifdef GD32F30X_HD
         #define OLED_SCL  PBout(3)
         #define OLED_SDA  PBout(5)
-        #define OLED_RST  PCout(8)            /* ÔÚMINISTM32ÉÏÖ±½Ó½Óµ½ÁËSTM32µÄ¸´Î»½Å£¡*/
+        #define OLED_RST  PCout(8)            /* åœ¨MINISTM32ä¸Šç›´æŽ¥æŽ¥åˆ°äº†STM32çš„å¤ä½è„šï¼*/
         #define OLED_DC   PCout(9) 
         #define OLED_CS   PAout(15)
         #define OLED_SCL_0    GPIOB->BRR  = 1 << 3// //OLED_SCL = 0
@@ -199,11 +199,11 @@ typedef struct yizhi_RTC_Time_s
         #define OLED_DC_0     GPIOC->BRR  = 1 << 9// //OLED_DC  = 0
         #define OLED_DC_1     GPIOC->BSRR = 1 << 9// //OLED_DC  = 1
         #define OLED_CS_0     GPIOA->BRR  = 1 << 15// //OLED_CS  = 0
-        #define OLED_CS_1     GPIOA->BSRR = 1 << 15// //OLED_CS  = 1      /* ¸ÄÎªBRR BSRR¼Ä´æÆ÷ 5.5958ms -> 4.4171ms  */
+        #define OLED_CS_1     GPIOA->BSRR = 1 << 15// //OLED_CS  = 1      /* æ”¹ä¸ºBRR BSRRå¯„å­˜å™¨ 5.5958ms -> 4.4171ms  */
         #else
         #define OLED_SCL  PCout(6)
         #define OLED_SDA  PBout(0)
-        #define OLED_RST  PBout(2)            /* ÔÚMINISTM32ÉÏÖ±½Ó½Óµ½ÁËSTM32µÄ¸´Î»½Å£¡*/
+        #define OLED_RST  PBout(2)            /* åœ¨MINISTM32ä¸Šç›´æŽ¥æŽ¥åˆ°äº†STM32çš„å¤ä½è„šï¼*/
         #define OLED_DC   PBout(4) 
         #define OLED_CS   PBout(6)
         #define OLED_SCL_0    GPIOC->BRR  = 1 << 6// //OLED_SCL = 0
@@ -215,7 +215,7 @@ typedef struct yizhi_RTC_Time_s
         #define OLED_DC_0     GPIOB->BRR  = 1 << 4// //OLED_DC  = 0
         #define OLED_DC_1     GPIOB->BSRR = 1 << 4// //OLED_DC  = 1
         #define OLED_CS_0     GPIOB->BRR  = 1 << 6// //OLED_CS  = 0
-        #define OLED_CS_1     GPIOB->BSRR = 1 << 6// //OLED_CS  = 1      /* ¸ÄÎªBRR BSRR¼Ä´æÆ÷ 5.5958ms -> 4.4171ms  */
+        #define OLED_CS_1     GPIOB->BSRR = 1 << 6// //OLED_CS  = 1      /* æ”¹ä¸ºBRR BSRRå¯„å­˜å™¨ 5.5958ms -> 4.4171ms  */
         #endif
     #if defined(CHIP_ST7735) || defined(CHIP_ST7789V2) 
     #define LCD_BLK_0     GPIOB->BRR  = 1 << 8
@@ -330,26 +330,26 @@ void OLED_Fill(unsigned int usData);
 void OLED_ClearLine(uint8_t ucStartDine, uint8_t ucEndDine,unsigned int usData);
 void OLED_PutPixel(uint8_t x,uint8_t y);
 void OLED_DrawBMP(uint8_t x0,uint8_t y0,uint8_t x1,uint8_t y1);
-/* ºº×ÖÏÔÊ¾ */
+/* æ±‰å­—æ˜¾ç¤º */
 void OLED_PutHan(uint8_t x,uint8_t y,uint8_t ch[], uint16_t ucYn);
 void OLED_Print(uint8_t x, uint8_t y, uint8_t ch[], uint16_t ucYn);
-/* ×Ö·ûÏÔÊ¾ */
+/* å­—ç¬¦æ˜¾ç¤º */
 void OLED_PutChar(uint8_t x,uint8_t y,uint8_t wan, uint8_t ucSize, uint16_t ucYn);
 void OLED_PutStr(uint8_t x,uint8_t y,uint8_t ch[], uint8_t ucSize, uint16_t ucYn);
-/* ÊýÖµÏÔÊ¾ */
+/* æ•°å€¼æ˜¾ç¤º */
 void OLED_PutNum(uint8_t x,uint8_t y,int m, uint8_t ucLen, uint8_t ucSize, uint16_t ucYn);
 void OLED_PutNumber(uint8_t x,uint8_t y,float m, uint8_t M, uint8_t N, char* pUnit, uint8_t ucSize, uint16_t ucYn);
 
-/* ÌØÊâÊýÖµÏÔÊ¾ */
-void OLED_P16x32Num(uint8_t p,int num,uint8_t unit);// ÌØ´ó×ÖÌå
+/* ç‰¹æ®Šæ•°å€¼æ˜¾ç¤º */
+void OLED_P16x32Num(uint8_t p,int num,uint8_t unit);// ç‰¹å¤§å­—ä½“
 void OLED_HexDisp(uint8_t x,uint8_t y,uint8_t *dat,uint8_t N, uint8_t ucSize, uint16_t ucYn);
-void OLED_P16x32Time(uint8_t p, RTC_Time_s *ptTime);//´ó×ÖÌåÊ±ÖÓÏÔÊ¾
-void OLED_PutTime(uint8_t x,uint8_t y,RTC_Time_s * time, uint8_t ucSize, uint16_t ucYn);//Ð¡×ÖÌåÊ±ÖÓÏÔÊ¾;
+void OLED_P16x32Time(uint8_t p, RTC_Time_s *ptTime);//å¤§å­—ä½“æ—¶é’Ÿæ˜¾ç¤º
+void OLED_PutTime(uint8_t x,uint8_t y,RTC_Time_s * time, uint8_t ucSize, uint16_t ucYn);//å°å­—ä½“æ—¶é’Ÿæ˜¾ç¤º;
 void timeClockStep(RTC_Time_s *ptTime);
 
 extern uint16_t BACK_COLOR;
 extern uint16_t FRONT_COLOR;
-//ÑÕÉ«
+//é¢œè‰²
 #define WHITE              0xFFFF
 #define BLACK              0x0000      
 #define BLUE                0x001F  
@@ -361,20 +361,20 @@ extern uint16_t FRONT_COLOR;
 #define GREEN              0x07E0
 #define CYAN               0x7FFF
 #define YELLOW             0xFFE0
-#define BROWN                  0XBC40 //×ØÉ«
-#define BRRED                  0XFC07 //×ØºìÉ«
-#define GRAY                   0X8430 //»ÒÉ«
-//GUIÑÕÉ«
+#define BROWN                  0XBC40 //æ£•è‰²
+#define BRRED                  0XFC07 //æ£•çº¢è‰²
+#define GRAY                   0X8430 //ç°è‰²
+//GUIé¢œè‰²
 
-#define DARKBLUE           0X01CF    //ÉîÀ¶É«
-#define LIGHTBLUE           0X7D7C    //Ç³À¶É«  
-#define GRAYBLUE            0X5458 //»ÒÀ¶É«
-//ÒÔÉÏÈýÉ«ÎªPANELµÄÑÕÉ« 
+#define DARKBLUE           0X01CF    //æ·±è“è‰²
+#define LIGHTBLUE           0X7D7C    //æµ…è“è‰²  
+#define GRAYBLUE            0X5458 //ç°è“è‰²
+//ä»¥ä¸Šä¸‰è‰²ä¸ºPANELçš„é¢œè‰² 
  
-#define LIGHTGREEN          0X841F //Ç³ÂÌÉ«
-#define LGRAY                  0XC618 //Ç³»ÒÉ«(PANNEL),´°Ìå±³¾°É«
+#define LIGHTGREEN          0X841F //æµ…ç»¿è‰²
+#define LGRAY                  0XC618 //æµ…ç°è‰²(PANNEL),çª—ä½“èƒŒæ™¯è‰²
 
-#define LGRAYBLUE        0XA651 //Ç³»ÒÀ¶É«(ÖÐ¼ä²ãÑÕÉ«)
-#define LBBLUE           0X2B12 //Ç³×ØÀ¶É«(Ñ¡ÔñÌõÄ¿µÄ·´É«)
+#define LGRAYBLUE        0XA651 //æµ…ç°è“è‰²(ä¸­é—´å±‚é¢œè‰²)
+#define LBBLUE           0X2B12 //æµ…æ£•è“è‰²(é€‰æ‹©æ¡ç›®çš„åè‰²)
 #endif
 

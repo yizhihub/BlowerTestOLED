@@ -21,12 +21,12 @@ const char GscBuildTIme[]   __attribute__((section(".ARM.__at_0x8000210"))) = __
     ec11Init();
     OLED_Init(); 
     msDelay(50);
-    BraoAdcInit();                               /* ±ØÐëÒªÔÚÕâÀï¼ÓÉÏ³õÊ¼»¯Ò»´Î²ÅÐÐ£¬ÉÏµçÏÈ³õÊ¼»¯ */
+    BraoAdcInit();                               /* å¿…é¡»è¦åœ¨è¿™é‡ŒåŠ ä¸Šåˆå§‹åŒ–ä¸€æ¬¡æ‰è¡Œï¼Œä¸Šç”µå…ˆåˆå§‹åŒ– */
 //  OLED_PutStr(0,OLED_LINE0, (uint8_t *)"abcdefghijklmnopqrstuvwxyz!@#$%^&*()_123456789~!", 6, RED);
 //  OLED_PutStr(0, OLED_LINE0, (uint8_t *)"123456789~!{}|AaBbCc", 6, GREEN);
 //  OLED_PutStr(0, OLED_LINE1, (uint8_t *)"Aa123456789~!{}|", 8, BLUE);
 //  OLED_PutStr(0, OLED_LINE2, (uint8_t *)"Am12345", 16, BLUE);
-//  OLED_PutHan(22,  OLED_LINE0, (uint8_t *)"·ç»ú²âÊÔÆ½Ì¨", 1);
+//  OLED_PutHan(22,  OLED_LINE0, (uint8_t *)"é£Žæœºæµ‹è¯•å¹³å°", 1);
     __enable_irq();
 
 //    strcpy((char*)MenuItem[0] ,"1:MPU  ");
@@ -47,9 +47,9 @@ const char GscBuildTIme[]   __attribute__((section(".ARM.__at_0x8000210"))) = __
 //              USART1->DR = ucData;
 //          }
 //        static float t = 3.14f;
-//        OLED_ShowChar(36,52,t,12,1);//ÏÔÊ¾ASCII×Ö·û    
-//        OLED_ShowNum(94,52,t,3,12);    //ÏÔÊ¾ASCII×Ö·ûµÄÂëÖµ    
-//        OLED_Refresh_Gram();//¸üÐÂÏÔÊ¾µ½OLED
+//        OLED_ShowChar(36,52,t,12,1);//æ˜¾ç¤ºASCIIå­—ç¬¦    
+//        OLED_ShowNum(94,52,t,3,12);    //æ˜¾ç¤ºASCIIå­—ç¬¦çš„ç å€¼    
+//        OLED_Refresh_Gram();//æ›´æ–°æ˜¾ç¤ºåˆ°OLED
 //        t++;
 //        if(t>'~')t=' ';
 //        OLED_PutNumber(32, OLED_LINE0, t, 2, 1, 0, 6, GREEN);  // 92

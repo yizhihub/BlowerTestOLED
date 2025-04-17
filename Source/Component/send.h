@@ -4,7 +4,7 @@
 
 
 //#include "include.h"
-// Ò»°üº¬Õâ¸öÓï¾ä¾Í³öÏÖÏÂÃæ´íÎó
+// ä¸€åŒ…å«è¿™ä¸ªè¯­å¥å°±å‡ºç°ä¸‹é¢é”™è¯¯
 //Error[Li006]: duplicate definitions for "BME_XOR_H";  
 
 
