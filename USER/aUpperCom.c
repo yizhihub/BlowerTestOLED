@@ -257,7 +257,7 @@ void UpperComCXD7054(uint8_t ucX)
                     bScreenValFlg = 1;
                     break;
                 
-                case KEY_UP: 
+                case KEY_DOWN: 
                     bScreenIDFlg = 0;
                     bEdit_flag   = 0;
                     break;
@@ -460,7 +460,7 @@ void UpperComBFC68S1(uint8_t ucX)
                     bScreenValFlg = 1;
                     break;
                 
-                case KEY_UP: 
+                case KEY_DOWN: 
                     bScreenIDFlg = 0;
                     bEdit_flag   = 0;
                     break;
@@ -663,7 +663,7 @@ void UpperComNidecTF029B(uint8_t ucX)
                     bScreenValFlg = 1;
                     break;
                 
-                case KEY_UP: 
+                case KEY_DOWN: 
                     bScreenIDFlg = 0;
                     bEdit_flag   = 0;
                     break;

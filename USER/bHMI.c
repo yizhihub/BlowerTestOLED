@@ -418,7 +418,7 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
       usDelay(10);
       return  FirstItem+NowItem;
     }
-    if(KEY_UP == key)
+    if(KEY_DOWN == key)
     {
       //while(ADKey_Scan()==KEY_BACK) 
         usDelay(10);
@@ -1072,12 +1072,12 @@ void BlowerBiLTest(uint8_t ucX)
                 }
                 break;
             
-            case KEY_UP: 
+            case KEY_DOWN: 
                 bPwmRunning = !bPwmRunning;
                 bScreenIDFlg = 1;
                 bEdit_flag   = 0;
                 break;
-            case KEY_DOWN: 
+            case KEY_UP: 
                 HallCalibrationEn();
                 break;
             
@@ -1281,7 +1281,7 @@ void BlowerC60Test(uint8_t ucX)
                 }
                 break;
             
-            case KEY_UP: 
+            case KEY_DOWN: 
                 bPwmRunning = !bPwmRunning;
                 bScreenIDFlg = 1;
                 bEdit_flag   = 0;
