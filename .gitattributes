@@ -1,0 +1,43 @@
+#*********************************************************************************************************
+#                          Copyright (c), 2022-2032, yuwell Co. , Ltd
+#    ___                             _   _               ____               ___           _
+#   |_ _|_ __  _ __   _____   ____ _| |_(_) ___  _ __   |  _ \ ___  ___    |_ _|_ __  ___| |_
+#    | || '_ \| '_ \ / _ \ \ / / _` | __| |/ _ \| '_ \  | |_) / _ \/ __|    | || '_ \/ __| __|
+#    | || | | | | | | (_) \ V / (_| | |_| | (_) | | | | |  _ <  __/\__ \_   | || | | \__ \ |_ _
+#   |___|_| |_|_| |_|\___/ \_/ \__,_|\__|_|\___/|_| |_| |_| \_\___||___(_) |___|_| |_|___/\__(_)
+#
+#-------------------------------------------Description---------------------------------------------------
+# @file    .gitattributes
+# @author  li.gd
+# @date    2025-03-01
+# @version v1.0
+# @brief   For unify all kinds of text files' line end.
+#-------------------------------------------Histroy-------------------------------------------------------
+# @history
+# <author>           <time>                 <desc>
+# li.gd         2025-03-01                v1.0   first version
+#
+#---------------------------------------------------------------------------------------------------------
+#@verbatim
+# reference  https://juejin.cn/post/6942320745494085669
+# when modify this file, please execute 'git add --renormalize .'
+# Apply the "clean" process freshly to all tracked files to forcibly add them again to the index. This is
+# useful after changing core.autocrlf configuration or the text attribute in order to correct files added
+# with wrong CRLF/LF line endings. This option implies -u.
+#@endverbatim
+#********************************************************************************************************/
+
+# since we all develop code on windows platfrom, select CRLF as the default line end.
+LICENSE text eol=lf
+* text=auto
+*.txt text eol=crlf
+*.md text eol=crlf
+*.c text eol=crlf
+*.h text eol=crlf
+*.s text eol=crlf
+*.sct text eol=crlf
+*.scf text eol=crlf
+*.uvopt text eol=lf
+*.uvproj text eol=lf
+*.uvoptx text eol=lf
+*.uvprojx text eol=lf
