@@ -253,7 +253,7 @@ extern "C" {
         #define OLED_DC_1     GPIOC->BSRR = 1 << 9// //OLED_DC  = 1
         #define OLED_CS_0     GPIOA->BRR  = 1 << 15// //OLED_CS  = 0
         #define OLED_CS_1     GPIOA->BSRR = 1 << 15// //OLED_CS  = 1      /* 改为BRR BSRR寄存器 5.5958ms -> 4.4171ms  */
-        #elif defined(MiniSTIM32V3)
+        #elif defined(MiniSTM32V3)
         #define OLED_SCL  PCout(6)
         #define OLED_SDA  PBout(0)
         #define OLED_RST  PBout(2)            /* 在MINISTM32上直接接到了STM32的复位脚！*/

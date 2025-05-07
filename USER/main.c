@@ -21,13 +21,16 @@ const char GscBuildTIme[]   __attribute__((section(".ARM.__at_0x8000210"))) = __
     ec11Init();
     OLED_Init(); 
     msDelay(50);
-    BraoAdcInit();                               /* 蹇呴』瑕佸湪杩欓噷鍔犱笂鍒濆鍖栦竴娆℃墠琛岋紝涓婄數鍏堝垵濮嬪寲 */
-//  OLED_PutStr(0,OLED_LINE0, (uint8_t *)"abcdefghijklmnopqrstuvwxyz!@#$%^&*()_123456789~!", 6, RED);
-//  OLED_PutStr(0, OLED_LINE0, (uint8_t *)"123456789~!{}|AaBbCc", 6, GREEN);
-//  OLED_PutStr(0, OLED_LINE1, (uint8_t *)"Aa123456789~!{}|", 8, BLUE);
-//  OLED_PutStr(0, OLED_LINE2, (uint8_t *)"Am12345", 16, BLUE);
-//  OLED_PutHan(22,  OLED_LINE0, (uint8_t *)"椋庢満娴嬭瘯骞冲彴", 1);
+    BraoAdcInit();                               /* 必须要在这里加上初始化一次才行，上电先初始化 */
+    OLED_PutStr(0,OLED_LINE0, (uint8_t *)"abcdefghijklmnopqrstuvwxyz!@#$%^&*()_123456789~!", 6, RED);
+    OLED_PutStr(0, OLED_LINE0, (uint8_t *)"123456789~!{}|AaBbCc", 6, GREEN);
+    OLED_PutStr(0, OLED_LINE1, (uint8_t *)"Aa123456789~!{}|", 8, BLUE);
+    OLED_PutStr(0, OLED_LINE2, (uint8_t *)"Am12345", 16, BLUE);
+    msDelay(50);
+    OLED_PutHan(0,  OLED_LINE3, (uint8_t *)"风机测试平台", BLUE);
     __enable_irq();
+    msDelay(500);
+    OLED_Fill(0x00);
 
 //    strcpy((char*)MenuItem[0] ,"1:MPU  ");
 //    strcpy((char*)MenuItem[1] ,"2:NRF  ");
@@ -47,9 +50,9 @@ const char GscBuildTIme[]   __attribute__((section(".ARM.__at_0x8000210"))) = __
 //              USART1->DR = ucData;
 //          }
 //        static float t = 3.14f;
-//        OLED_ShowChar(36,52,t,12,1);//鏄剧ずASCII瀛楃    
-//        OLED_ShowNum(94,52,t,3,12);    //鏄剧ずASCII瀛楃鐨勭爜鍊�    
-//        OLED_Refresh_Gram();//鏇存柊鏄剧ず鍒癘LED
+//        OLED_ShowChar(36,52,t,12,1);//显示ASCII字符    
+//        OLED_ShowNum(94,52,t,3,12);    //显示ASCII字符数值  
+//        OLED_Refresh_Gram();//更新显示到OLED
 //        t++;
 //        if(t>'~')t=' ';
 //        OLED_PutNumber(32, OLED_LINE0, t, 2, 1, 0, 6, GREEN);  // 92

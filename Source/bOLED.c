@@ -568,7 +568,7 @@ void OLED_Init(void)
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOC, &GPIO_InitStructure);
     GPIO_SetBits(GPIOC, GPIO_Pin_8 | GPIO_Pin_9);
-    #elif defined(MiniSTIM32V3)
+    #elif defined(MiniSTM32V3)
     GPIO_InitTypeDef  GPIO_InitStructure;
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOC, ENABLE );
@@ -634,14 +634,30 @@ void OLED_Init(void)
     OLED_WrCmd(0x3A);
     OLED_WrCmd(0xBE);
     OLED_WrCmd(0x3E);
+    
+    /*
+     * Master Current Control Set master current attenuation factor 
+     * A[3:0] from 00d to 15d corresponding to 1/16, 2/16… to 16/16 attenuation 
+     * 0x0F is brightest
+     */
     OLED_WrCmd(0x87);
-    OLED_WrCmd(0x06);
+    OLED_WrCmd(0x0F);  // 0x06
+    
+    /*
+     * Set Contrast for Color A, B, C (81h, 82h, 83h) .. 
+     * I test it A = BLUE B = GREEN C= RED @20250507 
+     * 0xFF is brightest
+     */ 
     OLED_WrCmd(0x81);
-    OLED_WrCmd(0x91);
+    OLED_WrCmd(0xFF);  // 0x91  
     OLED_WrCmd(0x82);
-    OLED_WrCmd(0x50);
+    OLED_WrCmd(0xFF);  // 0x50
     OLED_WrCmd(0x83);
-    OLED_WrCmd(0x7D);
+    OLED_WrCmd(0xFF);  // 0x7D
+    
+    /*
+     * Set Display On/Off (ACh / AEh / AFh) ..
+     */
     OLED_WrCmd(0xAF);
     OLED_Fill(0x00);}
 #elif defined(CHIP_SSD1351)
@@ -669,12 +685,21 @@ void OLED_Init(void)
     OLED_WrDat(0xA0); 
     OLED_WrDat(0xB5);
     OLED_WrDat(0x55); // Enable External VSL
+    
+    /* 
+     * set three colors' brightness
+     */
     OLED_WrCmd(0xC1);
-    OLED_WrDat(0xC8); // Set Contrast of Color A (Red)
-    OLED_WrDat(0x80); // Set Contrast of Color B (Green)
-    OLED_WrDat(0xC8); // Set Contrast of Color C (Blue)
+    OLED_WrDat(0xFF); // Set Contrast of Color A (Red)
+    OLED_WrDat(0xFF); // Set Contrast of Color B (Green)
+    OLED_WrDat(0xFF); // Set Contrast of Color C (Blue)
+    
+    /*
+     * set global or master brightness 
+     */
     OLED_WrCmd(0xC7); 
     OLED_WrDat(0x0F); // Master Contrast Current Control  Default => 0x0F (Maximum)
+    
     /* Set_Gray_Scale_Table() */
     OLED_WrCmd(0xB1); 
     OLED_WrDat(0x32); // Set Phase 1 as 5 Clocks & Phase 2 as 3 Clocks
