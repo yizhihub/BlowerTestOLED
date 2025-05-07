@@ -53,7 +53,7 @@ static uchar FirstItem;
 static uchar UartCMDSpeedTxBuf[10] = {0x2B, 0xC1, 0x3F};
 static uchar MenuValue[7][16];
 
-
+#pragma diag_suppress 550 
 
 static INT8U  ucTemperature;
 static INT16U ulVoltage10Mv;
@@ -77,6 +77,7 @@ INT32S            _GlSetMecVelRpm = 0;
   全局变量定义
 *********************************************************************************************************/
 
+#pragma diag_suppress 177 
  
 /**
 ********************************************************************************************************

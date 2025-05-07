@@ -59,8 +59,8 @@ extern const char GscBuildTIme[];
 ********************************************************************************************************
 ** @nameis VersionInfoDisp
 ** @effect Display Version info.
-** @import ulPeriodHz    : pwm frequencyï¼Œunit Hz 
-**         ulDeadtimeNs  : dead timeï¼Œunit ns
+** @import ulPeriodHz    : pwm frequency£¬unit Hz 
+**         ulDeadtimeNs  : dead time£¬unit ns
 **         pfuncIntFault : PWM Fault interrupter func. pointer, input (void *)0  if disable.
 **         pfuncIntPwm   : PWM Periodic Interrupter callback func. pointer, if noone insert (void *)0
 ** @export none
@@ -102,7 +102,7 @@ void VersionInfoDisp(void)
         else if (GulPrintTimeCnt > 10)
         {
             GulPrintTimeCnt = 0;
-            switch (ucSendState)                                        /* æ ¹æ®æ­¤çŠ¶æ€ä½åˆ‡æ¢å‘é€æŒ‡ä»¤ */
+            switch (ucSendState)                                        /* ¸ù¾İ´Ë×´Ì¬Î»ÇĞ»»·¢ËÍÖ¸Áî */
             {
                 case 0:
                     uartDrvPutBuf(USART2, UartCmdVerTxBuf1, 3);
@@ -121,7 +121,7 @@ void VersionInfoDisp(void)
             
         OLED_PutStr(10, OLED_LINE2, (uint8_t *)GscBuildDate,   6, 1);
         OLED_PutStr(10, OLED_LINE2 + LINE_HEIGHT / 2, (uint8_t *)GscBuildTIme,   6, 1);
-        OLED_PutNumber(10, OLED_LINE3, RSHUNT*_GfRsINA226.fdata, 2, 3, "mÎ©", 6, 1);
+        OLED_PutNumber(10, OLED_LINE3, RSHUNT*_GfRsINA226.fdata, 2, 3, "m¦¸", 6, 1);
         msDelay(20);
     }
 }
@@ -141,26 +141,26 @@ void HMI_DrawName(uint8_t ucX, uint8_t ucStart, uint8_t str[], uint16_t ucYn)
     switch (ucX) {
          
     case 0:
-        OLED_Print(0 + ucStart, OLED_LINE1, str, ucYn); // æ­£å¸¸æ˜¾ç¤º 
+        OLED_Print(0 + ucStart, OLED_LINE1, str, ucYn); // Õı³£ÏÔÊ¾ 
         break;
     
     case 1:
-        OLED_Print(64 + ucStart, OLED_LINE1, str, ucYn); // æ­£å¸¸æ˜¾ç¤º    
+        OLED_Print(64 + ucStart, OLED_LINE1, str, ucYn); // Õı³£ÏÔÊ¾    
         break;
     
     case 2:
-        OLED_Print(0 + ucStart, OLED_LINE2, str, ucYn); // æ­£å¸¸æ˜¾ç¤º    
+        OLED_Print(0 + ucStart, OLED_LINE2, str, ucYn); // Õı³£ÏÔÊ¾    
         break;
     
     case 3:
-        OLED_Print(64 + ucStart, OLED_LINE2, str, ucYn); // æ­£å¸¸æ˜¾ç¤º    
+        OLED_Print(64 + ucStart, OLED_LINE2, str, ucYn); // Õı³£ÏÔÊ¾    
         break;
     
     case 4:
-        OLED_PutStr(0 + ucStart, OLED_LINE3, str, 6, ucYn); // æ­£å¸¸æ˜¾ç¤º    
+        OLED_PutStr(0 + ucStart, OLED_LINE3, str, 6, ucYn); // Õı³£ÏÔÊ¾    
         break;
     case 5:
-        OLED_PutStr(0 + ucStart, OLED_LINE3 + (LINE_HEIGHT >> 1), str, 6, ucYn); // æ­£å¸¸æ˜¾ç¤º    
+        OLED_PutStr(0 + ucStart, OLED_LINE3 + (LINE_HEIGHT >> 1), str, 6, ucYn); // Õı³£ÏÔÊ¾    
         break;
     
     default:
@@ -276,21 +276,21 @@ void PWM_ProtoUpdate(PWM_CTRL_DATA * ptPwm, INT16U ePwmProto)
 *********************************************************************************************************/
 void PWM_KeyCallback(PWM_CTRL_UNION *PwmCtrl, uint8_t ucItem)
 {
-   if (ucItem == 4) {                                                                         /* å˜æ›´åè®® */ 
+   if (ucItem == 4) {                                                                         /* ±ä¸üĞ­Òé */ 
         if (PwmCtrl->sPwmCtrl[4] > 3)  PwmCtrl->sPwmCtrl[4] = 3;  /* max ePwmProtocol is 2 */
         PWM_ProtoUpdate(&PwmCtrl->tPwmCtrl, PwmCtrl->tPwmCtrl.ePwmProtocol);
         PWM_PERIOD_SETA(PwmCtrl->tPwmCtrl.usPwmModulo);
         PwmCtrl->tPwmCtrl.sPwmWidthSetting = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
-    } else if (ucItem == 0) {                                                                /* è®¾å®šä½è½¬é€Ÿå¹³å° */
+    } else if (ucItem == 0) {                                                                /* Éè¶¨µÍ×ªËÙÆ½Ì¨ */
         
-        PwmCtrl->tPwmCtrl.sPwmWidthLow  = PwmCtrl->tPwmCtrl.sPwmWidthStart +              /* PwmCtrl->tPwmCtrl.sPwmLowVal;ä»è°ƒæ•´å ç©ºæ¯”ç™¾åˆ†æ¯”ä¿®æ”¹ä¸ºç›´æ¥è°ƒæ•´è„‰å†²å®½åº¦ */
+        PwmCtrl->tPwmCtrl.sPwmWidthLow  = PwmCtrl->tPwmCtrl.sPwmWidthStart +              /* PwmCtrl->tPwmCtrl.sPwmLowVal;´Óµ÷ÕûÕ¼¿Õ±È°Ù·Ö±ÈĞŞ¸ÄÎªÖ±½Óµ÷ÕûÂö³å¿í¶È */
                                          PwmCtrl->tPwmCtrl.sPwmWidthRange * PwmCtrl->tPwmCtrl.sPwmLowVal /  1000u;
         if (PwmCtrl->tPwmCtrl.sPwmWidthLow < PwmCtrl->tPwmCtrl.sPwmWidthDflt)
             PwmCtrl->tPwmCtrl.sPwmWidthLow = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
         PwmCtrl->tPwmCtrl.sPwmWidthSetting =  PwmCtrl->tPwmCtrl.sPwmWidthLow;
-    } else if (ucItem == 2) {                                                              /* è®¾å®šé«˜è½¬é€Ÿå¹³å° */
+    } else if (ucItem == 2) {                                                              /* Éè¶¨¸ß×ªËÙÆ½Ì¨ */
         PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmHighVal;
-        PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmWidthStart +              /* PwmCtrl->tPwmCtrl.sPwmHighVal;ä»è°ƒæ•´å ç©ºæ¯”ç™¾åˆ†æ¯”ä¿®æ”¹ä¸ºç›´æ¥è°ƒæ•´è„‰å†²å®½åº¦ */
+        PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmWidthStart +              /* PwmCtrl->tPwmCtrl.sPwmHighVal;´Óµ÷ÕûÕ¼¿Õ±È°Ù·Ö±ÈĞŞ¸ÄÎªÖ±½Óµ÷ÕûÂö³å¿í¶È */
                                          PwmCtrl->tPwmCtrl.sPwmWidthRange * PwmCtrl->tPwmCtrl.sPwmHighVal /  1000u; 
         if (PwmCtrl->tPwmCtrl.sPwmWidthHigh < PwmCtrl->tPwmCtrl.sPwmWidthDflt)
             PwmCtrl->tPwmCtrl.sPwmWidthHigh = PwmCtrl->tPwmCtrl.sPwmWidthDflt;
@@ -300,12 +300,12 @@ void PWM_KeyCallback(PWM_CTRL_UNION *PwmCtrl, uint8_t ucItem)
     }
 }
 /***********************************************************************************************************
-# å‡½æ•°åç§°: DramMenu()
-# è¾“å…¥å‚æ•°: cMenuItem èœå•æ¡ç›®æ–‡æœ¬çš„ç¼“å­˜  num ï¼šèœå•æ€»å…±çš„æ¡ç›®æ•°  tile: æ˜¯å¦æ˜¾ç¤ºæ ‡é¢˜  1 æ˜¾ç¤º  0 ä¸æ˜¾ç¤º 
-# è¾“å‡ºå‚æ•°: uint8
-# åŠŸ    èƒ½: ç»˜åˆ¶èœå•æ¡ç›®
-# å…¶    ä»–ï¼š
-# ä½œ    è€…: 2015/3/8, by yizhi
+# º¯ÊıÃû³Æ: DramMenu()
+# ÊäÈë²ÎÊı: cMenuItem ²Ëµ¥ÌõÄ¿ÎÄ±¾µÄ»º´æ  num £º²Ëµ¥×Ü¹²µÄÌõÄ¿Êı  tile: ÊÇ·ñÏÔÊ¾±êÌâ  1 ÏÔÊ¾  0 ²»ÏÔÊ¾ 
+# Êä³ö²ÎÊı: uint8
+# ¹¦    ÄÜ: »æÖÆ²Ëµ¥ÌõÄ¿
+# Æä    Ëû£º
+# ×÷    Õß: 2015/3/8, by yizhi
 ************************************************************************************************************/
 uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)  
 {
@@ -321,7 +321,7 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
   else 
   {        
     title2=1;
-    //OLED_CLS(); æ³¨é‡Šæ ‡è®° AAA
+    //OLED_CLS(); ×¢ÊÍ±ê¼Ç AAA
   }
   while(1)
   {
@@ -334,11 +334,11 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
         {
           if(NowItem!=ii)
           {
-            OLED_Print(0,(ii*2+title*2),MenuItem[FirstItem+ii], 1); // æ­£å¸¸æ˜¾ç¤º
+            OLED_Print(0,(ii*2+title*2),MenuItem[FirstItem+ii], 1); // Õı³£ÏÔÊ¾
           }
           else
           {
-            OLED_Print(0,(ii*2+title*2),MenuItem[FirstItem+ii], 0); // é«˜äº®æ˜¾ç¤º
+            OLED_Print(0,(ii*2+title*2),MenuItem[FirstItem+ii], 0); // ¸ßÁÁÏÔÊ¾
           }
         }
       }
@@ -348,20 +348,20 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
         {
           if(NowItem!=ii)
           {
-            OLED_Print(0,(ii*2+2),MenuItem[FirstItem+ii], 1);     // æ­£å¸¸æ˜¾ç¤º 
+            OLED_Print(0,(ii*2+2),MenuItem[FirstItem+ii], 1);     // Õı³£ÏÔÊ¾ 
           }
           else
           {
-            OLED_Print(0,(ii*2+2),MenuItem[FirstItem+ii], 0);      // é«˜äº®æ˜¾ç¤º 
+            OLED_Print(0,(ii*2+2),MenuItem[FirstItem+ii], 0);      // ¸ßÁÁÏÔÊ¾ 
           }
         }
         
       }
       while(ADKey_Scan() != KEY_NONE);
-    /*è¿™å¥è¯åŠ ä¸Šå¿…è¦æ€§æ˜¯ï¼Œ1ã€é¦–æ¬¡è¿›å…¥è¯¥å±‚èœå•ï¼Œä»ä»ä»»åŠ¡é€€å‡ºæˆ–è€…
-    //ä»æ­¤èœå•é€€å‡ºï¼Œç”±äºé€€å‡ºï¼ˆæˆ–è€…è¿”å›ï¼‰çš„è§¦å‘æŒ‰é”®éƒ½ä¸º KEY_CANCELï¼Œè¿™æ ·è¿™é‡Œä¸å¡ä¸€ä¸‹çš„è¯ï¼Œå°±ä¼šç›´æ¥
-    //ä»ä»»åŠ¡å‡½æ•°é€€åˆ°é¦–é¡µèœå•ã€‚2ï¼ŒåŠ ä¸Šè¿™å¥è¯ï¼Œåˆ™èœå•ç•Œé¢ä¸‹å°±ä¸èƒ½æœ‰æŒ‰ç€ä¸Šä¸‹é”®ä¸æ¾å¼€é«˜äº®æ¡è¿ç»­æ»‘åŠ¨çš„
-    //æ•ˆæœã€‚ å½“ç„¶è‹¥æ˜¯åªæœ‰ä¸€å±‚èœå•ã€‚å¯ä»¥æ³¨é‡Šæ‰ã€‚*/
+    /*Õâ¾ä»°¼ÓÉÏ±ØÒªĞÔÊÇ£¬1¡¢Ê×´Î½øÈë¸Ã²ã²Ëµ¥£¬´Ó´ÓÈÎÎñÍË³ö»òÕß
+    //´Ó´Ë²Ëµ¥ÍË³ö£¬ÓÉÓÚÍË³ö£¨»òÕß·µ»Ø£©µÄ´¥·¢°´¼ü¶¼Îª KEY_CANCEL£¬ÕâÑùÕâÀï²»¿¨Ò»ÏÂµÄ»°£¬¾Í»áÖ±½Ó
+    //´ÓÈÎÎñº¯ÊıÍËµ½Ê×Ò³²Ëµ¥¡£2£¬¼ÓÉÏÕâ¾ä»°£¬Ôò²Ëµ¥½çÃæÏÂ¾Í²»ÄÜÓĞ°´×ÅÉÏÏÂ¼ü²»ËÉ¿ª¸ßÁÁÌõÁ¬Ğø»¬¶¯µÄ
+    //Ğ§¹û¡£ µ±È»ÈôÊÇÖ»ÓĞÒ»²ã²Ëµ¥¡£¿ÉÒÔ×¢ÊÍµô¡£*/
     }
     key = ADKey_Check();
     if(EC11_CW == key)
@@ -372,15 +372,15 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
       //while(ADKey_Scan()==KEY_UP);
       if(num>2)
       {
-          if(NowItem > 0)         NowItem-=1; // å½“å‰å± çš„æ¡ç›®
-          else if(FirstItem >0)  FirstItem-=1; // å½“å‰å± çš„ç¬¬ä¸€ä¸ªæ¡ç›® 
-          else  // å·²åˆ°è¾¾æ‰€æœ‰èœå•çš„ç¬¬ä¸€ä¸ªæ¡ç›®
+          if(NowItem > 0)         NowItem-=1; // µ±Ç°ÆÁ µÄÌõÄ¿
+          else if(FirstItem >0)  FirstItem-=1; // µ±Ç°ÆÁ µÄµÚÒ»¸öÌõÄ¿ 
+          else  // ÒÑµ½´ïËùÓĞ²Ëµ¥µÄµÚÒ»¸öÌõÄ¿
           {
             NowItem=3-title;
             FirstItem=num-4+title;
           }
       }
-      else   // èœå•æ€»æ¡ç›®<=2
+      else   // ²Ëµ¥×ÜÌõÄ¿<=2
       {
         if(NowItem>0)   NowItem-=1;
 //        else            NowItem =0;
@@ -390,7 +390,7 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
     if(EC11_CCW == key)
     {
       GsEc11CntCCW = 0;
-      // msDelay(10);  // å»¶æ—¶æ¶ˆé™¤æŠ–åŠ¨
+      // msDelay(10);  // ÑÓÊ±Ïû³ı¶¶¶¯
       // if(ADKey_Scan(1)==KEY_UP) 
       //while(ADKey_Scan()==KEY_DOWN);  
       if(num>2)
@@ -404,7 +404,7 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
           NowItem   = 0;
         }
       }
-      else   // èœå•æ€»æ¡ç›®<=2
+      else   // ²Ëµ¥×ÜÌõÄ¿<=2
       {
         if(NowItem< (num - 1))   NowItem+=1;
 //        else            NowItem =0;
@@ -431,28 +431,28 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
         usDelay(10);
         return 0xff;
     }
-    msDelay(4); // éš¾é“è¿™ä¸ªå»¶æ—¶ä»¥å‰åšé£æ€å¡å°”çš„æ—¶å€™éƒ½æ²¡æœ‰åŠ å—ï¼Ÿ2016å¹´1æœˆ10æ—¥åŠ ä¸Šã€‚
+    msDelay(4); // ÄÑµÀÕâ¸öÑÓÊ±ÒÔÇ°×ö·ÉË¼¿¨¶ûµÄÊ±ºò¶¼Ã»ÓĞ¼ÓÂğ£¿2016Äê1ÔÂ10ÈÕ¼ÓÉÏ¡£
   }
 }
 
 /***********************************************************************************************************
-*****************************************æ¡ç›®å‡½æ•°***********************************************/
+*****************************************ÌõÄ¿º¯Êı***********************************************/
   /*******************************************************************************
-# å‡½æ•°åŸåï¼šIMUCalibrate
-# è¾“å…¥å‚æ•°: void
-# è¾“å‡ºå‚æ•°: void
-# åŠŸ    èƒ½: çŸ«æ­£é™€èºä»ªçš„é›¶ç‚¹ æ ‡å®šåŠ é€Ÿåº¦è®¡ 
-# å…¶    ä»–ï¼š
-# æ ¼    è¨€ï¼šI just struggle myself! 
-# ä½œ    è€…: 2015/5/5, by yizhi
+# º¯ÊıÔ­Ãû£ºIMUCalibrate
+# ÊäÈë²ÎÊı: void
+# Êä³ö²ÎÊı: void
+# ¹¦    ÄÜ: ½ÃÕıÍÓÂİÒÇµÄÁãµã ±ê¶¨¼ÓËÙ¶È¼Æ 
+# Æä    Ëû£º
+# ¸ñ    ÑÔ£ºI just struggle myself! 
+# ×÷    Õß: 2015/5/5, by yizhi
 ********************************************************************************/
 //void IMUCalibrate(void)
 //{
 //  uint8 i,key;
 //  uint16 cali_flag=0;
-//  int16 idata temp[50]; // ä¸€ä¸‹å­ç”¨æ‰100å­—èŠ‚çš„idataç©ºé—´ 
-//    // æ­¤å¤„é‡‡ç”¨æ—¶é—´æ¢å–ç©ºé—´çš„åšæ³•,æ¯æ¬¡åªæ ¡å‡†ä¸€ä¸ªè½´,åˆ†ä¸‰æ¬¡æ ¡å‡†.å¦‚æœå•ç‰‡æœº
-//    // å†…å­˜è¶³å¤Ÿå¤§ä¹Ÿå¯ä»¥ä¸€æ¬¡æ€§æ ¡å‡†ä¸‰ä¸ªè½´.
+//  int16 idata temp[50]; // Ò»ÏÂ×ÓÓÃµô100×Ö½ÚµÄidata¿Õ¼ä 
+//    // ´Ë´¦²ÉÓÃÊ±¼ä»»È¡¿Õ¼äµÄ×ö·¨,Ã¿´ÎÖ»Ğ£×¼Ò»¸öÖá,·ÖÈı´ÎĞ£×¼.Èç¹ûµ¥Æ¬»ú
+//    // ÄÚ´æ×ã¹»´óÒ²¿ÉÒÔÒ»´ÎĞÔĞ£×¼Èı¸öÖá.
 //  int16 temp_sum;
 //  //IMURaw_s temp;
 //  OLED_CLS();
@@ -471,76 +471,76 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
 //     {
 //             OLED_P8x16Str(0,6,"               ",1);
 //       OLED_P8x16Str(0,6,"Cali",1);
-//       msDelay(1000);  // 1såå¼€å§‹æ ¡å‡†    å¾…å™¨ä»¶å……åˆ†ç¨³å®š 
-//       OLED_P8x16Str(32,6,".",1);// ç¬¬ä¸€ä¸ªç‚¹
-//       for(i=0;i<50;i++) // è¯»å–æ•°æ®é˜¶æ®µå¿…é¡»ä¿æŒé™æ­¢ 
+//       msDelay(1000);  // 1sºó¿ªÊ¼Ğ£×¼    ´ıÆ÷¼ş³ä·ÖÎÈ¶¨ 
+//       OLED_P8x16Str(32,6,".",1);// µÚÒ»¸öµã
+//       for(i=0;i<50;i++) // ¶ÁÈ¡Êı¾İ½×¶Î±ØĞë±£³Ö¾²Ö¹ 
 //       {
 //          MPU6050_Read(); 
 //          temp[i]=GyroX;  
 //          msDelay(5);
 //       }
-//       SortNum(temp,50); // å¯¹è¸©åˆ°çš„50ä¸ªç‚¹è¿›è¡Œæ’åº  
+//       SortNum(temp,50); // ¶Ô²Èµ½µÄ50¸öµã½øĞĞÅÅĞò  
 //             temp_sum=0;
 //             for(i=10;i<40;i++)
 //       { 
 //         temp_sum+=temp[i];
 //       }
-//             GyroX_Bias+=Float2Int(temp_sum/30.0);// Xè½´é™€èºä»ªæ ¡å‡†å®Œæˆ 
-//             OLED_P8x16Str(40,6,".",1);//ç¬¬äºŒä¸ªç‚¹ 
-//           for(i=0;i<50;i++) // è¯»å–æ•°æ®é˜¶æ®µå¿…é¡»ä¿æŒé™æ­¢ 
+//             GyroX_Bias+=Float2Int(temp_sum/30.0);// XÖáÍÓÂİÒÇĞ£×¼Íê³É 
+//             OLED_P8x16Str(40,6,".",1);//µÚ¶ş¸öµã 
+//           for(i=0;i<50;i++) // ¶ÁÈ¡Êı¾İ½×¶Î±ØĞë±£³Ö¾²Ö¹ 
 //       {
 //          MPU6050_Read(); 
 //          temp[i]=GyroY;  
 //          msDelay(5);
 //       }
-//       SortNum(temp,50); // å¯¹è¸©åˆ°çš„50ä¸ªç‚¹è¿›è¡Œæ’åº  
+//       SortNum(temp,50); // ¶Ô²Èµ½µÄ50¸öµã½øĞĞÅÅĞò  
 //             temp_sum=0;
 //             for(i=10;i<40;i++)
 //       {
 //         temp_sum+=temp[i];
 //       }
-//             GyroY_Bias+=Float2Int(temp_sum/30.0);// Yè½´é™€èºä»ªæ ¡å‡†å®Œæˆ 
-//           OLED_P8x16Str(48,6,".",1);//ç¬¬ä¸‰ä¸ªç‚¹ 
-//           for(i=0;i<50;i++) // è¯»å–æ•°æ®é˜¶æ®µå¿…é¡»ä¿æŒé™æ­¢ 
+//             GyroY_Bias+=Float2Int(temp_sum/30.0);// YÖáÍÓÂİÒÇĞ£×¼Íê³É 
+//           OLED_P8x16Str(48,6,".",1);//µÚÈı¸öµã 
+//           for(i=0;i<50;i++) // ¶ÁÈ¡Êı¾İ½×¶Î±ØĞë±£³Ö¾²Ö¹ 
 //       {
 //          MPU6050_Read(); 
 //          temp[i]=GyroZ;  
 //          msDelay(5);
 //       }
-//       SortNum(temp,50); // å¯¹è¸©åˆ°çš„50ä¸ªç‚¹è¿›è¡Œæ’åº  
+//       SortNum(temp,50); // ¶Ô²Èµ½µÄ50¸öµã½øĞĞÅÅĞò  
 //             temp_sum=0;
 //             for(i=10;i<40;i++)
 //       {
 //         temp_sum+=temp[i];
 //       }
-//       GyroZ_Bias+=Float2Int(temp_sum/30.0);// Zè½´é™€èºä»ªæ ¡å‡†å®Œæˆ 
-//       OLED_P8x16Str(56,6,".",1);// ç¬¬å››ä¸ªç‚¹
+//       GyroZ_Bias+=Float2Int(temp_sum/30.0);// ZÖáÍÓÂİÒÇĞ£×¼Íê³É 
+//       OLED_P8x16Str(56,6,".",1);// µÚËÄ¸öµã
 //       OLED_P8x16Str(64,6,".",1);
-////       OLED_P8x16Str(72,4,".",1);msDelay(100);//å…­
-////       OLED_P8x16Str(80,4,".",1);msDelay(100);//ä¸ƒ
-////       OLED_P8x16Str(88,4,".",1);msDelay(100);//å…« 
+////       OLED_P8x16Str(72,4,".",1);msDelay(100);//Áù
+////       OLED_P8x16Str(80,4,".",1);msDelay(100);//Æß
+////       OLED_P8x16Str(88,4,".",1);msDelay(100);//°Ë 
 //       OLED_P8x16Str(72,6,"OK!",1); 
-//       cali_flag=0; // é™€èºä»ªå·²æ ¡å‡†
+//       cali_flag=0; // ÍÓÂİÒÇÒÑĞ£×¼
 //       //Update_ParamValue();
 //      }
 //            key=ADKey_Scan();    
 //            if(key==KEY_UP)
 //            {
-//              while(ADKey_Scan()==KEY_UP);// æ­¤å¤„åŠ å…¥æ¾æ‰‹ç›‘æµ‹çš„åŸå› æ˜¯,ä¸åŒäººæŒ‰ä¸‹æŒ‰é”®åæ¾å¼€çš„æ—¶é—´ä¸ä¸€æ ·
-//                // æ‰€ä»¥ä»¥æ¾å¼€æ‰‹çš„æ—¶åˆ»ä¸ºå‡†,ç›®çš„æ˜¯è®©æ¿å­é™€èºä»ªå……åˆ†ç¨³å®š.
+//              while(ADKey_Scan()==KEY_UP);// ´Ë´¦¼ÓÈëËÉÊÖ¼à²âµÄÔ­ÒòÊÇ,²»Í¬ÈË°´ÏÂ°´¼üºóËÉ¿ªµÄÊ±¼ä²»Ò»Ñù
+//                // ËùÒÔÒÔËÉ¿ªÊÖµÄÊ±¿ÌÎª×¼,Ä¿µÄÊÇÈÃ°å×ÓÍÓÂİÒÇ³ä·ÖÎÈ¶¨.
 //              cali_flag=1;
 //             //  redraw_flag=1;
 //            }    
 //            msDelay(50); 
 //    }
-//    while(ADKey_Scan()!=0);  // ä»æœ‰æŒ‰é”® æŒ‰ä¸‹ å°±å¡åœ¨è¿™é‡Œ 
+//    while(ADKey_Scan()!=0);  // ÈÔÓĞ°´¼ü °´ÏÂ ¾Í¿¨ÔÚÕâÀï 
 //  Delay_us(10);
 //}
 /********************The last study************************
 #function: ADKey_Cali()
 #input:  void
 #output: void 
-#others: ADæŒ‰é”® ADå€¼æ ¡å‡†ï¼Œå‡ºç°è¯¯åˆ¤ï¼Œéœ€æ ¡å‡†ADæŒ‰é”®
+#others: AD°´¼ü ADÖµĞ£×¼£¬³öÏÖÎóÅĞ£¬ĞèĞ£×¼AD°´¼ü
 #date:  2016-01-10
 #author:  yizhi 
 ***********************************************************/
@@ -569,15 +569,15 @@ void IR_Test(void)
 //     uchar quit_flag=0;
 //   OLED_CLS();
 //     EX1=1; // enable Int1         
-//     TMOD&=0xf0; // T0å®šæ—¶å™¨ç”¨äºçº¢å¤–è§£ç æµ‹é‡
-//     AUXR&=~0x80;// 1Tæ¨¡å¼ æ…¢
-//   ET0=0;//å…³é—­ä¸­æ–­
-//   TR0=0;//åœæ­¢å®šæ—¶å™¨
+//     TMOD&=0xf0; // T0¶¨Ê±Æ÷ÓÃÓÚºìÍâ½âÂë²âÁ¿
+//     AUXR&=~0x80;// 1TÄ£Ê½ Âı
+//   ET0=0;//¹Ø±ÕÖĞ¶Ï
+//   TR0=0;//Í£Ö¹¶¨Ê±Æ÷
 //     EA=1; 
 //     OLED_P8x16Str(0,0,"IR_Docode:",1);
 //     IR_OK_Flag=0;
 //     
-//     while(ADKey_Check()!=KEY_UP) // ä½¿ç”¨å‘ä¸Šé”®ä½œä¸ºé€€å‡ºé”®
+//     while(ADKey_Check()!=KEY_UP) // Ê¹ÓÃÏòÉÏ¼ü×÷ÎªÍË³ö¼ü
 //     {
 //         if(IR_OK_Flag)
 //         {
@@ -587,7 +587,7 @@ void IR_Test(void)
 //         }
 //         msDelay(5);
 //     }
-//     EX1=0;// å…³é—­å¤–éƒ¨ä¸­æ–­
+//     EX1=0;// ¹Ø±ÕÍâ²¿ÖĞ¶Ï
      
 }
 /*********prepare to lanqiao competition*************************
@@ -595,7 +595,7 @@ void IR_Test(void)
 #input: none
 #output: none
 #others: refer to IAP15F2K60S2 pdf
-#description: æ•°ç ç®¡ OLEDåŒæ­¥æ˜¾ç¤º 
+#description: ÊıÂë¹Ü OLEDÍ¬²½ÏÔÊ¾ 
 #author::  2016-03-16 by'  yizhi 
 ******************************************************************/
 void RTC_Timer()
@@ -614,18 +614,18 @@ void RTC_Timer()
      EA=1;
      DS1302_GetTime(&time);
      OLED_P8x16Str(0,0,"RTC_Timer:",1);
-     //time={0,0,0,0,0,0};  // ä¸èƒ½è¿™æ ·èµ‹å€¼ 
+     //time={0,0,0,0,0,0};  // ²»ÄÜÕâÑù¸³Öµ 
      while(ADKey_Scan()!=KEY_CANCEL)
      {
          //ad=Get_ADC10bitResult(0x03); 
        DS1302_GetTime(&time);
          GPSTime_Disply(0,2,&time);
-         UpdateTime(&time); // åˆ·æ•°ç ç®¡æ˜¾ç¤ºæ˜¾å­˜
+         UpdateTime(&time); // Ë¢ÊıÂë¹ÜÏÔÊ¾ÏÔ´æ
          msDelay(990);
      }
    TR0=0;
    ET0=0;
-     EA=0; // å…³é—­å®šæ—¶å™¨,é‡Šæ”¾èµ„æº
+     EA=0; // ¹Ø±Õ¶¨Ê±Æ÷,ÊÍ·Å×ÊÔ´
      //OLED_P8x16Num4(0,2,ad);   
     */
 }
@@ -646,13 +646,13 @@ void DS18B20(void)
 //        }
 //      Init_DS18B20();
 //      msDelay(10);
-//      OLED_Print(0,0,"æ¸©åº¦Value:");
+//      OLED_Print(0,0,"ÎÂ¶ÈValue:");
 //      
 //      while(ADKey_Scan()!=KEY_CANCEL)
 //        {
 //            temp=ReadTemperature();
 //            OLED_P16x32Num(1,temp,1); 
-//            msDelay(50); // è¿™é‡ŒåŠ ä¸ªå»¶æ—¶æ¯”è¾ƒå¥½   @2016-04-24 åŠ ä¸Š
+//            msDelay(50); // ÕâÀï¼Ó¸öÑÓÊ±±È½ÏºÃ   @2016-04-24 ¼ÓÉÏ
 //            LED0_Turn();
 //        }
 
@@ -745,13 +745,13 @@ void BlowerBiLTest(uint8_t ucX)
     #if 1
         switch(GbUartRxDone)
         {
-            case 1:             /* å¤§æ— åˆ›åè®® */
+            case 1:             /* ´óÎŞ´´Ğ­Òé */
             {
-                nProSelCnt = 0;                         /* åè®®é€‰æ‹©æ­£ç¡®ï¼Œæ¸…é™¤é‡å‘è®¡æ•°å€¼ */
-                GucLingORptEn = 0;                                                    /* ç¦èƒ½LingOå‘é€ */
+                nProSelCnt = 0;                         /* Ğ­ÒéÑ¡ÔñÕıÈ·£¬Çå³ıÖØ·¢¼ÆÊıÖµ */
+                GucLingORptEn = 0;                                                    /* ½ûÄÜLingO·¢ËÍ */
                 uleRpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[6];
                 uleErrorCode  = USART_RX_BUF[4] << 8 | USART_RX_BUF[5];
-                GbUartRxDone =  0;                                   /* æ¶ˆè´¹å®Œæˆ */               
+                GbUartRxDone =  0;                                   /* Ïû·ÑÍê³É */               
                 OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpm,     5,          6, 1);
                 if (uleErrorCode)
                 {
@@ -765,14 +765,14 @@ void BlowerBiLTest(uint8_t ucX)
                 }
             }break;
             
-            case 2:             /* æ–°åè®®ï¼ˆæ•…éšœæŠ¥é”™ä¸ä¸‰ä»£æœºå…±ç”¨ï¼‰ */
+            case 2:             /* ĞÂĞ­Òé£¨¹ÊÕÏ±¨´íÓëÈı´ú»ú¹²ÓÃ£© */
             {
-                nProSelCnt = 0;                         /* åè®®é€‰æ‹©æ­£ç¡®ï¼Œæ¸…é™¤é‡å‘è®¡æ•°å€¼ */
+                nProSelCnt = 0;                         /* Ğ­ÒéÑ¡ÔñÕıÈ·£¬Çå³ıÖØ·¢¼ÆÊıÖµ */
                 if (GucUartRxIndex == 10)
                 {
                     uleErrorCode = 0;
                     uleRpm        = USART_RX_BUF[6] << 8 | USART_RX_BUF[5];
-                    GbUartRxDone =  0;                                     /* æ¶ˆè´¹å®Œæˆ */ 
+                    GbUartRxDone =  0;                                     /* Ïû·ÑÍê³É */ 
                     uleRpmFilterSum += uleRpm;
                     ucArrayIndex++;
                     if (ucArrayIndex == 10) 
@@ -791,12 +791,12 @@ void BlowerBiLTest(uint8_t ucX)
                 }
             }break;
             
-            case 3:             /* LingOåè®® */
+            case 3:             /* LingOĞ­Òé */
             {
-                nProSelCnt = 0;                         /* åè®®é€‰æ‹©æ­£ç¡®ï¼Œæ¸…é™¤é‡å‘è®¡æ•°å€¼ */
+                nProSelCnt = 0;                         /* Ğ­ÒéÑ¡ÔñÕıÈ·£¬Çå³ıÖØ·¢¼ÆÊıÖµ */
                 uleErrorCode = 0;
                 uleRpm        = USART_RX_BUF[3] << 8 | USART_RX_BUF[4];
-                GbUartRxDone =  0;                                     /* æ¶ˆè´¹å®Œæˆ */ 
+                GbUartRxDone =  0;                                     /* Ïû·ÑÍê³É */ 
                 uleRpmFilterSum += uleRpm;
                 ucArrayIndex++;
                 if (ucArrayIndex == 10) 
@@ -808,14 +808,14 @@ void BlowerBiLTest(uint8_t ucX)
                 }
             }break;
             
-            case 4:             /* æ–¹æ³¢ç”µè°ƒåè®® */
+            case 4:             /* ·½²¨µçµ÷Ğ­Òé */
             {
-                nProSelCnt = 0;                         /* åè®®é€‰æ‹©æ­£ç¡®ï¼Œæ¸…é™¤é‡å‘è®¡æ•°å€¼ */
+                nProSelCnt = 0;                         /* Ğ­ÒéÑ¡ÔñÕıÈ·£¬Çå³ıÖØ·¢¼ÆÊıÖµ */
                 GucLingORptEn = 0;
                 ucTemperature = USART_RX_BUF[0];
                 ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];
                 uleRpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[8];
-                GbUartRxDone =  0;                                     /* æ¶ˆè´¹å®Œæˆ */ 
+                GbUartRxDone =  0;                                     /* Ïû·ÑÍê³É */ 
                 uleRpmFilterSum += uleRpm;
                 ucArrayIndex++;
                 if (ucArrayIndex == 10) 
@@ -829,17 +829,17 @@ void BlowerBiLTest(uint8_t ucX)
             
             default:
                 uleRpm = 0;
-                GbUartRxDone = 0;                                     /* ç›´æ¥æ¶ˆè´¹å®Œæˆ */
+                GbUartRxDone = 0;                                     /* Ö±½ÓÏû·ÑÍê³É */
                 break;
         }
         #else
        if (GbUartRxDone) {
-          if (USART_RX_BUF[0] == 0x2B) {              /* ä¸‰ä»£æœºLingOç”µè°ƒåè®® */
+          if (USART_RX_BUF[0] == 0x2B) {              /* Èı´ú»úLingOµçµ÷Ğ­Òé */
               if (GucUartRxIndex == 10 && USART_RX_BUF[0] == 0x2B)
               {
                   uleErrorCode = 0;
                   uleRpm        = USART_RX_BUF[6] << 8 | USART_RX_BUF[5];
-                  GbUartRxDone =  0;                                     /* æ¶ˆè´¹å®Œæˆ */ 
+                  GbUartRxDone =  0;                                     /* Ïû·ÑÍê³É */ 
                   uleRpmFilterSum += uleRpm;
                   ucArrayIndex++;
     //              OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpm,     5,          6, 1);
@@ -848,7 +848,7 @@ void BlowerBiLTest(uint8_t ucX)
                       uleRpmFilter = uleRpmFilterSum / 10;
                       uleRpmFilterSum = 0;                      
                      /* OLED_PutNumber(0 , OLED_LINE1, ulVoltage10Mv / 100.0f, 2, 1, "V",  8, 1);
-                        OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "â„ƒ", 8, 1); */
+                        OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "¡æ", 8, 1); */
     //                  OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpmFilter * 100,     5,          6, 1);
                       OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpmFilter,     5,          6, 1);
                   }
@@ -867,12 +867,12 @@ void BlowerBiLTest(uint8_t ucX)
                       }
                   }
               }
-          } else if (GucUartRxIndex == 10 && USART_RX_BUF[0] != 0x2B) {              /* æ–¹æ³¢ç”µè°ƒåè®® */
+          } else if (GucUartRxIndex == 10 && USART_RX_BUF[0] != 0x2B) {              /* ·½²¨µçµ÷Ğ­Òé */
               GucLingORptEn = 0;
               ucTemperature = USART_RX_BUF[0];
               ulVoltage10Mv = USART_RX_BUF[1] << 8 | USART_RX_BUF[2];
               uleRpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[8];
-              GbUartRxDone =  0;                                     /* æ¶ˆè´¹å®Œæˆ */ 
+              GbUartRxDone =  0;                                     /* Ïû·ÑÍê³É */ 
               uleRpmFilterSum += uleRpm;
               ucArrayIndex++;
 //              OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpm*100,     5,          6, 1);
@@ -881,15 +881,15 @@ void BlowerBiLTest(uint8_t ucX)
                   uleRpmFilter = uleRpmFilterSum / 10;
                   uleRpmFilterSum = 0;                      
                  /* OLED_PutNumber(0 , OLED_LINE1, ulVoltage10Mv / 100.0f, 2, 1, "V",  8, 1);
-                    OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "â„ƒ", 8, 1); */
+                    OLED_PutNumber(48, OLED_LINE1, ucTemperature,          2, 0, "¡æ", 8, 1); */
                   OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpmFilter * 100 / GucPolePair,     5,          6, 1);
 //                  OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpm,     5,          6, 1);
               }
-          } else if (GucUartRxIndex == 10 && USART_RX_BUF[0] == 0x5A) {             /* å¤§æ— åˆ›åè®® */
-              GucLingORptEn = 0;                                                    /* ç¦èƒ½LingOå‘é€ */
+          } else if (GucUartRxIndex == 10 && USART_RX_BUF[0] == 0x5A) {             /* ´óÎŞ´´Ğ­Òé */
+              GucLingORptEn = 0;                                                    /* ½ûÄÜLingO·¢ËÍ */
               uleRpm        = USART_RX_BUF[7] << 8 | USART_RX_BUF[6];
               uleErrorCode  = USART_RX_BUF[4] << 8 | USART_RX_BUF[5];
-              GbUartRxDone =  0;                                   /* æ¶ˆè´¹å®Œæˆ */               
+              GbUartRxDone =  0;                                   /* Ïû·ÑÍê³É */               
               OLED_PutNum(64,  OLED_LINE3 + (LINE_HEIGHT >> 1),  uleRpm,     5,          6, 1);
               if (uleErrorCode)
               {
@@ -903,18 +903,18 @@ void BlowerBiLTest(uint8_t ucX)
               }
           }else {
               uleRpm = 0;
-              GbUartRxDone = 0;                                     /* ç›´æ¥æ¶ˆè´¹å®Œæˆ */
+              GbUartRxDone = 0;                                     /* Ö±½ÓÏû·ÑÍê³É */
           }
           #endif
 //          memset(USART_RX_BUF, 0, sizeof(USART_RX_BUF));
 
         if (GulPrintTimeCnt > 10) { 
             GulPrintTimeCnt = 0;
-            switch (GnProtocalSelect)                   /* é€šè¿‡çŠ¶æ€å€¼è½®è®­æ¥é€‰æ‹©åè®® */
+            switch (GnProtocalSelect)                   /* Í¨¹ı×´Ì¬ÖµÂÖÑµÀ´Ñ¡ÔñĞ­Òé */
             {
                 case 0:
                     uartDrvPutBuf(USART2, UartCMDSpeedTxBuf, 3);    /* ask for speed frame */ 
-                if (nProSelCnt++ > 3)               /* è¿ç»­å‘é€5æ¬¡å‡æœªæ”¶åˆ°å›å¤åˆ™åˆ‡æ¢åè®® */
+                if (nProSelCnt++ > 3)               /* Á¬Ğø·¢ËÍ5´Î¾ùÎ´ÊÕµ½»Ø¸´ÔòÇĞ»»Ğ­Òé */
                     {
                         nProSelCnt = 0;
                         GnProtocalSelect++;
@@ -984,17 +984,17 @@ void BlowerBiLTest(uint8_t ucX)
                 {
                     if((ucNowItem != ii) || bPwmRunning == 1)
                     {   
-                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 1); // æ­£å¸¸æ˜¾ç¤º
+                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 1); // Õı³£ÏÔÊ¾
                     }
                     else
                     {
-                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 0); // åé»‘æ˜¾ç¤º
+                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 0); // ·´ºÚÏÔÊ¾
                     }
                 }
 
                 for(ii=0; ii < ucEntrysEveryScreen; ii++)                                          
                 {
-                      HMI_DrawNumber(ii, 16, PwmCtrl1.sPwmCtrl[ii], &PwmCtrl1, 1); // æ­£å¸¸æ˜¾ç¤ºæ¯ä¸€ä¸ªNameä¸‹çš„Number
+                      HMI_DrawNumber(ii, 16, PwmCtrl1.sPwmCtrl[ii], &PwmCtrl1, 1); // Õı³£ÏÔÊ¾Ã¿Ò»¸öNameÏÂµÄNumber
                 }
             }
             
@@ -1006,7 +1006,7 @@ void BlowerBiLTest(uint8_t ucX)
 //                sprintf((char*)MenuValue[2] ,"%4.1f%%", PwmCtrl1.tPwmCtrl.sPwmHighVal / 10.0f);
 //                sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl1.tPwmCtrl.sPwmHighDur*10);
 //                sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl1.tPwmCtrl.ePwmProtocol);
-                HMI_DrawNumber(ucNowItem, 16, PwmCtrl1.sPwmCtrl[ucFirstItem+ucNowItem], &PwmCtrl1, 0);                 /* å½“å‰é€‰ä¸­æ¡ç›®åé»‘æ˜¾ç¤º  */
+                HMI_DrawNumber(ucNowItem, 16, PwmCtrl1.sPwmCtrl[ucFirstItem+ucNowItem], &PwmCtrl1, 0);                 /* µ±Ç°Ñ¡ÖĞÌõÄ¿·´ºÚÏÔÊ¾  */
 
             }
             eKeyPress = ADKey_Check();
@@ -1016,9 +1016,9 @@ void BlowerBiLTest(uint8_t ucX)
 
                 if (!bEdit_flag) {
                     GsEc11CntCW                  = 0;
-                    if(ucNowItem > 0)         ucNowItem   -= 1;               // å½“å‰å± çš„æ¡ç›®
-                    else if(ucFirstItem > 0)  ucFirstItem -= 1;               // å½“å‰å± çš„ç¬¬ä¸€ä¸ªæ¡ç›® 
-                    else                                                      // å·²åˆ°è¾¾æ‰€æœ‰èœå•çš„ç¬¬ä¸€ä¸ªæ¡ç›®
+                    if(ucNowItem > 0)         ucNowItem   -= 1;               // µ±Ç°ÆÁ µÄÌõÄ¿
+                    else if(ucFirstItem > 0)  ucFirstItem -= 1;               // µ±Ç°ÆÁ µÄµÚÒ»¸öÌõÄ¿ 
+                    else                                                      // ÒÑµ½´ïËùÓĞ²Ëµ¥µÄµÚÒ»¸öÌõÄ¿
                     {
                         ucNowItem   =  ucEntrysEveryScreen - 1;
                         ucFirstItem =  ucEntrysTotal - ucEntrysEveryScreen;                                
@@ -1026,7 +1026,7 @@ void BlowerBiLTest(uint8_t ucX)
                     bScreenIDFlg = 1;
                     bPwmRunning  = 0;                                   /* once rotate stop pwm run */ 
                 } else {
-                    PwmCtrl1.sPwmCtrl[ucNowItem] -= (GsEc11CntCW + 1);          /* å¯¹é€‰ä¸­çš„å€¼è¿›è¡Œå‡å°‘ */
+                    PwmCtrl1.sPwmCtrl[ucNowItem] -= (GsEc11CntCW + 1);          /* ¶ÔÑ¡ÖĞµÄÖµ½øĞĞ¼õÉÙ */
                     GsEc11CntCW                  = 0;
                    if (PwmCtrl1.sPwmCtrl[ucNowItem] < 0) PwmCtrl1.sPwmCtrl[ucNowItem] = 0;
                     bScreenValFlg = 1;
@@ -1055,7 +1055,7 @@ void BlowerBiLTest(uint8_t ucX)
                     bScreenIDFlg = 1;
                     bPwmRunning  = 0;                                   /* once rotate stop pwm run */ 
                 } else {
-                    PwmCtrl1.sPwmCtrl[ucNowItem] += (GsEc11CntCCW + 1);       /* å¯¹é€‰ä¸­çš„å€¼è¿›è¡Œå¢åŠ  */
+                    PwmCtrl1.sPwmCtrl[ucNowItem] += (GsEc11CntCCW + 1);       /* ¶ÔÑ¡ÖĞµÄÖµ½øĞĞÔö¼Ó */
                     GsEc11CntCCW                 = 0;
                     if (PwmCtrl1.sPwmCtrl[ucNowItem] > 999) PwmCtrl1.sPwmCtrl[ucNowItem] = 999;
                     bScreenValFlg = 1;
@@ -1153,7 +1153,7 @@ void BlowerC60Test(uint8_t ucX)
     BraoCalibrate();
     
     OLED_Fill(0x00);
-    OLED_Print(22,  OLED_LINE0, (uint8_t *)"C61æµ‹è¯•", 1);
+    OLED_Print(22,  OLED_LINE0, (uint8_t *)"C61²âÊÔ", 1);
     OLED_PutStr(104, OLED_LINE3, (uint8_t *)"RPM", 8, 1);
     FLASH_Read(PWMCTRL2_ADDR, (uint16_t*)PwmCtrl2.sPwmCtrl, 6);
     if ((uint8_t)PwmCtrl2.sPwmCtrl[0] == 0xFF && (uint8_t)(PwmCtrl2.sPwmCtrl[0]>>8) == 0xFF)
@@ -1206,17 +1206,17 @@ void BlowerC60Test(uint8_t ucX)
                 {
                     if((ucNowItem != ii) || bPwmRunning == 1)
                     {   
-                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 1); // æ­£å¸¸æ˜¾ç¤º
+                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 1); // Õı³£ÏÔÊ¾
                     }
                     else
                     {
-                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 0); // åé»‘æ˜¾ç¤º
+                        HMI_DrawName(ii, 0, MenuItem[ucFirstItem+ii], 0); // ·´ºÚÏÔÊ¾
                     }
                 }
 
                 for(ii=0; ii < ucEntrysEveryScreen; ii++)                                          
                 {
-                      HMI_DrawNumber(ii, 16, PwmCtrl2.sPwmCtrl[ucFirstItem+ii], &PwmCtrl2, 1); // æ­£å¸¸æ˜¾ç¤º
+                      HMI_DrawNumber(ii, 16, PwmCtrl2.sPwmCtrl[ucFirstItem+ii], &PwmCtrl2, 1); // Õı³£ÏÔÊ¾
                 }
             }
             
@@ -1228,7 +1228,7 @@ void BlowerC60Test(uint8_t ucX)
                 sprintf((char*)MenuValue[2] ,"%04dus", PwmCtrl2.tPwmCtrl.sPwmWidthHigh);
                 sprintf((char*)MenuValue[3] ,"%04dms", PwmCtrl2.tPwmCtrl.sPwmHighDur * 10);
                 sprintf((char*)MenuValue[4] ,"%02d", PwmCtrl2.tPwmCtrl.ePwmProtocol);
-                HMI_DrawNumber(ucNowItem, 16,  PwmCtrl2.sPwmCtrl[ucFirstItem+ucNowItem],&PwmCtrl2, 0); // åé»‘æ˜¾ç¤º
+                HMI_DrawNumber(ucNowItem, 16,  PwmCtrl2.sPwmCtrl[ucFirstItem+ucNowItem],&PwmCtrl2, 0); // ·´ºÚÏÔÊ¾
 
             }
             eKeyPress = ADKey_Check();
@@ -1238,9 +1238,9 @@ void BlowerC60Test(uint8_t ucX)
 
                 if (!bEdit_flag) {
                     GsEc11CntCW                  = 0;
-                    if(ucNowItem > 0)         ucNowItem   -= 1;               // å½“å‰å± çš„æ¡ç›®
-                    else if(ucFirstItem > 0)  ucFirstItem -= 1;               // å½“å‰å± çš„ç¬¬ä¸€ä¸ªæ¡ç›® 
-                    else                                                      // å·²åˆ°è¾¾æ‰€æœ‰èœå•çš„ç¬¬ä¸€ä¸ªæ¡ç›®
+                    if(ucNowItem > 0)         ucNowItem   -= 1;               // µ±Ç°ÆÁ µÄÌõÄ¿
+                    else if(ucFirstItem > 0)  ucFirstItem -= 1;               // µ±Ç°ÆÁ µÄµÚÒ»¸öÌõÄ¿ 
+                    else                                                      // ÒÑµ½´ïËùÓĞ²Ëµ¥µÄµÚÒ»¸öÌõÄ¿
                     {
                         ucNowItem   =  ucEntrysEveryScreen - 1;
                         ucFirstItem =  ucEntrysTotal - ucEntrysEveryScreen;                                
@@ -1353,11 +1353,11 @@ void Menu_Display(void)
     NowItem   = 0;
 //    TopDisp  =1;
 
-    while(1)  // æ ¹èœå•
+    while(1)  // ¸ù²Ëµ¥
     { 
         PWM_DUTY_SETA(0);
         strcpy((char*)MenuItem[0] ,"1:BlowerBiLTest ");     //BlowerBiLTest 
-        strcpy((char*)MenuItem[1] ,"2:Blower-NONAME ");    //BlowerC60Test
+        strcpy((char*)MenuItem[1] ,"2:Blower-±´·á ");    //BlowerC60Test
         strcpy((char*)MenuItem[2] ,"3:INA226Test    ");
         strcpy((char*)MenuItem[3] ,"4:SDP800Test    ");
         strcpy((char*)MenuItem[4] ,"5:BraoCalibrate ");
@@ -1367,7 +1367,7 @@ void Menu_Display(void)
         strcpy((char*)MenuItem[8] ,"9:Todolist_Test ");
         
         OLED_Fill(0x00);
-//        OLED_Print(8, OLED_LINE0, "è¯·é€‰æ‹©é£æœºå‹å·ï¼Ÿ", 1);
+//        OLED_Print(8, OLED_LINE0, "ÇëÑ¡Ôñ·ç»úĞÍºÅ£¿", 1);
         
         sel=DrawMenu(MenuItem,8,0); 
         msDelay(5);
@@ -1414,14 +1414,14 @@ void Menu_Display(void)
         }
     }
 }
-/*********************2016å¹´1æœˆå†æ¬¡è°ƒè¯•èœå•å‡½æ•°æ€»ç»“*******************************/ 
+/*********************2016Äê1ÔÂÔÙ´Îµ÷ÊÔ²Ëµ¥º¯Êı×Ü½á*******************************/ 
 /*
-1ã€ä¸€æ¬¡å‘ç°æˆ‘åœ¨NRF_testèœå•é‡Œé¢ç‚¹å‡»NONameçš„æ¡ç›®ï¼ˆä¸ºç¼–å†™å¯¹åº”æ¡ç›®ä»»åŠ¡å‡½æ•°ï¼‰ä¸ä¼šæ„Ÿè§‰åˆ°å±å¹•
-é—ªçƒä¸€ä¸‹ï¼Œè€Œåœ¨ä¸»èœå•ä¸­ï¼Œæˆ‘ç‚¹å‡»æœªå‘½åçš„æ¡ç›®ï¼Œèœå•ä¼šé—ªçƒä¸€ä¸‹ï¼Œçº ç»“äº†åŠä¸ªå°æ—¶ï¼Œæœ€ç»ˆæ‰¾å‡ºæ˜¯å› ä¸º
-çš„NRF-testäºŒçº§èœå•ç•™å‡ºçš„æ ‡é¢˜ä½ç½®ï¼Œè€Œé¦–é¡µèœå•ï¼ˆä¸»èœå•ï¼‰æœªç•™å‡ºæ ‡é¢˜çš„ä½ç½®ï¼Œåœ¨ç¨‹åºä¸­æˆ‘å‘ç°æ‰§è¡Œäº†
-OLED_CLS() [æœç´¢AAAæ³¨é‡Šæ ‡è¯†]ã€‚å¯ä»¥æ³¨é‡Šæ‰ï¼Œæ³¨é‡Šåã€‚é—®é¢˜å¾—åˆ°è§£å†³ã€‚ä»¥åå†é‡åˆ°é—ªå±ç°è±¡ï¼Œå¯èƒ½å°±æ˜¯
-å‡½æ•°å“ªé‡Œæ‰§è¡Œäº†OLED_CLS(),æ¸…å±å‡½æ•°æ‰§è¡Œæ—¶é—´è¾ƒé•¿ï¼Œå¯¼è‡´é—ªå±ã€‚
-2ã€æœ¬HMIæ–‡ä»¶å…±è®¾ç½®ä¸€ä¸ªäºŒçº§èœå•ï¼ˆNRF_Testï¼‰å’Œä¸€ä¸ªåœ¨é¦–é¡µèœå•ä¸‹çš„ä»»åŠ¡å‡½æ•°ï¼ˆADCalibraï¼‰å…¶ä¸­äºŒçº§èœå•
-ä¸»å¾ªç¯æ¡ä»¶é‡‡ç”¨while(!quit_flag)æ–¹å¼  è€ŒäºŒçº§èœå•ä¸‹çš„ä»»åŠ¡å‡½æ•°å’Œé¦–é¡µèœå•ä¸‹çš„ä»»åŠ¡å‡½æ•°çš„ä¸»å¾ªç¯æ¡ä»¶ä¸º
+1¡¢Ò»´Î·¢ÏÖÎÒÔÚNRF_test²Ëµ¥ÀïÃæµã»÷NONameµÄÌõÄ¿£¨Îª±àĞ´¶ÔÓ¦ÌõÄ¿ÈÎÎñº¯Êı£©²»»á¸Ğ¾õµ½ÆÁÄ»
+ÉÁË¸Ò»ÏÂ£¬¶øÔÚÖ÷²Ëµ¥ÖĞ£¬ÎÒµã»÷Î´ÃüÃûµÄÌõÄ¿£¬²Ëµ¥»áÉÁË¸Ò»ÏÂ£¬¾À½áÁË°ë¸öĞ¡Ê±£¬×îÖÕÕÒ³öÊÇÒòÎª
+µÄNRF-test¶ş¼¶²Ëµ¥Áô³öµÄ±êÌâÎ»ÖÃ£¬¶øÊ×Ò³²Ëµ¥£¨Ö÷²Ëµ¥£©Î´Áô³ö±êÌâµÄÎ»ÖÃ£¬ÔÚ³ÌĞòÖĞÎÒ·¢ÏÖÖ´ĞĞÁË
+OLED_CLS() [ËÑË÷AAA×¢ÊÍ±êÊ¶]¡£¿ÉÒÔ×¢ÊÍµô£¬×¢ÊÍºó¡£ÎÊÌâµÃµ½½â¾ö¡£ÒÔºóÔÙÓöµ½ÉÁÆÁÏÖÏó£¬¿ÉÄÜ¾ÍÊÇ
+º¯ÊıÄÄÀïÖ´ĞĞÁËOLED_CLS(),ÇåÆÁº¯ÊıÖ´ĞĞÊ±¼ä½Ï³¤£¬µ¼ÖÂÉÁÆÁ¡£
+2¡¢±¾HMIÎÄ¼ş¹²ÉèÖÃÒ»¸ö¶ş¼¶²Ëµ¥£¨NRF_Test£©ºÍÒ»¸öÔÚÊ×Ò³²Ëµ¥ÏÂµÄÈÎÎñº¯Êı£¨ADCalibra£©ÆäÖĞ¶ş¼¶²Ëµ¥
+Ö÷Ñ­»·Ìõ¼ş²ÉÓÃwhile(!quit_flag)·½Ê½  ¶ø¶ş¼¶²Ëµ¥ÏÂµÄÈÎÎñº¯ÊıºÍÊ×Ò³²Ëµ¥ÏÂµÄÈÎÎñº¯ÊıµÄÖ÷Ñ­»·Ìõ¼şÎª
 while(ADKey_Scan()!=KEY_CANCEL) */
 

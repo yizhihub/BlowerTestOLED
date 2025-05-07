@@ -48,7 +48,7 @@ const char GscBuildTIme[]   __attribute__((section(".ARM.__at_0x8000210"))) = __
 //          }
 //        static float t = 3.14f;
 //        OLED_ShowChar(36,52,t,12,1);//显示ASCII字符    
-//        OLED_ShowNum(94,52,t,3,12);    //显示ASCII字符的码值    
+//        OLED_ShowNum(94,52,t,3,12);    //显示ASCII字符的码倄1�7    
 //        OLED_Refresh_Gram();//更新显示到OLED
 //        t++;
 //        if(t>'~')t=' ';

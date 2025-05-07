@@ -162,6 +162,8 @@ void BraoAdcGet(int16_t *psResult)
     *psResult  = (INT16S)fUbusTemp;                                                                    
 }
 
+#pragma diag_suppress 177
+
 /**
 *********************************************************************************************************
 ** @nameis LinerInterpolationCalc

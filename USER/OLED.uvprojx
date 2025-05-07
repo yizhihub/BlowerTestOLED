@@ -338,7 +338,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,ARM_PLATEFORM,STM32F10X_HD,CHIP_SSD1309,OLED_SPI,GD32F30X_HD,GD32F303RE,</Define>
+              <Define>USE_STDPERIPH_DRIVER,ARM_PLATEFORM,STM32F10X_HD,CHIP_SSD1309,OLED_SPI,GD32F30X_TEST_PLATFORM,GD32F30X_HD,GD32F303RE</Define>
               <Undefine></Undefine>
               <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\USER;..\HARDWARE\OLED;..\SYSTEM\usart;..\SYSTEM\STM32F10x_FWLib\inc;..\SYSTEM\CORE;..\HARDWARE\Pressurer;..\HARDWARE\INA226;..\Source</IncludePath>
             </VariousControls>

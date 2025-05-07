@@ -1,6 +1,45 @@
+/*********************************************************************************************************
+*                          Copyright (c), 2002-2024, yuwell Co. , Ltd
+*    ___                             _   _               ____               ___           _
+*   |_ _|_ __  _ __   _____   ____ _| |_(_) ___  _ __   |  _ \ ___  ___    |_ _|_ __  ___| |_
+*    | || '_ \| '_ \ / _ \ \ / / _` | __| |/ _ \| '_ \  | |_) / _ \/ __|    | || '_ \/ __| __|
+*    | || | | | | | | (_) \ V / (_| | |_| | (_) | | | | |  _ <  __/\__ \_   | || | | \__ \ |_ _
+*   |___|_| |_|_| |_|\___/ \_/ \__,_|\__|_|\___/|_| |_| |_| \_\___||___(_) |___|_| |_|___/\__(_)
+*
+*-------------------------------------------Description---------------------------------------------------
+* @file    Application.h
+* @author  yizhi
+* @date    2025-05-07
+* @version v1.0
+* @brief   OLED字库头文件 取模采用列行式，阴码，逆向。
+*-------------------------------------------Histroy-------------------------------------------------------
+* @history
+* <author>           <time>                 <desc>
+* liguangdao       2025-05-07                v1.0   初始版本
+*
+*---------------------------------------------------------------------------------------------------------
+ @verbatim
+ ##variables type perfix
+   pfn(pointer of function), v(void), b(bool), c(char), n(unsigned char),s(short),w(unsigned short),i(int)
+   l(long), y(unsigned long), f(float), d(double), e(enum), t(struct), u(union), q(Q quality), r(string),
+   ll(long long)
+ ##variables typedef
+   char, S8(signed char), U8(unsigned char), S16(short), U16(unsigned short), S32(int), U32(unsigned int)
+   F32(float), F64(double)
+
+ @endverbatim
+*********************************************************************************************************/
 #ifndef _bOLED_H
 #define _bOLED_H
 
+/* Includes --------------------------------------------------------------------------------------------*/
+#include "boled.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Macro -----------------------------------------------------------------------------------------------*/
 /*
  * slection between arm or 51 for const data 
  */
@@ -43,12 +82,37 @@
 #define OLED_COLOR
 #endif
 
+#define WHITE              0xFFFF
+#define BLACK              0x0000      
+#define BLUE               0x001F  
+#define BRED               0XF81F
+#define GRED               0XFFE0
+#define GBLUE              0X07FF
+#define RED                0xF800
+#define MAGENTA            0xF81F
+#define GREEN              0x07E0
+#define CYAN               0x7FFF
+#define YELLOW             0xFFE0
+#define BROWN              0XBC40 //棕色
+#define BRRED              0XFC07 //棕红色
+#define GRAY               0X8430 //灰色
+#define DARKBLUE           0X01CF //深蓝色
+#define LIGHTBLUE          0X7D7C //浅蓝色  
+#define GRAYBLUE           0X5458 //灰蓝色
+//以上三色为PANEL的颜色 
+ 
+#define LIGHTGREEN         0X841F //浅绿色
+#define LGRAY              0XC618 //浅灰色(PANNEL),窗体背景色
+#define LGRAYBLUE          0XA651 //浅灰蓝色(中间层颜色)
+#define LBBLUE             0X2B12 //浅棕蓝色(选择条目的反色)
+
+
 #define XLevelL        0x00
 #define XLevelH        0x10
 #define XLevel        ((XLevelH&0x0F)*16+XLevelL)
 #define Max_Column    128
 #define Max_Row        64
-#define    Brightness    0x7F 
+#define Brightness    0x7F 
 #define OLED_WIDTH 128
 #define OLED_HIGH  64
 #define LINE_HEIGHT 2
@@ -123,17 +187,6 @@
 #define FEATURE_HANZI
 //#define FEATURE_BMP
 
-typedef struct yizhi_RTC_Time_s
-{
-    unsigned char second;
-    unsigned char minute;
-    unsigned char hour;
-    unsigned char week;
-    unsigned char date;
-    unsigned char month;
-    unsigned char year;                                                 /*  ture year=2000+year;        */  
-}RTC_Time_s;
-
 #ifdef C51_PLATEFORM
 
     #if defined(IAP15W413ASDIP16)
@@ -184,7 +237,7 @@ typedef struct yizhi_RTC_Time_s
 
     #ifdef  OLED_SPI
     
-        #ifdef GD32F30X_HD
+        #ifdef GD32F30X_TEST_PLATFORM
         #define OLED_SCL  PBout(3)
         #define OLED_SDA  PBout(5)
         #define OLED_RST  PCout(8)            /* 在MINISTM32上直接接到了STM32的复位脚！*/
@@ -200,7 +253,7 @@ typedef struct yizhi_RTC_Time_s
         #define OLED_DC_1     GPIOC->BSRR = 1 << 9// //OLED_DC  = 1
         #define OLED_CS_0     GPIOA->BRR  = 1 << 15// //OLED_CS  = 0
         #define OLED_CS_1     GPIOA->BSRR = 1 << 15// //OLED_CS  = 1      /* 改为BRR BSRR寄存器 5.5958ms -> 4.4171ms  */
-        #else
+        #elif defined(MiniSTIM32V3)
         #define OLED_SCL  PCout(6)
         #define OLED_SDA  PBout(0)
         #define OLED_RST  PBout(2)            /* 在MINISTM32上直接接到了STM32的复位脚！*/
@@ -216,6 +269,8 @@ typedef struct yizhi_RTC_Time_s
         #define OLED_DC_1     GPIOB->BSRR = 1 << 4// //OLED_DC  = 1
         #define OLED_CS_0     GPIOB->BRR  = 1 << 6// //OLED_CS  = 0
         #define OLED_CS_1     GPIOB->BSRR = 1 << 6// //OLED_CS  = 1      /* 改为BRR BSRR寄存器 5.5958ms -> 4.4171ms  */
+        #else 
+        #error "Please defined OLED interface platform" 
         #endif
     #if defined(CHIP_ST7735) || defined(CHIP_ST7789V2) 
     #define LCD_BLK_0     GPIOB->BRR  = 1 << 8
@@ -323,6 +378,22 @@ typedef struct yizhi_RTC_Time_s
     #endif   /* #ifdef OLED_SPI */
 #endif
 
+/* Typedef ---------------------------------------------------------------------------------------------*/
+typedef struct yizhi_RTC_Time_s
+{
+    unsigned char second;
+    unsigned char minute;
+    unsigned char hour;
+    unsigned char week;
+    unsigned char date;
+    unsigned char month;
+    unsigned char year;                                                 /*  ture year=2000+year;        */  
+}RTC_Time_s;
+/* Global variables declaration-------------------------------------------------------------------------*/
+extern uint16_t BACK_COLOR;
+extern uint16_t FRONT_COLOR;
+
+/* Public function declaration -------------------------------------------------------------------------*/
 void OLED_WrDat(unsigned char dat);
 void OLED_WrCmd(unsigned char cmd);
 void OLED_Init(void);
@@ -347,34 +418,5 @@ void OLED_P16x32Time(uint8_t p, RTC_Time_s *ptTime);//大字体时钟显示
 void OLED_PutTime(uint8_t x,uint8_t y,RTC_Time_s * time, uint8_t ucSize, uint16_t ucYn);//小字体时钟显示;
 void timeClockStep(RTC_Time_s *ptTime);
 
-extern uint16_t BACK_COLOR;
-extern uint16_t FRONT_COLOR;
-//颜色
-#define WHITE              0xFFFF
-#define BLACK              0x0000      
-#define BLUE                0x001F  
-#define BRED             0XF81F
-#define GRED                    0XFFE0
-#define GBLUE                   0X07FF
-#define RED                0xF800
-#define MAGENTA            0xF81F
-#define GREEN              0x07E0
-#define CYAN               0x7FFF
-#define YELLOW             0xFFE0
-#define BROWN                  0XBC40 //棕色
-#define BRRED                  0XFC07 //棕红色
-#define GRAY                   0X8430 //灰色
-//GUI颜色
-
-#define DARKBLUE           0X01CF    //深蓝色
-#define LIGHTBLUE           0X7D7C    //浅蓝色  
-#define GRAYBLUE            0X5458 //灰蓝色
-//以上三色为PANEL的颜色 
- 
-#define LIGHTGREEN          0X841F //浅绿色
-#define LGRAY                  0XC618 //浅灰色(PANNEL),窗体背景色
-
-#define LGRAYBLUE        0XA651 //浅灰蓝色(中间层颜色)
-#define LBBLUE           0X2B12 //浅棕蓝色(选择条目的反色)
-#endif
+#endif                                                                  /* _bOLED_H                     */
 
