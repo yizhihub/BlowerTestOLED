@@ -43,8 +43,8 @@
 /* Private variables -----------------------------------------------------------------------------------*/
 
 /* Global variables ------------------------------------------------------------------------------------*/
-uint16_t BACK_COLOR = BLACK;
-uint16_t FRONT_COLOR = YELLOW;
+uint16_t _GwBackGround = BLACK;
+uint16_t _GwForeGround = WHITE;
 /* External extern variables ---------------------------------------------------------------------------*/
 
 /* Private function prototypes -------------------------------------------------------------------------*/
@@ -1209,6 +1209,7 @@ void OLED_PutChar(u8 x,u8 y,u8 wan, u8 ucSize, uint16_t ucYn)
         return;                                                     /* 不支持的字号     */
     }
 #ifdef OLED_COLOR
+    if (ucYn == 0)  ucYn = BLUE;                                    /* selected item                */
     OLED_Address_Set(x, y, x + ucSize - 1, y + (ucSize << 1 & 0xF8) - 1);/* set refresh windows                  */
     for(pos = 0; pos < ucSize; pos++)                                   /* ucSize also represent character width*/
     {
@@ -1257,7 +1258,7 @@ void OLED_PutChar(u8 x,u8 y,u8 wan, u8 ucSize, uint16_t ucYn)
             if (ulTemp[0] & 0x01) {
                 OLED_WrDat(ucYn>>8); OLED_WrDat(ucYn);//LCD_WrWord(ucYn);
             } else {
-                OLED_WrDat(BACK_COLOR>>8); OLED_WrDat(BACK_COLOR);//LCD_WrWord(BACK_COLOR);
+                OLED_WrDat(_GwBackGround>>8); OLED_WrDat(_GwBackGround);//LCD_WrWord(_GwBackGround);
             }
             ulTemp[0] >>= 1;
     #elif defined(CHIP_SSD1322)
@@ -1335,7 +1336,7 @@ void OLED_PutStr(uint8_t x,uint8_t y,uint8_t ch[], uint8_t ucSize, uint16_t ucYn
 {
     uint8_t j=0, wan;
     
-    if (ucYn == 1) ucYn = FRONT_COLOR;
+    if (ucYn == 1) ucYn = _GwForeGround;
     while (ch[j]!='\0')
     {    
         wan = ch[j];
@@ -1390,7 +1391,7 @@ void OLED_PutStr(uint8_t x,uint8_t y,uint8_t ch[], uint8_t ucSize, uint16_t ucYn
 void OLED_PutNum(uint8_t x,uint8_t y,int m, uint8_t ucLen, uint8_t ucSize, uint16_t ucYn)
 {
     int8_t i, ucNegative = 0;
-    if (ucYn == 1) ucYn = FRONT_COLOR;
+    if (ucYn == 1) ucYn = _GwForeGround;
     /*if (m < 0) {
         m = -m;
         OLED_PutChar(x, y, '-', ucYn);
@@ -1451,7 +1452,7 @@ void OLED_PutNumber(uint8_t x,uint8_t y,float m, uint8_t M, uint8_t N, char* pUn
     uint16_t inte,temp;//deci;
     static  uint8_t ucLastOCCupy;
     
-    if (ucYn == 1) ucYn = FRONT_COLOR;
+    if (ucYn == 1) ucYn = _GwForeGround;
     if(m<0)
     {
         OLED_PutChar(x, y, '-', ucYn);
@@ -1538,7 +1539,7 @@ void OLED_PutNumber(uint8_t x,uint8_t y,float m, uint8_t M, uint8_t N, char* pUn
     int8_t   i=0, negative=0;
     uint8_t  subshi, x_decimal;
 
-    if (ucYn == 1) ucYn = FRONT_COLOR;
+    if (ucYn == 1) ucYn = _GwForeGround;
     if (m < 0) {
         m = -m;
         negative=1; 
@@ -1627,7 +1628,7 @@ void OLED_PutNumber(uint8_t x,uint8_t y,float m, uint8_t M, uint8_t N, char* pUn
 void OLED_HexDisp(uint8_t x,uint8_t y,uint8_t *dat,uint8_t N, uint8_t ucSize, uint16_t ucYn)
 {
     uint8_t temp,i;
-    if (ucYn == 1) ucYn = FRONT_COLOR; 
+    if (ucYn == 1) ucYn = _GwForeGround; 
     
     OLED_PutChar(x,y,'0', ucSize, ucYn);  x += ucSize;
     OLED_PutChar(x,y,'x', ucSize, ucYn);  x += ucSize;
@@ -1660,7 +1661,7 @@ void OLED_HexDisp(uint8_t x,uint8_t y,uint8_t *dat,uint8_t N, uint8_t ucSize, ui
 */
 void OLED_PutTime(uint8_t x,uint8_t y,RTC_Time_s * time, uint8_t ucSize, uint16_t ucYn)
 {
-    if (ucYn == 1) ucYn = FRONT_COLOR;
+    if (ucYn == 1) ucYn = _GwForeGround;
 // OLED_PutChar(x,y,time->year%100/10+0x30); x+=8;
 // OLED_PutChar(x,y,time->year%10+0x30);     x+=8;
 // OLED_PutChar(x,y,'-'); x+=8;
@@ -1728,6 +1729,7 @@ void OLED_PutHan(uint8_t x,uint8_t y,uint8_t ch[], uint16_t ucYn)
                 return;
         }
 #ifdef OLED_COLOR
+        if (ucYn == 0)  ucYn = BLUE;                           /* selected item                */
         OLED_Address_Set(x, y, x + 14 - 1, y + (16) - 1);
         for(wm = 0;wm < 14;wm++)                       /* 每个汉字需要扫描14列 */
         {
@@ -1742,7 +1744,7 @@ void OLED_PutHan(uint8_t x,uint8_t y,uint8_t ch[], uint16_t ucYn)
                 if (usTemp[0] & 0x01) {
                     OLED_WrDat(ucYn>>8); OLED_WrDat(ucYn);//LCD_WrWord(ucYn);
                 } else {
-                    OLED_WrDat(BACK_COLOR>>8); OLED_WrDat(BACK_COLOR);//LCD_WrWord(BACK_COLOR);
+                    OLED_WrDat(_GwBackGround>>8); OLED_WrDat(_GwBackGround);//LCD_WrWord(_GwBackGround);
                 }
                 usTemp[0] >>= 1;
         #elif defined(CHIP_SSD1322)
@@ -1801,6 +1803,8 @@ void OLED_Print(uint8_t x,uint8_t y,uint8_t ch[], uint16_t ucYn)
 {
     uint8_t ch2[3];
     uint8_t ii=0;
+    
+    if (ucYn == 1)     ucYn = _GwForeGround;                             /* No selected item            */ 
     while(ch[ii] != '\0')
     {
         if(ch[ii] > 127)

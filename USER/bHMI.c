@@ -334,11 +334,11 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
         {
           if(NowItem!=ii)
           {
-            OLED_Print(0,(ii*2+title*2),MenuItem[FirstItem+ii], 1); // 正常显示
+            OLED_Print(0,(ii * LINE_HEIGHT + title * LINE_HEIGHT),MenuItem[FirstItem+ii], 1); // 正常显示
           }
           else
           {
-            OLED_Print(0,(ii*2+title*2),MenuItem[FirstItem+ii], 0); // 高亮显示
+            OLED_Print(0,(ii * LINE_HEIGHT + title * LINE_HEIGHT),MenuItem[FirstItem+ii], 0); // 高亮显示
           }
         }
       }
@@ -348,11 +348,11 @@ uchar DrawMenu(uchar MenuItem[][17],uchar num,uchar title)
         {
           if(NowItem!=ii)
           {
-            OLED_Print(0,(ii*2+2),MenuItem[FirstItem+ii], 1);     // 正常显示 
+            OLED_Print(0,(ii * LINE_HEIGHT + LINE_HEIGHT),MenuItem[FirstItem+ii], 1);     // 正常显示 
           }
           else
           {
-            OLED_Print(0,(ii*2+2),MenuItem[FirstItem+ii], 0);      // 高亮显示 
+            OLED_Print(0,(ii * LINE_HEIGHT + LINE_HEIGHT),MenuItem[FirstItem+ii], 0);      // 高亮显示 
           }
         }
         

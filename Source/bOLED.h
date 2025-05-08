@@ -390,8 +390,8 @@ typedef struct yizhi_RTC_Time_s
     unsigned char year;                                                 /*  ture year=2000+year;        */  
 }RTC_Time_s;
 /* Global variables declaration-------------------------------------------------------------------------*/
-extern uint16_t BACK_COLOR;
-extern uint16_t FRONT_COLOR;
+extern uint16_t _GwBackGround;
+extern uint16_t _GwForeGround;
 
 /* Public function declaration -------------------------------------------------------------------------*/
 void OLED_WrDat(unsigned char dat);
